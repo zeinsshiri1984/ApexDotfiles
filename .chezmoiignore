@@ -1,0 +1,9 @@
+README.md
+LICENSE
+.git
+.gitignore
+templates
+
+# --- 忽略 macOS 的垃圾文件 ---
+.DS_Store
+**/.DS_Store

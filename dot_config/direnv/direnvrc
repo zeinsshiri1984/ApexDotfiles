@@ -1,0 +1,6 @@
+use_devbox() {
+  # 监听配置文件变动
+  watch_file devbox.json
+  # 核心：直接调用 devbox 的环境生成器
+  eval "$(devbox generate direnv --print-envrc)"
+}

@@ -1,0 +1,33 @@
+# --- OS Generated ---
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- Editor / IDE ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+
+# --- Security (防止手滑提交密钥) ---
+keys.txt
+*.age
+*.pem
+*.key
+id_rsa
+id_ed25519
+secrets.env.yaml
+
+# --- Generic Dev ---
+.env.local
+node_modules/
+dist/
+build/
+.direnv/
+.devbox/

@@ -1,0 +1,27 @@
+set shell := ["zsh", "-c"]
+
+# 默认动作：列出所有命令
+default:
+    @just --list
+
+# 编译项目
+build:
+    cargo build
+
+# 运行项目
+run:
+    cargo run
+
+# 运行测试
+test:
+    cargo test
+    
+# 质量检查
+check:
+    cargo clippy -- -D warnings
+    cargo fmt -- --check
+
+# 提交前预检
+pre-commit:
+    just check
+    just test

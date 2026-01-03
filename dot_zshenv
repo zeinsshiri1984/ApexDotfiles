@@ -1,0 +1,57 @@
+# Homebrew
+# 只有未加载过才加载，避免子 Shell 重复 path 操作带来的微小开销
+if [[ -z "$HOMEBREW_PREFIX" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+# --- XDG 规范 (让 Home 目录更干净) ---
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+# 确保目录存在，否则历史记录无法保存
+[[ ! -d "$XDG_STATE_HOME/zsh" ]] && mkdir -p "$XDG_STATE_HOME/zsh"
+[[ ! -d "$XDG_CACHE_HOME/zsh" ]] && mkdir -p "$XDG_CACHE_HOME/zsh"
+
+export HOMEBREW_CACHE="$XDG_CACHE_HOME/Homebrew"
+export HOMEBREW_BUNDLE_FILE="$XDG_CONFIG_HOME/brew/Brewfile"
+export HOMEBREW_NO_ANALYTICS=1
+
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+
+if [ -n "$BASH_VERSION" ]; then
+    HISTFILE="$XDG_STATE_HOME/bash/history"
+fi
+
+export GNUPGHOME="$XDG_DATA_HOME/gnupg"
+chmod 700 "$XDG_DATA_HOME/gnupg" 
+
+# 指定 Zsh 配置目录 (让 zshrc 从 ~/.config/zsh 读取)
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"  # 将 .zshrc 移入 .config/zsh
+# 设置 rbw 的数据目录遵循 XDG
+#export RBW_HOME="$XDG_DATA_HOME/rbw"
+# Ripgrep 配置文件位置
+export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/config"
+
+# --- 全局变量 ---
+export EDITOR='hx'
+export VISUAL='hx'
+export LANG=en_US.UTF-8
+export PAGER='less'
+
+# --- 路径增强 ---
+# 将用户级 bin 加入 PATH (Go, Rust, Local)
+typeset -U PATH # 确保 PATH 不重复
+path=(
+  "$HOME/.local/bin"
+  "$HOME/go/bin"
+  "$HOME/.cargo/bin"
+  $path
+)
+export PATH
+
+# 性能优化 (跳过不必要的检查)
+export SKIP_FIX_PATH=true

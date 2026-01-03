@@ -1,0 +1,32 @@
+#!/bin/bash
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+
+set -e # 遇到错误立即停止
+
+echo "📦 [1/3] 同步 Homebrew 工具链..."
+# 关闭分析，保护隐私
+brew analytics off
+brew update
+# 运行安装，并在安装后清理不在清单中的软件
+brew bundle --file={{ joinPath .chezmoi.sourceDir "Brewfile" }} --verbose --cleanup
+brew upgrade
+
+#xdg-ninja --dry-run
+
+echo "📦 [2/3] 检查/更新 Devbox..."
+if ! command -v devbox &> /dev/null; then
+    curl -fsSL https://get.jetify.com/devbox | bash
+else
+    # 静默更新
+    devbox version update >/dev/null 2>&1 || true
+    echo "   -> Devbox 已是最新"
+fi
+
+echo "📦 [3/3] 检查 Claude Code CLI..."
+if ! command -v claude &> /dev/null; then
+    curl -fsSL https://claude.ai/install.sh | bash
+else
+    echo "   -> Claude Code 已安装"
+fi
+
+echo "✅ 用户环境就绪！"

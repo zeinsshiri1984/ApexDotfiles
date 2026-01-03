@@ -1,0 +1,13 @@
+# 交互式询问变量
+project_name:
+  type: str
+  help: 项目名称 (如 my_tool)
+
+author_name:
+  type: str
+  default: "Your Name"
+
+# 忽略文件
+_exclude:
+  - ".git"
+  - ".sops.yaml" # 可以选择性忽略

@@ -1,0 +1,6 @@
+use devbox
+
+# 如果存在加密文件，自动解密并注入环境变量
+if [ -f secrets.env.yaml ]; then
+    eval $(sops -d --extract '["API_KEY"]' --format dotenv secrets.env.yaml)
+fi
