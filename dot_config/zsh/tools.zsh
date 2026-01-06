@@ -9,7 +9,7 @@ eval "$(zoxide init zsh)"
 eval "$(atuin init zsh --disable-up-arrow)"
 
 # --- Carapace ---
-export CARAPACE_BRIDGES='zsh,nushell,bash,inshellisense'
+export CARAPACE_BRIDGES='zsh,bash,inshellisense'
 zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
 eval "$(carapace _carapace)"
 

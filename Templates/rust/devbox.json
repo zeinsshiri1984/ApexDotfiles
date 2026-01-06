@@ -1,15 +1,12 @@
 {
   "packages": [
     "rustc@latest",
-    "cargo@latest", 
+    "cargo@latest",
     "clippy@latest",
     "rust-analyzer@latest",
-    "pkg-config@latest", 
-    "openssl@latest" 
+    "pkg-config@latest",
+    "openssl@latest"
   ],
-  "env": {
-    "RUST_BACKTRACE": "1"
-  },
   "shell": {
     "init_hook": [
       "echo '🦀 Rust Environment Loaded!'"

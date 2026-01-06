@@ -1,0 +1,5 @@
+creation_rules:
+  # 匹配任何以 .secret.env 结尾的文件
+  - path_regex: .*\.secret\.env$
+    # 使用 Copier 填入的公钥
+    age: "[[ age_public_key ]]"

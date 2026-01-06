@@ -69,12 +69,24 @@
     useFastForwardQuote = true
     # 推送时自动推送关联的 tags
     followTags = true
+    
+[maintenance]
+    auto = false # 建议手动管理或通过 cron 触发，避免在编译时自动触发 GC 卡顿
+    strategy = incremental
 
 [fetch]
     # 取回后自动清理远程已删除的分支（保持分支列表干净）
     prune = true
     pruneTags = true
     parallel = 0 # 并行 fetch 加速
+    fsckobjects = true
+    writeCommitGraph = true # 加速 git log
+    
+[transfer]
+    fsckobjects = true # 抓取时检查数据完整性
+    
+[receive]
+    fsckObjects = true
 
 [rebase]
     # rebase 时自动 stash 未提交的修改，结束后自动 pop
@@ -91,11 +103,11 @@
 # --- 安全凭证 (委托给 gh) ;HTTPS 操作也不用输密码---
 [credential "https://github.com"]
     helper = 
-    helper = !$(which gh) auth git-credential
+    helper = !gh auth git-credential
 
 [credential "https://gist.github.com"]
     helper = 
-    helper = !$(which gh) auth git-credential
+    helper = !gh auth git-credential
     
 # --- 性能优化 (针对超大型仓库) ---
 [feature]

@@ -11,17 +11,17 @@ apply = ["source"] # 确保它立即被 source，不延迟
 
 # ---  Powerlevel10k ---
 # P10k 自身有极其先进的 Instant Prompt 技术，无需 defer
-# 我们在 .zshrc 中手动处理 instant prompt，这里只负责加载主题文件
+# 在 .zshrc 中手动处理 instant prompt，这里只负责加载主题文件
 [plugins.powerlevel10k]
 github = "romkatv/powerlevel10k"
 apply = ["source"]
 
-# --- 补全系统 UI (Fzf-tab) 必须在 compinit 之后，Syntax Highlight 之前---
+# --- 补全系统 UI (Fzf-tab) (立即加载，否则补全会卡顿或失效)---
 [plugins.fzf-tab]
 github = "Aloxaf/fzf-tab"
 apply = ["source"]
 
-# --- 自动建议 (延迟加载，不阻塞启动) ---
+# --- 自动建议 ---
 [plugins.zsh-autosuggestions]
 github = "zsh-users/zsh-autosuggestions"
 use = ["{{ name }}.zsh"]

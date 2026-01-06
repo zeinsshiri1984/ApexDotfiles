@@ -4,24 +4,24 @@ set shell := ["zsh", "-c"]
 default:
     @just --list
 
-# 编译项目
+# 编译 (Release)
 build:
-    cargo build
+    cargo build --release
 
-# 运行项目
+# 运行
 run:
     cargo run
 
-# 运行测试
+# 代码检查 (Clippy + Format)
+check:
+    cargo fmt -- --check
+    cargo clippy -- -D warnings
+
+# 本地测试
 test:
     cargo test
     
-# 质量检查
-check:
-    cargo clippy -- -D warnings
-    cargo fmt -- --check
-
-# 提交前预检
-pre-commit:
-    just check
-    just test
+# 更新环境 (Devbox + Cargo)
+update:
+    devbox update
+    cargo update

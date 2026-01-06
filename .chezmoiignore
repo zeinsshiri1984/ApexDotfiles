@@ -2,8 +2,12 @@ README.md
 LICENSE
 .git
 .gitignore
-templates
+.sops.yaml
 
-# --- 忽略 macOS 的垃圾文件 ---
+# 忽略模板目录 (由 Copier 使用，而不是 Chezmoi)
+Templates/
+Templates/**
+
+# 忽略 macOS 系统垃圾
 .DS_Store
 **/.DS_Store

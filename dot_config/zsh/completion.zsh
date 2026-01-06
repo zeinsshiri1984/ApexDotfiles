@@ -35,11 +35,13 @@ zstyle ':fzf-tab:complete:-command-:*' fzf-preview \
   '(whence -p $word || whence -f $word || whence -a $word) | bat -l sh --color=always --style=plain'
 
 # kill 预览
-zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview 'ps --pid=$group -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview \
+  'ps --pid=$group -o cmd --no-headers -w -w'
 
 # systemctl 预览
 zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview 'ps --pid=$group -o cmd --no-headers -w -w'
-zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview \
+  'SYSTEMD_COLORS=1 systemctl status $word 2>/dev/null || echo "No status available"'
 
 # 环境变量预览
 zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|expand):*' \

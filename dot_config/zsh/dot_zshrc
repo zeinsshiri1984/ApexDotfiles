@@ -1,37 +1,49 @@
+# 非交互式 shell 直接退出
+[[ $- != *i* ]] && return
+
 # ---  Powerlevel10k Instant Prompt (必须在最前面) ---
 # 这一步会创建缓存，让 Prompt 在插件加载完之前就显示出来
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# 非交互式 shell 直接退出
-[[ $- != *i* ]] && return
+# 确保 GPG TTY 正确，否则 git 签名会报错
+export GPG_TTY=$(tty)
 
-# ---  加载 P10k 配置 (优先加载以显示界面) ---
-source "$ZDOTDIR/p10k.zsh"
+# Homebrew 静态加载
+# 如果缓存文件存在，直接 source (耗时 < 1ms)
+if [[ -f "$ZDOTDIR/brew_env.zsh" ]]; then
+    source "$ZDOTDIR/brew_env.zsh"
+else
+    # 兜底：如果缓存文件丢了，回退到慢速的官方 eval 方法，并后台重新生成缓存
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    (/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh > "$ZDOTDIR/brew_env.zsh" &)
+fi
+
+# --- 加载Sheldon ---
+eval "$(sheldon source)"
 
 # --- 补全系统Compinit初始化 (在 sheldon 之前，因为 fzf-tab 需要它)) ---
 # 开启缓存以加速
 autoload -Uz compinit
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
-# 智能检测缓存有效性 (20小时)
-_comp_files=(${ZDOTDIR:-$HOME}/.zcompdump(Nmh-20))
-if (( $#_comp_files )); then
-    compinit -C -d "${ZDOTDIR:-$HOME}/.zcompdump"
+# 检查缓存是否在 24h 内，如果是则直接用，否则重新生成
+if [[ -n "$ZDOTDIR/.zcompdump(#qN.mh-24)" ]]; then
+    compinit -C -d "$ZDOTDIR/.zcompdump"
 else
-    compinit -d "${ZDOTDIR:-$HOME}/.zcompdump"
-    # 异步编译 dump 文件，加快下次读取
-    { zcompile "${ZDOTDIR:-$HOME}/.zcompdump" } &!
+    compinit -i -d "$ZDOTDIR/.zcompdump"
+    # 后台静默编译，加速下次启动
+    { zcompile "$ZDOTDIR/.zcompdump" } &!
 fi
-
-# --- 加载Sheldon ---
-eval "$(sheldon source)"
 
 # --- 加载模块化配置 ---
 source "$ZDOTDIR/aliases.zsh"
 source "$ZDOTDIR/tools.zsh"
 source "$ZDOTDIR/completion.zsh"
+
+# ---  加载 P10k 配置 (优先加载以显示界面) ---
+source "$ZDOTDIR/p10k.zsh"
 
 # 确保终端控制码重置
 unset MANPATH # 避免某些系统上的 manpath 混乱

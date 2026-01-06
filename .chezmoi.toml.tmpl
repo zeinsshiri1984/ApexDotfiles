@@ -2,12 +2,11 @@
 {{- $email := promptStringOnce . "email" "Git Email address" -}}
 {{- $name := promptStringOnce . "name" "Git Username" -}}
 
-# 自动获取 Age 公钥 (优先读环境变量，否则读文件)
-{{- $agekey := env "AGE_PUBLIC_KEY" -}}
-{{- if not $agekey -}}
-    {{- if stat (joinPath .chezmoi.homeDir ".config/sops/age/keys.txt") -}}
-        {{- $agekey = output "sh" "-c" "grep 'public key' ~/.config/sops/age/keys.txt | cut -d: -f2 | tr -d ' '" | trim -}}
-    {{- end -}}
+# 尝试从标准位置读取公钥，自动去除空格
+{{- $agekey := "" -}}
+{{- $keyfile := joinPath .chezmoi.homeDir ".config/sops/age/keys.txt" -}}
+{{- if stat $keyfile -}}
+    {{- $agekey = output "sh" "-c" (print "grep 'public key' " $keyfile " | cut -d: -f2 | tr -d ' '") | trim -}}
 {{- end -}}
 
 # --- 核心配置 ---
@@ -15,9 +14,9 @@ sourceDir = "{{ .chezmoi.sourceDir }}"
 encryption = "age"                     # 默认加密引擎
 
 [age]
-    identity = "~/.config/sops/age/keys.txt"
+    identity = "{{ $keyfile }}"
     recipient = "{{ $agekey }}"
-    suffix = ".age"
+    suffix = ".age" # 任何以 .age 结尾的文件自动加密
 
 [data]
     email = "{{ $email }}"

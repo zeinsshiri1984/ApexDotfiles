@@ -1,6 +1,12 @@
+# --- Devbox 集成 ---
 use_devbox() {
-  # 监听配置文件变动
+  # 监听 devbox.json 变动
   watch_file devbox.json
-  # 核心：直接调用 devbox 的环境生成器
-  eval "$(devbox generate direnv --print-envrc)"
+  watch_file devbox.lock
+  
+  # 只有当 devbox.json 存在时才加载
+  if [ -f "devbox.json" ]; then
+    # 使用 print-envrc 生成导出语句，速度快且稳定
+    eval "$(devbox generate direnv --print-envrc)"
+  fi
 }

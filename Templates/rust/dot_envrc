@@ -1,6 +1,26 @@
+# 激活 Devbox 环境
 use devbox
 
-# 如果存在加密文件，自动解密并注入环境变量
-if [ -f secrets.env.yaml ]; then
-    eval $(sops -d --extract '["API_KEY"]' --format dotenv secrets.env.yaml)
-fi
+# Sops 自动解密:遍历所有 .secret.env 后缀的文件
+for secret_file in *.secret.env; do
+    # 如果文件存在（处理通配符不匹配的情况）
+    if [ -f "$secret_file" ]; then
+        # 计算 Hash 用于缓存命名
+        secret_hash=$(sha256sum "$secret_file" | cut -d ' ' -f 1)
+        # 存放在 XDG_RUNTIME_DIR (内存盘 /run/user/1000)，重启即焚，比硬盘安全
+        cache_dir="$XDG_RUNTIME_DIR/devbox-secrets/$PWD_HASH"
+        mkdir -p "$cache_dir"
+        cache_file="$cache_dir/.decrypted-${secret_hash}.env"
+
+        # 如果缓存不存在，或者源文件比缓存新，则重新解密
+        if [ ! -f "$cache_file" ] || [ "$secret_file" -nt "$cache_file" ]; then
+            echo "🔓 Decrypting $secret_file to Memory FS..."
+            # 提取密钥注入环境变量 --format dotenv 告诉 sops 这是一个 key=value 格式的文件
+            sops -d --format dotenv "$secret_file" > "$cache_file"
+            chmod 600 "$cache_file"
+        fi
+
+        # 加载解密后的变量
+        source "$cache_file"
+    fi
+done

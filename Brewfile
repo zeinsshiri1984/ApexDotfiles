@@ -14,8 +14,9 @@ brew "direnv"       # 目录环境切换
 brew "gitleaks"     # 密钥泄露扫描
 brew "sops"
 brew "age"
-brew "xdg-ninja"
+#brew "xdg-ninja"
 brew "Copier"
+#brew "cocogitto"
 
 # --- Shell 交互层 ---
 brew "zsh"
@@ -24,6 +25,7 @@ brew "atuin"          # 历史记录同步
 brew "zoxide"         # 目录跳转
 brew "carapace"       # 自动补全
 brew "gum"            # 脚本交互 UI (编写脚本神器)
+brew "plz-cli"
 
 # --- 现代化终端工具---
 brew "zellij"       # 终端复用 (tmux 替代者)
@@ -38,11 +40,12 @@ brew "tealdeer"     # tldr (man 手册简化版)
 brew "difftastic"   # 语法感知 diff (用于代码审查)
 
 # --- 数据处理流水线 ---
-brew "nushell"       # 结构化数据 Shell
+#brew "nushell"       # 结构化数据 Shell
 brew "jaq"           # JSON 处理 (jq 的 Rust 版，更快)
-brew "jnv"           # 交互式 JSON 过滤
+brew "yq"
+#brew "jnv"           # 交互式 JSON 过滤
 brew "angle-grinder" # 命令行日志分析神器 (ag)
-brew "jc"            # 把非结构化输出转 JSON
+#brew "jc"            # 把非结构化输出转 JSON
 brew "sd"            # sed 的直观替代品
 
 # --- 安全工具 ---
@@ -71,14 +74,15 @@ brew "mosh"
 #brew "zrok"           # 内网穿透 (类似 ngrok)
 
 # --- 容器与虚拟化 ---
-brew "docker-compose"
+#brew "docker-compose"
 brew "podman"
 brew "podman-compose"
 #brew "dive"         # 镜像层分析
-brew "hadolint"      # Dockerfile 检查
+#brew "hadolint"      # Dockerfile 检查
 #brew "syft"           # SBOM 生成
 #brew "k9s"
-brew "ctop"
+#brew "ctop"
+brew "lazydocker"
 
 # --- Git 工具 ---
 brew "git-delta"

@@ -1,0 +1,35 @@
+#!/bin/bash
+set -e
+
+# 定义颜色
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}🚀 [1/5] 更新 Chezmoi 配置源...${NC}"
+# 拉取最新 dotfiles 并应用
+chezmoi update --apply
+
+echo -e "${BLUE}🍺 [2/5] 更新 Homebrew...${NC}"
+brew update
+brew upgrade
+brew cleanup
+
+echo -e "${BLUE}📦 [3/5] 更新 Devbox 全局包...${NC}"
+if command -v devbox &> /dev/null; then
+    devbox global update
+fi
+
+echo -e "${BLUE}🐚 [4/5] 更新 Zsh 插件 (Sheldon)...${NC}"
+if command -v sheldon &> /dev/null; then
+    sheldon lock --update
+fi
+
+echo -e "${BLUE}🐳 [5/5] 清理 Podman/Docker 垃圾...${NC}"
+if command -v podman &> /dev/null; then
+    podman system prune -f
+elif command -v docker &> /dev/null; then
+    docker system prune -f
+fi
+
+echo -e "${GREEN}✅ 所有系统组件已更新完毕！${NC}"
