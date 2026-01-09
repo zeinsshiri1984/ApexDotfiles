@@ -2,26 +2,12 @@
 {{- $email := promptStringOnce . "email" "Git Email address" -}}
 {{- $name := promptStringOnce . "name" "Git Username" -}}
 
-# 尝试从标准位置读取公钥，自动去除空格
-{{- $agekey := "" -}}
-{{- $keyfile := joinPath .chezmoi.homeDir ".config/sops/age/keys.txt" -}}
-{{- if stat $keyfile -}}
-    {{- $agekey = output "sh" "-c" (print "grep 'public key' " $keyfile " | cut -d: -f2 | tr -d ' '") | trim -}}
-{{- end -}}
-
 # --- 核心配置 ---
 sourceDir = "{{ .chezmoi.sourceDir }}"
-encryption = "age"                     # 默认加密引擎
-
-[age]
-    identity = "{{ $keyfile }}"
-    recipient = "{{ $agekey }}"
-    suffix = ".age" # 任何以 .age 结尾的文件自动加密
 
 [data]
     email = "{{ $email }}"
     name = "{{ $name }}"
-    agekey = "{{ $agekey }}"
 
 # 开启 Diff 比较时的颜色与分页
 [diff]

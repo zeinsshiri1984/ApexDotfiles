@@ -10,7 +10,7 @@ brew bundle --file={{ joinPath .chezmoi.sourceDir "Brewfile" }} --verbose --clea
 brew upgrade
 
 echo "🚀 生成 Homebrew 静态环境配置..."
-# 把 brew shellenv 的输出重定向到一个文件,.zshrc 读取缓存的环境
+# 把 brew shellenv 的输出重定向到一个文件,.zshrc 读取缓存的2环境
 /home/linuxbrew/.linuxbrew/bin/brew shellenv zsh > "$HOME/.config/zsh/brew_env.zsh"
 
 echo "📦 [2/5] 检查/更新 Devbox..."

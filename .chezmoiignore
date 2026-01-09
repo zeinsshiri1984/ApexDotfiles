@@ -2,7 +2,6 @@ README.md
 LICENSE
 .git
 .gitignore
-.sops.yaml
 
 # 忽略模板目录 (由 Copier 使用，而不是 Chezmoi)
 Templates/
