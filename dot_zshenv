@@ -58,8 +58,8 @@ export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="$DOCKER_HOST"
 typeset -U PATH # 确保 PATH 不重复
 path=(
   "$HOME/.local/bin" 
-  "$HOMEBREW_PREFIX/bin"
-  "$HOMEBREW_PREFIX/sbin"
+  "/home/linuxbrew/.linuxbrew/bin"
+  "/home/linuxbrew/.linuxbrew/sbin"
   $path
 )
 export PATH

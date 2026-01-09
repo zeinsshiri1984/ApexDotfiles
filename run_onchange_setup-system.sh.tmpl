@@ -24,7 +24,7 @@ echo "📦 [3/5] 检查 Claude Code CLI..."
 if ! command -v claude &> /dev/null; then
     curl -fsSL https://claude.ai/install.sh | bash
 else
-    claude update || true 
+    timeout 10s claude update || true 
 fi
 
 echo "📦 [4/5] 配置 Podman Socket & Docker Shim..."

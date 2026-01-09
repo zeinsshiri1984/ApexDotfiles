@@ -8,7 +8,7 @@ brew "chezmoi"
 brew "git" #用户级 Git 永远不会因为权限问题去污染 /etc 或 /usr
 brew "gh"
 brew "just"
-#brew "lefthook"     # Git Hooks 管理
+brew "lefthook"     # Git Hooks 管理
 brew "direnv"       # 目录环境切换
 brew "gitleaks"     # 密钥泄露扫描
 #brew "xdg-ninja"
