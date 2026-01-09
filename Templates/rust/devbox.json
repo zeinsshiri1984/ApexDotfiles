@@ -3,17 +3,23 @@
     "rustc@latest",
     "cargo@latest",
     "clippy@latest",
-    "rust-analyzer@latest",
+    "bacon@latest",
     "pkg-config@latest",
     "openssl@latest"
   ],
+  "env": {
+    "RUST_SRC_PATH": "$DEVBOX_PACKAGES_DIR/rustc/lib/rustlib/src/rust/library"
+  },
   "shell": {
     "init_hook": [
-      "echo '🦀 Rust Environment Loaded!'"
+      "# 自动恢复 lefthook 钩子 (如果是刚 clone 下来)",
+      "lefthook install > /dev/null 2>&1 || true",
+      "git config core.hooksPath .githooks"
     ],
     "scripts": {
-      "run": "cargo run",
-      "test": "cargo test"
+      "build": "cargo build --release",
+      "test": "cargo test",
+      "watch": "bacon"
     }
   }
 }

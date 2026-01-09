@@ -3,7 +3,7 @@
 
 set -e # 遇到错误立即停止
 
-echo "📦 [1/4] 同步 Homebrew 工具链..."
+echo "📦 [1/5] 同步 Homebrew 工具链..."
 brew update
 # 运行安装，并在安装后清理不在清单中的软件
 brew bundle --file={{ joinPath .chezmoi.sourceDir "Brewfile" }} --verbose --cleanup
@@ -13,63 +13,54 @@ echo "🚀 生成 Homebrew 静态环境配置..."
 # 把 brew shellenv 的输出重定向到一个文件,.zshrc 读取缓存的环境
 /home/linuxbrew/.linuxbrew/bin/brew shellenv zsh > "$HOME/.config/zsh/brew_env.zsh"
 
-echo "📦 [2/4] 检查/更新 Devbox..."
+echo "📦 [2/5] 检查/更新 Devbox..."
 if ! command -v devbox &> /dev/null; then
     curl -fsSL https://get.jetify.com/devbox | bash
 else
-    # 静默更新
     devbox version update >/dev/null 2>&1 || true
-    echo "   -> Devbox 已是最新"
 fi
 
-echo "📦 [3/4] 检查 Claude Code CLI..."
+echo "📦 [3/5] 检查 Claude Code CLI..."
 if ! command -v claude &> /dev/null; then
     curl -fsSL https://claude.ai/install.sh | bash
 else
     claude update || true 
-    echo "   -> Claude Code 已安装"
 fi
 
-echo "📦 [4/4] Podman 终极伪装 Shim;比 alias 更强，能骗过任何脚本和二进制程序..."
+echo "📦 [4/5] 配置 Podman Socket & Docker Shim..."
 mkdir -p "$HOME/.local/bin"
 
-# 创建 Docker -> Podman 伪装 (如果尚未存在)
-# 判断是否存在，防止覆盖你可能手动修改过的 shim
-if [ ! -f "$HOME/.local/bin/docker" ]; then
-    echo "🐳 创建 Docker -> Podman Shim..."
-    cat << 'EOF' > "$HOME/.local/bin/docker"
+#  Docker Shim (二进制劫持，解决许多工具脚本 调用 docker 的问题)
+DOCKER_SHIM="$HOME/.local/bin/docker"
+if [ ! -f "$DOCKER_SHIM" ]; then
+    cat << 'EOF' > "$DOCKER_SHIM"
 #!/bin/sh
 exec podman "$@"
 EOF
-    chmod +x "$HOME/.local/bin/docker"
+    chmod +x "$DOCKER_SHIM"
+    echo "   -> Shim 创建成功"
 fi
 
-# 3. 注册并启动 Podman Socket (修复报错的核心)
+#  Systemd Socket (用户级)
 if command -v systemctl &>/dev/null; then
-    echo "🔌 配置 Podman Systemd 服务..."
+    # 确保目录存在
+    mkdir -p "$HOME/.config/systemd/user"
     
-    # 定义源文件路径 (Homebrew 安装路径) 和 目标路径 (用户 Systemd 配置)
     PODMAN_PREFIX=$(brew --prefix podman)
-    SYSTEMD_USER_DIR="$HOME/.config/systemd/user"
-    mkdir -p "$SYSTEMD_USER_DIR"
-
-    # 检测并链接服务文件
-    if [[ -f "$PODMAN_PREFIX/lib/systemd/user/podman.socket" ]]; then
-        # 强制链接 socket 和 service 文件，确保指向最新版本
-        ln -sf "$PODMAN_PREFIX/lib/systemd/user/podman.socket" "$SYSTEMD_USER_DIR/podman.socket"
-        ln -sf "$PODMAN_PREFIX/lib/systemd/user/podman.service" "$SYSTEMD_USER_DIR/podman.service"
-        
-        # 重载 systemd 守护进程以识别新文件
+    SOCKET_SRC="$PODMAN_PREFIX/lib/systemd/user/podman.socket"
+    SERVICE_SRC="$PODMAN_PREFIX/lib/systemd/user/podman.service"
+    
+    # 链接服务文件 (使用 -f 强制覆盖链接，确保指向最新 brew 版本)
+    if [[ -f "$SOCKET_SRC" ]]; then
+        ln -sf "$SOCKET_SRC" "$HOME/.config/systemd/user/podman.socket"
+        ln -sf "$SERVICE_SRC" "$HOME/.config/systemd/user/podman.service"
         systemctl --user daemon-reload
-        echo "   -> 服务文件已链接并重载"
-    else
-        echo "⚠️  警告: 在 $PODMAN_PREFIX 下未找到 Systemd 文件，跳过服务注册。"
     fi
 
     # 启用并立即启动 Socket
     systemctl --user enable --now podman.socket
     
-    # 验证 Socket 是否这就绪
+    # 检查 Socket 文件
     if [ -S "$XDG_RUNTIME_DIR/podman/podman.sock" ]; then
         echo "✅ Podman Socket 已就绪: $XDG_RUNTIME_DIR/podman/podman.sock"
     else
@@ -78,6 +69,20 @@ if command -v systemctl &>/dev/null; then
 
     # 设置 Docker Host 供当前脚本后续使用 (持久化配置在 .zshenv)
     export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+    export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="${XDG_RUNTIME_DIR}/podman/podman.sock"
+fi
+
+echo "📦 [5/5] 默认 Shell 设置 ..."
+TARGET_SHELL="$(which zsh)"
+if [ "$SHELL" != "$TARGET_SHELL" ]; then
+    # 只要路径在 /etc/shells 里，chsh 就能成功
+    grep -q "$TARGET_SHELL" /etc/shells || echo "$TARGET_SHELL" | sudo tee -a /etc/shells >/dev/null
+    sudo chsh -s "$TARGET_SHELL" "$USER"
+fi
+
+echo "📦 提升文件监听上限  ..."
+if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
+    echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches >/dev/null
 fi
 
 echo "✅ 用户环境就绪！"

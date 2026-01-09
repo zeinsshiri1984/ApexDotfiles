@@ -44,6 +44,15 @@ fi
 
 [[ -z "$NPM_CONFIG_USERCONFIG" ]] && export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 
+# --- Podman 伪装 Docker---
+# 显式指向 Podman Socket，让原本寻找 Docker Socket 的工具找到 Podman
+export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+export DOCKER_SOCK="$DOCKER_HOST"
+# 禁用 Docker 内容信任 (Podman 不需要)
+export DOCKER_CONTENT_TRUST=0
+# 兼容 Testcontainers (Java/Go 测试框架)
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="$DOCKER_HOST"
+
 # --- 路径增强 ---
 # 将用户级 bin 加入 PATH
 typeset -U PATH # 确保 PATH 不重复
@@ -54,12 +63,6 @@ path=(
   $path
 )
 export PATH
-
-# --- Podman 伪装 Docker---
-# 显式指向 Podman Socket，让原本寻找 Docker Socket 的工具找到 Podman
-export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
-# 禁用 Docker 的安全检查（因为我们用的是 Podman）
-export DOCKER_CONTENT_TRUST=0
 
 # 性能优化 (跳过不必要的检查)
 export SKIP_FIX_PATH=true

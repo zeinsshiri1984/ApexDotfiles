@@ -7,13 +7,7 @@ author_name:
   type: str
   default: "Your Name"
 
-# 自动读取环境变量中的 AGE_PUBLIC_KEY，如果没有则留空需手动填
-age_public_key:
-  type: str
-  default: "{{ env['AGE_PUBLIC_KEY'] }}" 
-  help: 用于加密的 Age 公钥
-
-# 忽略文件
 _exclude:
   - "copier.yaml"
   - ".git"
+  - ".env" # 确保模板里的测试 .env 不会被复制过去覆盖用户的（如果有的话）

@@ -1,11 +1,11 @@
-# 非交互式 shell 直接退出
-[[ $- != *i* ]] && return
-
 # ---  Powerlevel10k Instant Prompt (必须在最前面) ---
 # 这一步会创建缓存，让 Prompt 在插件加载完之前就显示出来
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+# 非交互式 shell 直接退出
+[[ $- != *i* ]] && return
 
 # 确保 GPG TTY 正确，否则 git 签名会报错
 export GPG_TTY=$(tty)

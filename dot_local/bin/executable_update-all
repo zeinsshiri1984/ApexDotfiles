@@ -15,8 +15,8 @@ brew update
 brew upgrade
 brew cleanup
 
-echo -e "${BLUE}📦 [3/5] 更新 Devbox 全局包...${NC}"
-if command -v devbox &> /dev/null; then
+echo -e "${BLUE}📦 [3/5] 更新 Devbox 全局包(如果有)...${NC}"
+if devbox global list >/dev/null 2>&1; then
     devbox global update
 fi
 

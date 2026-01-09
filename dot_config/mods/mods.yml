@@ -1,0 +1,9 @@
+default-model: openai-free
+apis:
+  openai:
+    base-url: https://api.openai.com/v1
+    api-key: {{ .env.OPENAI_API_KEY }} # 建议从环境变量或 sops 读取
+    models:
+      gpt-4o:
+        aliases: ["4o"]
+        max-input-chars: 128000
