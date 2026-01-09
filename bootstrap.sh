@@ -37,8 +37,8 @@ else
     echo "GitHub 已认证"
 fi
 
-echo "配置 Copilot CLI..."
-gh extension install github/gh-copilot --force &>/dev/null || gh extension upgrade github/gh-copilot &>/dev/null || true
+echo "下载或更新Copilot CLI..."
+gh extension install github/gh-copilot &>/dev/null || gh extension upgrade github/gh-copilot &>/dev/null || true
 
 echo "⚡️ [5/5]拉取Dotfiles并应用配置..."
 if [ ! -d "$HOME/.local/share/chezmoi" ]; then
