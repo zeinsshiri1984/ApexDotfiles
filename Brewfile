@@ -21,6 +21,10 @@ brew "atuin"          # 历史记录同步
 brew "zoxide"         # 目录跳转
 brew "carapace"       # 自动补全
 brew "gum"            # 脚本交互 UI (编写脚本神器)
+brew "ffmpegthumbnailer"       # 音视频处理工具
+brew "sevenzip"     # 7-Zip 解压/压缩工具（Homebrew 中官方名称为 sevenzip）
+brew "poppler"      # PDF 处理工具集
+brew "imagemagick"  # 图像处理工具
 
 # --- 现代化终端工具---
 brew "zellij"       # 终端复用 (tmux 替代者)

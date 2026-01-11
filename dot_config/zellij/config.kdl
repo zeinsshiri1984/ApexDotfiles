@@ -1,0 +1,68 @@
+// 其他的 Zellij 会用默认值
+
+// 基础设置
+theme "default"
+default_shell "zsh"
+mouse_mode true
+copy_command "clip.exe" 
+copy_on_select true
+pane_frames true    // 是否显示窗格边框
+
+
+// Session 行为
+session_serialization true    //自动进入 Session 序列化;可保存你的多项目会话状态
+serialize_pane_viewport true  //自动保存
+mirror_session true  // 允许跨终端同步 session
+on_force_close "detach"
+
+// UI 设置
+ui {
+    pane_frames {
+        rounded_corners true
+    }
+}
+
+//操作逻辑
+default_mode "locked" // 默认锁定，不干扰 Helix 的 Ctrl 键
+
+keybinds {
+    //编辑模式都生效的zellij按键,会覆盖Helix按键
+    locked {
+        bind "Ctrl g" { SwitchToMode "Normal"; }
+        
+        // pane (覆盖 Helix 原生行为)
+        bind "Alt h" "Alt Left" { MoveFocusOrTab "Left"; }
+        bind "Alt l" "Alt Right" { MoveFocusOrTab "Right"; }
+        bind "Alt j" "Alt Down" { MoveFocus "Down"; }
+        bind "Alt k" "Alt Up" { MoveFocus "Up"; }
+        bind "Alt n" { NewPane; }
+        bind "Alt f" { ToggleFloatingPanes; }
+    }
+
+    shared_except "locked" {
+        bind "Ctrl g" { SwitchToMode "Locked"; }
+        bind "Ctrl q" { Quit; }
+    }
+    
+    // 浏览模式
+    normal {
+        bind "h" { MoveFocus "Left"; }
+        bind "l" { MoveFocus "Right"; }
+        bind "j" { MoveFocus "Down"; }
+        bind "k" { MoveFocus "Up"; }
+        bind "n" { NewPane; }
+        bind "x" { CloseFocus; }
+        // 方便切换回编辑模式
+        bind "i" { SwitchToMode "Locked"; }
+        bind "Enter" { SwitchToMode "Locked"; }
+        bind "Esc" { SwitchToMode "Locked"; }
+    }
+}
+
+// UI 插件配置
+plugins {
+    tab-bar { path "tab-bar"; }
+    status-bar { path "status-bar"; }
+    strider { path "strider"; }
+    compact-bar { path "compact-bar"; }
+}

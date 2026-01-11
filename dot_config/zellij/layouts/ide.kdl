@@ -1,0 +1,25 @@
+layout {
+    default_tab_template {
+        // 顶部：显示 Tab 和 Session 名字
+        pane size=1 borderless=true {
+            plugin location="zellij:compact-bar"
+        }
+        
+        children // 中间：主工作区
+        
+        // 底部：显示快捷键提示
+        pane size=1 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+
+    tab name="Zide" focus=true {
+        pane split_direction="vertical" {
+            pane size="65%" name="hx" focus=true {
+                command "hx"
+                args "."
+            }
+            pane size="35%" name="term"
+        }
+    }
+}

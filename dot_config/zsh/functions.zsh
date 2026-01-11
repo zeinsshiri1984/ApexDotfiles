@@ -5,7 +5,7 @@ function gi() {
 }
 
 # --- gh AI 助手集成 ---
-function ??() {
+function ask() {
     if [[ -z "$1" ]]; then
         echo "Usage: ?? <natural language request>"
         return 1
@@ -62,4 +62,26 @@ function new() {
     direnv allow
     
     echo "🎉 Project $name initialized!"
+}
+
+# Yazi Shell Wrapper: 退出 yazi 时自动 cd 到最后所在的目录
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
+
+#已存在 Session 则直接进入，否则按 IDE 布局新建
+function zc() {
+    local name="${1:-$(basename "$PWD" | tr '.-' '__')}"
+    # 检查会话是否存在
+    if zellij list-sessions -n | grep -q -w "$name"; then
+        zellij attach "$name"
+    else
+        # 强制使用 ide 布局
+        zellij --session "$name" --layout ide
+    fi
 }

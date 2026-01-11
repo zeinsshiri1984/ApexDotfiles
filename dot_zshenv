@@ -14,6 +14,9 @@ export VISUAL='hx'
 export LANG=en_US.UTF-8
 export PAGER='less'
 
+#yazi
+export YAZI_CONFIG_HOME="$XDG_CONFIG_HOME/yazi"
+
 # Zsh
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
@@ -32,6 +35,7 @@ export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/config"
 export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export ATUIN_CONFIG_DIR="$XDG_CONFIG_HOME/atuin"
+export ZELLIJ_CONFIG_DIR="$XDG_CONFIG_HOME/zellij"
 
 # 编程语言(不覆盖项目配置的home路径)
 [[ -z "$CARGO_HOME" ]] && export CARGO_HOME="$XDG_DATA_HOME/cargo"

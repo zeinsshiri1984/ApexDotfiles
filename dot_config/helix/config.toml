@@ -1,0 +1,41 @@
+[editor]
+line-number = "relative"   # 相对行号 (Vim/Helix 神器，方便 jump)
+mouse = true               # 允许鼠标点击/滚动
+cursorline = true          # 高亮当前行
+color-modes = true         # 模式变色 (Insert红/Normal蓝)
+true-color = true          # 真彩色支持
+bufferline = "always"      # 始终显示顶部 Buffer 列表，看起来就像 IDE 的 Tab
+idle-timeout = 0           # 让快捷键提示菜单瞬间弹出，不卡顿
+completion-trigger-len = 1 # 代码补全更积极
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false             # 文件选择器显示隐藏文件
+
+[editor.statusline]
+left = ["mode", "spinner", "read-only-indicator", "file-modification-indicator"]
+center = ["diagnostics"]
+right = ["version-control", "position", "position-percentage", "total-line-numbers", "file-encoding", "file-type"]
+separator = "│"
+
+[keys.normal]
+# 避开 Zellij 的 Alt-h/l (切换窗格);通过 Alt+i/o 快速切换 Tab (Buffer)
+"A-i" = ":bp"  # previous buffer
+"A-o" = ":bn"  # next buffer
+"A-w" = ":bc"  # close buffer (close tab)
+
+# Helix 调用sh 执行 zellij 命令，生成新pane运行 TUI 工具
+# --close-on-exit: 当 Yazi/LazyGit 退出时，浮动窗自动销毁，不会留个空壳
+
+# Ctrl-p: 调用上一步创建的 yazi-picker 脚本
+# -n 'Yazi': 窗格标题
+# --close-on-exit: 脚本跑完自动销毁，不留空壳
+# --floating ...: 居中浮动
+"C-p" = ":sh zellij run -n 'Yazi' --close-on-exit --floating -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.local/bin/yazi-picker"
+
+# Ctrl-l: 打开 LazyGit
+"C-l" = ":sh zellij run -n 'Lazygit' --close-on-exit --floating -x 5%% -y 5%% --width 90%% --height 90%% -- lazygit"

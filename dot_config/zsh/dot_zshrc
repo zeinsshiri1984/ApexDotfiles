@@ -41,6 +41,7 @@ fi
 source "$ZDOTDIR/aliases.zsh"
 source "$ZDOTDIR/tools.zsh"
 source "$ZDOTDIR/completion.zsh"
+source "$ZDOTDIR/functions.zsh"
 
 # ---  加载 P10k 配置 (优先加载以显示界面) ---
 source "$ZDOTDIR/p10k.zsh"

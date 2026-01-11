@@ -6,8 +6,6 @@ alias tree='eza --tree --icons --group-directories-first'
 alias cat='bat'    # 高亮查看
 alias grep='rg'    # Ripgrep
 alias find='fd'    # Fd
-# Zoxide 接管 cd (不再需要输入 z code，直接 cd code)
-eval "$(zoxide init zsh --cmd cd)"
 
 alias z='zellij'
 alias h='hx'

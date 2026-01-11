@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# 1. 创建临时文件
+tmp_file=$(mktemp /tmp/yazi-picker.XXXXXX)
+
+# 清理函数
+cleanup() {
+    rm -f "$tmp_file"
+}
+trap cleanup EXIT
+
+# 2. 启动 Yazi (阻塞模式，直到用户按下 Enter 或 q)
+yazi "$@" --chooser-file="$tmp_file"
+
+# 3. 判断是否选中了文件
+if [ -s "$tmp_file" ]; then
+    selected_path=$(cat "$tmp_file")
+    
+    # --- 关键动作 ---
+    
+    # A. 隐藏浮动窗
+    # 这会立即把焦点交还给底下的 Helix，但脚本还在后台继续跑
+    zellij action toggle-floating-panes
+    
+    # B. 等待焦点稳定 (防抖)
+    sleep 0.1
+    
+    # C. 构造并发送命令
+    safe_path=$(printf "%q" "$selected_path")
+    
+    # 发送 ESC 确保 Helix 在 Normal 模式
+    zellij action write 27 
+    # 发送打开命令 (:open 会在当前 Buffer 列表里新增文件，就像 "stack" 进去一样，不会覆盖原有未保存的工作)
+    zellij action write-chars ":open $safe_path"
+    zellij action write 13
+fi
+
+# 脚本自然结束，由 --close-on-exit 负责清理战场

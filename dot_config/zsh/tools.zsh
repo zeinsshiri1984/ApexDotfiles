@@ -1,8 +1,8 @@
 # Direnv (hook 模式，进入目录自动激活)
 eval "$(direnv hook zsh)"
 
-# Zoxide (目录跳转)
-eval "$(zoxide init zsh)"
+# Zoxide (接管 cd)
+eval "$(zoxide init zsh --cmd cd)"
 
 # Atuin (历史记录增强 - 绑定 Ctrl+R)
 # 禁用 Up 键绑定，只用 Ctrl+R，保留 Shell 原生 Up 查找上一条习惯
