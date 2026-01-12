@@ -77,11 +77,20 @@ function y() {
 #已存在 Session 则直接进入，否则按 IDE 布局新建
 function zc() {
     local name="${1:-$(basename "$PWD" | tr '.-' '__')}"
+    
+    # 检测是否已经在 Zellij session 内部，避免嵌套
+    if [[ -n "$ZELLIJ" ]]; then
+        echo "🚫 You are already inside a Zellij session!"
+        return
+    fi
+
     # 检查会话是否存在
     if zellij list-sessions -n | grep -q -w "$name"; then
         zellij attach "$name"
     else
-        # 强制使用 ide 布局
+        # 核心：新建会话时强制指定 layout 为 ide
+        # 这里的 'ide' 对应后续步骤创建的 layouts/ide.kdl
+        echo "🚀 Creating new IDE session: $name"
         zellij --session "$name" --layout ide
     fi
 }
