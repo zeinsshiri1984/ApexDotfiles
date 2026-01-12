@@ -7,10 +7,12 @@ alias cat='bat'    # 高亮查看
 alias grep='rg'    # Ripgrep
 alias find='fd'    # Fd
 
-alias z='zellij'
 alias h='hx'
 alias vi='hx'
 alias vim='hx'
+
+alias z='zellij'
+alias zc='zellij attach -c'
 
 alias top='btop'
 alias ps='procs'
@@ -20,8 +22,6 @@ alias help='tldr'
 alias t='tldr'
 alias sed='sd'
 alias jq='jaq'
-
-alias y='yazi'
 
 # --- 网络工具增强 (Network) ---
 alias curl='curlie'     

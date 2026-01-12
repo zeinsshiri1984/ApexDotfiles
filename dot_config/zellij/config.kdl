@@ -3,19 +3,22 @@
 // 基础设置
 theme "default"
 default_shell "zsh"
+default_mode "locked" // 默认锁定，不干扰 Helix 的 Ctrl 键
 mouse_mode true
-copy_command "clip.exe" 
+copy_clipboard "system"
 copy_on_select true
-pane_frames true    // 是否显示窗格边框
-
+attach_to_session true // 不指定会话启动时，自动附加到已存在的会话
 
 // Session 行为
 session_serialization true    //自动进入 Session 序列化;可保存你的多项目会话状态
 serialize_pane_viewport true  //自动保存
-mirror_session true  // 允许跨终端同步 session
-on_force_close "detach"
+mirror_session true           // 允许跨终端同步 session
+on_force_close "detach"       // 关闭终端窗口时默认 Detach 而不是杀死进程
 
 // UI 设置
+pane_frames true          // 是否显示窗格边框
+//default_layout "compact"  // 使用紧凑布局
+default_layout "ide"
 ui {
     pane_frames {
         rounded_corners true
@@ -23,46 +26,71 @@ ui {
 }
 
 //操作逻辑
-default_mode "locked" // 默认锁定，不干扰 Helix 的 Ctrl 键
-
 keybinds {
     //编辑模式都生效的zellij按键,会覆盖Helix按键
     locked {
         bind "Ctrl g" { SwitchToMode "Normal"; }
-        
-        // pane (覆盖 Helix 原生行为)
-        bind "Alt h" "Alt Left" { MoveFocusOrTab "Left"; }
-        bind "Alt l" "Alt Right" { MoveFocusOrTab "Right"; }
-        bind "Alt j" "Alt Down" { MoveFocus "Down"; }
-        bind "Alt k" "Alt Up" { MoveFocus "Up"; }
-        bind "Alt n" { NewPane; }
-        bind "Alt f" { ToggleFloatingPanes; }
+        bind "Ctrl q" {  Detach; }
     }
 
-    shared_except "locked" {
-        bind "Ctrl g" { SwitchToMode "Locked"; }
-        bind "Ctrl q" { Quit; }
-    }
-    
-    // 浏览模式
-    normal {
-        bind "h" { MoveFocus "Left"; }
-        bind "l" { MoveFocus "Right"; }
-        bind "j" { MoveFocus "Down"; }
-        bind "k" { MoveFocus "Up"; }
-        bind "n" { NewPane; }
-        bind "x" { CloseFocus; }
-        // 方便切换回编辑模式
-        bind "i" { SwitchToMode "Locked"; }
+    renametab {
         bind "Enter" { SwitchToMode "Locked"; }
+        bind "Esc" { UndoRenameTab; SwitchToMode "Locked"; }
+    }
+
+    // 在"renametab" 之外的模式下都生效这两个模式可能需要输入alt转义字符?
+    shared_except "renametab"  {
+        bind "Ctrl g" { SwitchToMode "Locked"; }
+        bind "Ctrl q" {  Detach; }
+        bind "i" { SwitchToMode "Locked"; }
         bind "Esc" { SwitchToMode "Locked"; }
+
+        // --- Pane管理 ---
+        bind "Alt n" { NewPane "stacked"; }               // 新建窗格(自动)
+        bind "Alt r" { NewPane "Right"; }       // 强制向右分屏 (Right)
+        bind "Alt d" { NewPane "Down"; }        // 强制向下分屏 (Down)
+        bind "Alt x" { CloseFocus; }            // 关闭当前窗格/Tab (常用!)
+        bind "Alt f" { ToggleFocusFullscreen; } // 全屏/取消全屏 (Focus)
+        bind "Alt e" { TogglePaneEmbedOrFloating; } // 悬浮/平铺互转
+        // --- Pane 导航 (Vim风格) ---
+        bind "Alt h" "Alt Left" { MoveFocus "Left"; }
+        bind "Alt l" "Alt Right" { MoveFocus "Right"; }
+        bind "Alt j" "Alt Down" { MoveFocus "Down"; }
+        bind "Alt k" "Alt Up" { MoveFocus "Up"; }
+        // --- Pane 大小调整 ---
+        bind "Alt =" { Resize "Increase"; }
+        bind "Alt -" { Resize "Decrease"; }
+
+        // --- Tab管理 ---
+        bind "Alt t" { NewTab; }               // 新建 Tab
+        bind "Alt [" { GoToPreviousTab; }      // 上一个 Tab
+        bind "Alt ]" { GoToNextTab; }          // 下一个 Tab
+        bind "Alt 1" { GoToTab 1; }            // 快速切换 1-9
+        bind "Alt 2" { GoToTab 2; }
+        bind "Alt 3" { GoToTab 3; }
+        bind "Alt 4" { GoToTab 4; }
+        bind "Alt 5" { GoToTab 5; }
+        bind "Alt 6" { GoToTab 6; }
+        bind "Alt 7" { GoToTab 7; }
+        bind "Alt 8" { GoToTab 8; }
+        bind "Alt 9" { GoToTab 9; }
+        bind "Alt s" { ToggleActiveSyncTab; }  // 同步输入 (Sync)
+        bind "Alt R" { SwitchToMode "RenameTab"; TabNameInput 0; }
+
+        //Session:唤起Tab 和 Session管理器，用箭头选择，Enter 切换;以及Session新建等
+        bind "Alt w" { LaunchOrFocusPlugin "session-manager" {
+                floating true              // 设置为浮动模式
+                move_to_focused_tab true   // 让它跟随当前聚焦的 Tab
+            } 
+        }
     }
 }
 
 // UI 插件配置
 plugins {
-    tab-bar { path "tab-bar"; }
-    status-bar { path "status-bar"; }
-    strider { path "strider"; }
-    compact-bar { path "compact-bar"; }
+    tab-bar location="zellij:tab-bar"
+    status-bar location="zellij:status-bar"
+    strider location="zellij:strider"
+    compact-bar location="zellij:compact-bar"
+    session-manager location="zellij:session-manager"
 }
