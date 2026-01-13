@@ -1,0 +1,45 @@
+[log]
+enabled = false # 生产环境关闭日志，减少 I/O
+
+[manager]
+layout         = [ 1, 4, 3 ]  # 调整为更利于阅读长文件名的比例
+sort_by        = "natural"
+sort_sensitive = false
+sort_reverse   = false
+sort_dir_first = true
+linemode       = "size"       # 默认显示文件大小，性能最好
+show_hidden    = true
+show_symlink   = true
+scrolloff      = 5            # 也就是 vim 的 scrolloff，保留上下文
+mouse_events   = ["click", "scroll"] # 明确允许鼠标
+
+[opener]
+edit = [
+    { run = '${EDITOR:-hx} "$@"', block = true, desc = "Editor", for = "unix" },
+    { run = 'code "%*"', orphan = true, desc = "VSCode", for = "windows" } # WSL 兼容
+]
+open = [
+    { run = 'xdg-open "$@"', desc = "Open", for = "linux" },
+    { run = 'open "$@"', desc = "Open", for = "macos" },
+    { run = 'wslview "$@"', desc = "Open", for = "windows" } # 需要 wslu 包
+]
+extract = [
+    { run = 'ya pub extract --list "$@"', desc = "Extract here", for = "unix" },
+]
+
+[open]
+rules = [
+    { name = "*/", use = [ "edit", "open", "extract" ] },
+    { mime = "text/*", use = [ "edit" ] },
+    { mime = "image/*", use = [ "open" ] },
+    { mime = "application/json", use = [ "edit" ] },
+    { mime = "inode/directory", use = [ "edit" ] } # 允许用编辑器打开目录
+]
+
+[tasks]
+# 拉满并发数，提升多文件操作效率
+micro_workers    = 10
+macro_workers    = 20
+bidi_components  = 10
+image_alloc      = 536870912  # 512MB 内存池用于图片加载，防止闪退
+plugin_use_isolation = false  # 稍微提升插件加载速度

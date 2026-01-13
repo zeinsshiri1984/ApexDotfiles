@@ -1,0 +1,20 @@
+[manager]
+prepend_keymap = [
+    # 智能进入 (Smart Enter)
+    { on = [ "l" ], run = "lua require('init').smart_enter()", desc = "Open or Enter" },
+    { on = [ "<Right>" ], run = "lua require('init').smart_enter()", desc = "Open or Enter" },
+
+    # 智能剪贴板 (Smart Copy)
+    { on = [ "y" ], run = "lua require('init').smart_paste()", desc = "Copy path to system clipboard" },
+
+    # 快速跳转 (利用 zoxide)
+    { on = [ "z" ], run = "plugin zoxide", desc = "Jump via zoxide" },
+    
+    # 搜索 (利用 fd)
+    { on = [ "f" ], run = "search fd", desc = "Search files via fd" },
+    { on = [ "/" ], run = "filter --smart", desc = "Filter files" },
+
+    # 退出安全性
+    { on = [ "q" ], run = "quit", desc = "Quit" },
+    { on = [ "Q" ], run = "quit --no-cwd-file", desc = "Exit without changing cwd" }
+]

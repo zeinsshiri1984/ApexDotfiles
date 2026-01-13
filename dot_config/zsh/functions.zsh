@@ -66,10 +66,29 @@ function new() {
 
 # Yazi Shell Wrapper: 退出 yazi 时自动 cd 到最后所在的目录
 function y() {
-  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-  yazi "$@" --cwd-file="$tmp"
-  if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-    builtin cd -- "$cwd"
-  fi
-  rm -f -- "$tmp"
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    local config_home="$HOME/.config/yazi"
+    
+    # 1. 环境检测逻辑
+    # 如果在 Zellij 中，或者 SSH 连接中，或者终端不支持图形协议(这里用简单的 TERM 判断，可根据情况调整)
+    # 强制切换到 "Lite" 轻量环境
+    if [[ -n "$ZELLIJ" ]] || [[ -n "$SSH_CONNECTION" ]]; then
+        # 指向 Lite 配置目录 (你可以复用你现有的结构)
+        export YAZI_CONFIG_HOME="$config_home/lite_env"
+        # 显式告诉 Yazi 关闭图像适配器（双保险）
+        export YAZI_IMAGE_PREVIEW=0
+    else
+        # 桌面全功能模式
+        export YAZI_CONFIG_HOME="$config_home"
+        unset YAZI_IMAGE_PREVIEW
+    fi
+
+    # 2. 启动 Yazi
+    yazi "$@" --cwd-file="$tmp"
+
+    # 3. 退出后目录跳转
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
 }

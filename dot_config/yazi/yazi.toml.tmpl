@@ -1,0 +1,14 @@
+[preview]
+tab_size        = 2
+max_width       = 1000
+max_height      = 1000
+cache_dir       = "~/.cache/yazi"
+image_filter    = "lanczos3" # 桌面环境用高质量算法
+image_quality   = 80
+sixel_fraction  = 15
+ueberzug_scale  = 1
+ueberzug_offset = [ 0, 0, 0, 0 ]
+image_preview   = true    # 开启图片预览
+
+# 引入共享部分
+{{ template "yazi_shared.toml" . }}
