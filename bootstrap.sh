@@ -39,7 +39,7 @@ fi
 
 echo "⚡️ [5/5]拉取Dotfiles并应用配置..."
 if [ ! -d "$HOME/.local/share/chezmoi" ]; then
-    chezmoi init --apply ApexDotfiles
+    chezmoi init --apply git@github.com:zeinsshiri1984/ApexDotfiles.git
 else
     # 加上 --keep-going 防止因单个文件冲突导致整个更新停止
     chezmoi apply --keep-going
