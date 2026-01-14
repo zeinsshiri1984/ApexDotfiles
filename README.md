@@ -48,7 +48,7 @@ If the ~/.local/share directory already contains the chezmoi directory, this wil
  - [License choice](https://choosealicense.com/)
  - [shields.io](https://shields.io/)
 
-##TODO:
+## TODO:
  - ai cli工具配置
  - Yazi配置优化
  - helix配置优化
