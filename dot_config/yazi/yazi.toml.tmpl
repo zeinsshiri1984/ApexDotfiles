@@ -9,6 +9,8 @@ sixel_fraction  = 15
 ueberzug_scale  = 1
 ueberzug_offset = [ 0, 0, 0, 0 ]
 image_preview   = true    # 开启图片预览
+max_items      = 200         # 目录文件过多时只预加载部分
+image_delay    = 30          # 毫秒，快速滚动时不渲染图片，极大提升流畅度
 
 # 引入共享部分
 {{ template "yazi_shared.toml" . }}

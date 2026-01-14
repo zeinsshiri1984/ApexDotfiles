@@ -27,11 +27,11 @@ brew "poppler"      # PDF 处理工具集
 brew "imagemagick"  # 图像处理工具
 
 # --- 现代化终端工具---
-brew "zellij"       # 终端复用 (tmux 替代者)
-brew "helix"        # 模态编辑器 (vim 替代者)
+brew "zellij", args: ["HEAD"]       # 终端复用 (tmux 替代者)
+brew "helix", args: ["HEAD"]        # 模态编辑器 (vim 替代者)
 brew "bat"          # cat 增强 (语法高亮)
 brew "eza"          # ls 增强 (图标、Git状态)
-brew "yazi"         # 文件管理器 (预览极快)
+brew "yazi", args: ["HEAD"]  # 文件管理器 (预览极快)
 brew "fzf"          # 模糊搜索基石
 brew "ripgrep"      # grep 替代 (rg)
 brew "fd"           # find 替代
@@ -40,6 +40,7 @@ brew "difftastic"   # 语法感知 diff (用于代码审查)
 
 # --- 数据处理流水线 ---
 brew "jaq"           # JSON 处理 (jq 的 Rust 版，更快)
+brew "jq"
 brew "yq"
 brew "angle-grinder" # 命令行日志分析神器 (ag)
 brew "sd"            # sed 的直观替代品
@@ -101,5 +102,5 @@ brew "glow"           # Markdown 渲染
 #brew "pandoc"
 
 # --- AI (CLI) ---
-#brew "aider"
+brew 'gemini-cli'
 brew "mods"

@@ -14,6 +14,10 @@ alias vim='hx'
 alias z='zellij'
 alias zc='zellij attach -c'
 
+alias cc='claude'
+alias cx='codex'
+alias gm='gemini'
+
 alias top='btop'
 alias ps='procs'
 alias df='duf'
@@ -70,6 +74,3 @@ alias sc='systemctl'
 alias scu='systemctl --user'
 alias j='just'    # 任务运行
 alias dx='devbox' # 项目环境
-
-# 调用全局维护脚本工具
-alias uuu='update-all'

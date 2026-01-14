@@ -1,20 +1,21 @@
 [manager]
 prepend_keymap = [
     # 智能进入 (Smart Enter)
-    { on = [ "l" ], run = "lua require('init').smart_enter()", desc = "Open or Enter" },
-    { on = [ "<Right>" ], run = "lua require('init').smart_enter()", desc = "Open or Enter" },
+    { on = [ "l" ], run = "lua require('init').smart_enter()", desc = "Smart Enter" },
+    { on = [ "<Right>" ], run = "lua require('init').smart_enter()", desc = "Smart Enter" },
 
     # 智能剪贴板 (Smart Copy)
-    { on = [ "y" ], run = "lua require('init').smart_paste()", desc = "Copy path to system clipboard" },
+    { on = [ "y" ], run = "lua require('init').smart_paste()", desc = "Copy path to clipboard" },
 
-    # 快速跳转 (利用 zoxide)
+    # --- 快速跳转/搜索 ---
     { on = [ "z" ], run = "plugin zoxide", desc = "Jump via zoxide" },
-    
-    # 搜索 (利用 fd)
-    { on = [ "f" ], run = "search fd", desc = "Search files via fd" },
+    { on = [ "f" ], run = "plugin fzf", desc = "Jump via fzf" }, # 建议安装 yazi-rs/plugins 中的 fzf
     { on = [ "/" ], run = "filter --smart", desc = "Filter files" },
 
-    # 退出安全性
+    # 拖拽模拟 (配合 Dragon 或类似工具，可选，但很极客)
+    # { on = [ "<C-n>" ], run = "shell 'dragon-drop -x -T %c' --confirm", desc = "Drag and drop" },
+    
+    # --- 安全退出 ---
     { on = [ "q" ], run = "quit", desc = "Quit" },
-    { on = [ "Q" ], run = "quit --no-cwd-file", desc = "Exit without changing cwd" }
+    { on = [ "Q" ], run = "quit --no-cwd-file", desc = "Exit (no cd)" }
 ]

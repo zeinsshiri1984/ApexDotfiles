@@ -12,6 +12,7 @@ show_hidden    = true
 show_symlink   = true
 scrolloff      = 5            # 也就是 vim 的 scrolloff，保留上下文
 mouse_events   = ["click", "scroll"] # 明确允许鼠标
+title_format   = "Yazi: {cwd}"
 
 [opener]
 edit = [
@@ -21,7 +22,10 @@ edit = [
 open = [
     { run = 'xdg-open "$@"', desc = "Open", for = "linux" },
     { run = 'open "$@"', desc = "Open", for = "macos" },
-    { run = 'wslview "$@"', desc = "Open", for = "windows" } # 需要 wslu 包
+    { run = 'wslview "$@"', desc = "Open", for = "wsl" } # 需要 wslu 包
+]
+play = [
+    { run = 'mpv "$@"', orphan = true, for = "unix" }
 ]
 extract = [
     { run = 'ya pub extract --list "$@"', desc = "Extract here", for = "unix" },
@@ -32,6 +36,7 @@ rules = [
     { name = "*/", use = [ "edit", "open", "extract" ] },
     { mime = "text/*", use = [ "edit" ] },
     { mime = "image/*", use = [ "open" ] },
+    { mime = "video/*", use = [ "play", "open" ] },
     { mime = "application/json", use = [ "edit" ] },
     { mime = "inode/directory", use = [ "edit" ] } # 允许用编辑器打开目录
 ]

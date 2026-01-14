@@ -3,19 +3,22 @@ max_width  = 80
 max_height = 80
 tab_size   = 2
 image_preview = false  # 核心：关闭图像预览
+sixel_fraction = 0  # 彻底禁用 Sixel
 
 [plugin]
-# 核心优化：针对媒体文件，强制使用 noop 预加载器
-# 这意味着 Yazi 不会尝试调用 ffmpeg/magick 生成缩略图，极大提升 Zellij 中的滚动速度
+# 针对媒体文件，强制使用 noop 预加载器
+# 这意味着 Yazi 不会尝试调用 ffmpeg/magick 生成缩略图，极大提升 Zellij 中的滚动速度和服务器/容器资源
 prepend_previewers = [
     { mime = "image/*", run = "noop" },
     { mime = "video/*", run = "noop" },
-    { mime = "application/pdf", run = "noop" }
+    { mime = "application/pdf", run = "noop" },
+    { mime = "audio/*", run = "noop" }
 ]
 prepend_preloaders = [
     { mime = "image/*", run = "noop" },
     { mime = "video/*", run = "noop" },
-    { mime = "application/pdf", run = "noop" }
+    { mime = "application/pdf", run = "noop" },
+    { mime = "audio/*", run = "noop" }
 ]
 
 # 引入共享部分
