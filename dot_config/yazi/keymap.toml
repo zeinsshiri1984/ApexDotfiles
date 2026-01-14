@@ -14,6 +14,11 @@ prepend_keymap = [
 
     # 拖拽模拟 (配合 Dragon 或类似工具，可选，但很极客)
     # { on = [ "<C-n>" ], run = "shell 'dragon-drop -x -T %c' --confirm", desc = "Drag and drop" },
+
+    # d: 移动到回收站 (使用 yazi 内置的 trash 支持，它会自动对接 trash-cli 或 glib-trash)
+    { on = [ "d" ], run = "remove --trash", desc = "Move to trash" },
+    # D: 永久删除 (强制确认)
+    { on = [ "D" ], run = "remove --permanently", desc = "PERMANENTLY delete" },
     
     # --- 安全退出 ---
     { on = [ "q" ], run = "quit", desc = "Quit" },

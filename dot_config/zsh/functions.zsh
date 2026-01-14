@@ -1,7 +1,23 @@
 # 不需要安装额外工具，用 curl 直接拉取 gitignore.io 的 API
-# 用法: gi rust,python,vscode >.gitignore
+# 用法: gi rust,windows,macos,linux,vscovisualstudiocode >.gitignore
+# 1. 生成: gi rust,python,vscode > .gitignore
+# 2. 搜索: gi search type   (会输出所有包含 type 的模板，如 typo3, types, etc.)
+# 3. 列表: gi list          (列出所有支持的模板)
 function gi() {
-    curl -sL https://www.toptal.com/developers/gitignore/api/$@
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: gi <list|search TERM|LANG1,LANG2...>"
+        return 1
+    fi
+
+    if [[ "$1" == "list" ]]; then
+        curl -sL https://www.toptal.com/developers/gitignore/api/list | tr ',' '\n'
+    elif [[ "$1" == "search" && -n "$2" ]]; then
+        # 从列表中过滤关键词
+        curl -sL https://www.toptal.com/developers/gitignore/api/list | tr ',' '\n' | grep -i "$2"
+    else
+        # 生成 ignore 文件
+        curl -sL https://www.toptal.com/developers/gitignore/api/"$@"
+    fi
 }
 
 # --- gh AI 助手集成 ---

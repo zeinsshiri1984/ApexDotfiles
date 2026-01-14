@@ -4,32 +4,67 @@ set -e
 # 定义颜色
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
+YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}🚀 [1/5] 更新 Chezmoi 配置源...${NC}"
-# 拉取最新 dotfiles 并应用
+echo -e "${BLUE}🚀 [1/6] 更新 Chezmoi 配置源...${NC}"
 chezmoi update --apply
 
-echo -e "${BLUE}🍺 [2/5] 更新 Homebrew...${NC}"
+echo -e "${BLUE}🍺 [2/6] 更新 Homebrew...${NC}"
+# 增加 --greedy 可以更新那些 auto_update 为 false 的 cask，但耗时较长，根据需求选加
 brew update
 brew upgrade
-brew cleanup
+brew cleanup --prune=all # 强力清除所有旧版本缓存
 
-echo -e "${BLUE}📦 [3/5] 更新 Devbox 全局包(如果有)...${NC}"
+echo -e "${BLUE}📦 [3/6] 更新 Devbox 全局包...${NC}"
 if devbox global list >/dev/null 2>&1; then
     devbox global update
+    devbox global pull # 确保镜像也是新的
 fi
 
-echo -e "${BLUE}🐚 [4/5] 更新 Zsh 插件 (Sheldon)...${NC}"
+echo -e "${BLUE}🐚 [4/6] 更新 Zsh 插件 (Sheldon)...${NC}"
 if command -v sheldon &> /dev/null; then
     sheldon lock --update
 fi
 
-echo -e "${BLUE}🐳 [5/5] 清理 Podman/Docker 垃圾...${NC}"
+echo -e "${BLUE}🐳 [5/6] 深度清理 Docker/Podman...${NC}"
 if command -v podman &> /dev/null; then
-    podman system prune -f
+    # Podman 的清理
+    podman system prune -a -f --volumes # -a: 清理未使用的镜像而不仅仅是悬空的
 elif command -v docker &> /dev/null; then
-    docker system prune -f
+    # Docker 的清理
+    docker system prune -a -f --volumes
 fi
 
-echo -e "${GREEN}✅ 所有系统组件已更新完毕！${NC}"
+echo -e "${BLUE}♻️  [6/6] 最终垃圾回收...${NC}"
+if command -v trash-empty &> /dev/null; then
+    echo "   -> 清理 7 天前的回收站文件..."
+    trash-empty 7 
+fi
+
+echo "   -> 清理语言缓存..."
+go clean -modcache 2>/dev/null || true
+npm cache clean --force 2>/dev/null || true
+yarn cache clean 2>/dev/null || true
+
+echo -e "${BLUE}🧹 [6/6] 清理系统孤儿包与垃圾...${NC}"
+if [ -f /etc/debian_version ] && command -v apt-get &>/dev/null; then
+    echo "   -> [APT] 移除系统级孤儿依赖..."
+    sudo apt-get autoremove -y
+    sudo apt-get clean
+elif [ -f /etc/fedora-release ] && command -v dnf &>/dev/null; then
+    echo "   -> [DNF] 移除系统级孤儿依赖..."
+    sudo dnf autoremove -y
+    sudo dnf clean all
+elif [ -f /etc/arch-release ] && command -v pacman &>/dev/null; then
+    # Arch 的清理稍微激进，这里使用最安全的孤儿清理命令
+    # 仅当有孤儿包时才执行删除，避免空参数报错
+    if pacman -Qdtq >/dev/null 2>&1; then
+        echo "   -> [Pacman] 移除孤儿依赖..."
+        sudo pacman -Rns $(pacman -Qdtq) --noconfirm
+    else
+        echo "   -> [Pacman] 无孤儿包，跳过。"
+    fi
+fi
+
+echo -e "${GREEN}✅ 系统焕然一新！${NC}"

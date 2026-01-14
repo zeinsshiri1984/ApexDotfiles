@@ -42,12 +42,12 @@ alias x='exit'
 # --- 安全操作 ---
 alias cp='cp -i'
 alias mv='mv -i'
-alias rm='rm -I' # 只有删除3个以上文件时才询问，比 rm -i 效率高且不烦人
 
-alias rml='trash-list'
-alias rme='trash-empty'
-    
-fi
+alias rm='trash-put'     # 默认 rm 只是移动到回收站 (遵循 XDG: ~/.local/share/Trash)
+alias rl='trash-list'    # 查看回收站内容
+alias rc='trash-empty'   # 清空回收站
+alias rs='trash-restore' # 还原文件 (交互式)
+alias rmp='/bin/rm -vI'  # -v: 显示过程, -I: 删除超过3个文件时提示 (比 -i 智能)
 
 # --- Git  ---
 alias l='lazygit'
