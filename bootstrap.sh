@@ -26,15 +26,13 @@ brew install gcc git gh chezmoi
 
 echo "🐳 [4/5] GitHub 认证..."
 if ! gh auth status &>/dev/null; then
+    echo "⚠️  未检测到 GitHub 登录状态。"
+    echo "请先运行以下命令登录，然后重新运行此脚本："
+    echo "  gh auth login -p ssh -w --git-protocol ssh"
     # -p ssh: 强制使用 SSH 协议;-w: 使用 Web 浏览器登录;--git-protocol ssh: 确保后续 git clone 操作默认用 git@github.com
-    gh auth login -p ssh -w --git-protocol ssh < /dev/tty
-    
-    if [ $? -ne 0 ]; then
-        echo "❌ 登录失败或被取消，脚本终止。"
-        exit 1
-    fi
+    exit 1
 else
-    echo "GitHub 已认证"
+    echo "✅ GitHub 已认证"
 fi
 
 echo "⚡️ [5/5]拉取Dotfiles并应用配置..."
