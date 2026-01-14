@@ -42,7 +42,12 @@ alias x='exit'
 # --- 安全操作 ---
 alias cp='cp -i'
 alias mv='mv -i'
-alias rm='rm -i' 
+alias rm='rm -I' # 只有删除3个以上文件时才询问，比 rm -i 效率高且不烦人
+
+alias rml='trash-list'
+alias rme='trash-empty'
+    
+fi
 
 # --- Git  ---
 alias l='lazygit'

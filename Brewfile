@@ -25,6 +25,7 @@ brew "ffmpegthumbnailer"       # 音视频处理工具
 brew "sevenzip"     # 7-Zip 解压/压缩工具（Homebrew 中官方名称为 sevenzip）
 brew "poppler"      # PDF 处理工具集
 brew "imagemagick"  # 图像处理工具
+brew "trash-cli"
 
 # --- 现代化终端工具---
 brew "zellij", args: ["HEAD"]       # 终端复用 (tmux 替代者)
