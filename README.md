@@ -9,8 +9,7 @@ the world's first development environment
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-
+<img width="2544" height="1548" alt="屏幕截图 2026-01-15 015452" src="https://github.com/user-attachments/assets/ce182718-4847-4b34-a2a7-5de17b9bce18" />
 
 ## Installation
 
