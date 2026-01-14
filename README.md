@@ -11,7 +11,7 @@ the world's first development environment
 
 <img width="2549" height="1551" alt="image" src="https://github.com/user-attachments/assets/63900e99-49e1-4233-b6c2-744a03f0411f" />
 <img width="2549" height="1551" alt="image" src="https://github.com/user-attachments/assets/8490c973-f9ba-4601-836d-0d70946f7828" />
-![屏幕录制 2026-01-15 022204](https://github.com/user-attachments/assets/bd22d863-8fa9-442f-98ef-5bdc38c358bd)
+https://github.com/user-attachments/assets/bd22d863-8fa9-442f-98ef-5bdc38c358bd
 
 ## Installation
 
