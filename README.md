@@ -10,7 +10,7 @@ the world's first development environment
 ## Screenshots
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/612dfed8-2797-40e5-943c-4f108243537b" width="100%" autoplay loop muted playsinline></video>
+  <video src="https://github.com/user-attachments/assets/612dfed8-2797-40e5-943c-4f108243537b" width="100%" autoplay loop muted playsinline controls></video>
 </div>
 
 ## Installation
@@ -48,6 +48,7 @@ If the ~/.local/share directory already contains the chezmoi directory, this wil
  - [readme generator](https://readme.so)
  - [License choice](https://choosealicense.com/)
  - [shields.io](https://shields.io/)
+ - [screen](https://www.freeconvert.com/video-compressor)
 
 ## TODO:
  - ai cli工具配置
