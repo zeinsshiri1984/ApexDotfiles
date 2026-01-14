@@ -27,7 +27,7 @@ brew install gcc git gh chezmoi
 echo "🐳 [4/5] GitHub 认证..."
 if ! gh auth status &>/dev/null; then
     # -p ssh: 强制使用 SSH 协议;-w: 使用 Web 浏览器登录;--git-protocol ssh: 确保后续 git clone 操作默认用 git@github.com
-    gh auth login -p ssh -w --git-protocol ssh
+    gh auth login -p ssh -w --git-protocol ssh < /dev/tty
     
     if [ $? -ne 0 ]; then
         echo "❌ 登录失败或被取消，脚本终止。"
@@ -36,9 +36,6 @@ if ! gh auth status &>/dev/null; then
 else
     echo "GitHub 已认证"
 fi
-
-echo "下载或更新Copilot CLI..."
-gh extension install github/gh-copilot &>/dev/null || gh extension upgrade github/gh-copilot &>/dev/null || true
 
 echo "⚡️ [5/5]拉取Dotfiles并应用配置..."
 if [ ! -d "$HOME/.local/share/chezmoi" ]; then
