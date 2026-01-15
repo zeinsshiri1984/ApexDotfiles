@@ -10,7 +10,7 @@ the world's first development environment
 ## Screenshots
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/612dfed8-2797-40e5-943c-4f108243537b" width="100%" autoplay loop muted playsinline controls></video>
+  <video src="" width="100%" autoplay loop muted playsinline controls></video>
 </div>
 
 ## Installation
