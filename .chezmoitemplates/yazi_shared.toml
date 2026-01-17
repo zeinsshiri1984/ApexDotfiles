@@ -48,3 +48,7 @@ macro_workers    = 20
 bidi_components  = 10
 image_alloc      = 536870912  # 512MB 内存池用于图片加载，防止闪退
 plugin_use_isolation = false  # 稍微提升插件加载速度
+
+[git]
+show_branch  = false
+show_status  = false  # 关闭文件旁边的 M/A/D 状态标记

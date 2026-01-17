@@ -1,0 +1,14 @@
+romkatv/powerlevel10k
+romkatv/zsh-defer
+
+# 历史记录增强 (Up/Down 键逻辑)
+zsh-users/zsh-history-substring-search
+
+# 弹出补全UI 
+Aloxaf/fzf-tab
+
+# 幽灵补全
+zsh-users/zsh-autosuggestions
+
+# 语法高亮 (必须在最后)
+z-shell/F-Sy-H

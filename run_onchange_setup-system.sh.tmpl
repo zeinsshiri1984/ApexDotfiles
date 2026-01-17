@@ -20,7 +20,7 @@ else
     devbox version update >/dev/null 2>&1 || true
 fi
 
-echo "📦 [3/5] 检查 ai CLI..."
+echo "📦 [2/5] 检查 ai CLI..."
 if ! command -v claude &> /dev/null; then
     curl -fsSL https://claude.ai/install.sh | bash
 else
@@ -33,9 +33,7 @@ else
     timeout 10s npm update -g @openai/codex || true 
 fi
 
-gh extension install github/gh-copilot &>/dev/null || gh extension upgrade github/gh-copilot &>/dev/null || true
-
-echo "📦 [4/5] 配置 Podman Socket & Docker Shim..."
+echo "📦 [3/5] 配置 Podman Socket & Docker Shim..."
 mkdir -p "$HOME/.local/bin"
 
 #  Docker Shim (二进制劫持，解决许多工具脚本 调用 docker 的问题)

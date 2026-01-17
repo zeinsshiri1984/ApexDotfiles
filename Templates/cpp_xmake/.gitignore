@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/c++,c,cmake,xmake,ninja,lua,xcode,visualstudio,windows,macos,linux,vscovisualstudiocode,vim,clion,bazel
-# Edit at https://www.toptal.com/developers/gitignore?templates=c++,c,cmake,xmake,ninja,lua,xcode,visualstudio,windows,macos,linux,vscovisualstudiocode,vim,clion,bazel
+# Created by https://www.toptal.com/developers/gitignore/api/c++,c,cmake,xmake,ninja,lua,xcode,visualstudio,windows,macos,linux,vscovisualstudiocode,vim,clion,bazel,vcpkg,conan
+# Edit at https://www.toptal.com/developers/gitignore?templates=c++,c,cmake,xmake,ninja,lua,xcode,visualstudio,windows,macos,linux,vscovisualstudiocode,vim,clion,bazel,vcpkg,conan
 
 ### Bazel ###
 # gitignore template for Bazel build system
@@ -221,6 +221,28 @@ CMakeUserPresets.json
 # External projects
 *-prefix/
 
+### Conan ###
+# Conan build information
+conan.lock
+conanbuildinfo.*
+conaninfo.txt
+graph_info.json
+
+## Various built-in generators
+# cmake_find_package generator https://docs.conan.io/en/latest/reference/generators/cmake_find_package.html
+Find*.cmake
+
+# cmake_paths generator https://docs.conan.io/en/1.4/integrations/cmake/cmake_paths_generator.html
+conan_paths.*
+
+# Environment activation scripts produced by https://docs.conan.io/en/latest/mastering/virtualenv.html#virtualenv-generator
+activate_run.ps1
+activate_run.sh
+deactivate_run.ps1
+deactivate_run.sh
+environment_run.ps1.env
+environment_run.sh.env
+
 ### Linux ###
 *~
 
@@ -294,6 +316,14 @@ Temporary Items
 ### Ninja ###
 .ninja_deps
 .ninja_log
+
+### vcpkg ###
+# Vcpkg
+
+vcpkg-manifest-install.log
+
+## Manifest Mode
+vcpkg_installed/
 
 ### Vim ###
 # Swap
@@ -756,4 +786,4 @@ FodyWeavers.xsd
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# End of https://www.toptal.com/developers/gitignore/api/c++,c,cmake,xmake,ninja,lua,xcode,visualstudio,windows,macos,linux,vscovisualstudiocode,vim,clion,bazel
+# End of https://www.toptal.com/developers/gitignore/api/c++,c,cmake,xmake,ninja,lua,xcode,visualstudio,windows,macos,linux,vscovisualstudiocode,vim,clion,bazel,vcpkg,conan

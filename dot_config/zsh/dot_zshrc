@@ -7,11 +7,10 @@ fi
 # 非交互式 shell 直接退出
 [[ $- != *i* ]] && return
 
-# 确保 GPG TTY 正确，否则 git 签名会报错
-export GPG_TTY=$(tty)
+source "$ZDOTDIR/options.zsh"
 
 # Homebrew 静态加载
-# 如果缓存文件存在，直接 source (耗时 < 1ms)
+# 如果缓存文件存在，直接 source
 if [[ -f "$ZDOTDIR/brew_env.zsh" ]]; then
     source "$ZDOTDIR/brew_env.zsh"
 else
@@ -20,32 +19,27 @@ else
     (/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh > "$ZDOTDIR/brew_env.zsh" &)
 fi
 
-# --- 加载Sheldon ---
-eval "$(sheldon source)"
-
-# --- 补全系统Compinit初始化 (在 sheldon 之前，因为 fzf-tab 需要它)) ---
-# 开启缓存以加速
-autoload -Uz compinit
-zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
-# 检查缓存是否在 24h 内，如果是则直接用，否则重新生成
-if [[ -n "$ZDOTDIR/.zcompdump(#qN.mh-24)" ]]; then
-    compinit -C -d "$ZDOTDIR/.zcompdump"
-else
-    compinit -i -d "$ZDOTDIR/.zcompdump"
-    # 后台静默编译，加速下次启动
-    { zcompile "$ZDOTDIR/.zcompdump" } &!
+# Antidote Plugins (Static Loading)
+# 首次运行时生成 static_plugins.zsh，之后直接 source 静态文件
+zsh_plugins=${ZDOTDIR:-~/.config/zsh}/.zsh_plugins.txt
+zsh_static=${ZDOTDIR:-~/.config/zsh}/zsh_static.zsh
+# 仅在插件列表更新时重新生成静态文件
+if [[ ! -f "$zsh_static" ]] || [[ "$zsh_plugins" -nt "$zsh_static" ]]; then
+    source "$(brew --prefix antidote)/share/antidote/antidote.zsh"
+    antidote bundle < "$zsh_plugins" > "$zsh_static"
+    zcompile "$zsh_static" # 编译加速读取
 fi
+source "$zsh_static"
 
-# --- 加载模块化配置 ---
+# Load Modules
+source "$ZDOTDIR/tools.zsh"       # 里面有 zsh-defer，优先加载
+source "$ZDOTDIR/plugins.zsh"
 source "$ZDOTDIR/aliases.zsh"
-source "$ZDOTDIR/tools.zsh"
-source "$ZDOTDIR/completion.zsh"
 source "$ZDOTDIR/functions.zsh"
+source "$ZDOTDIR/keybindings.zsh"
 source "$ZDOTDIR/maintain.zsh"
-
 # ---  加载 P10k 配置 (优先加载以显示界面) ---
 source "$ZDOTDIR/p10k.zsh"
 
-# 确保终端控制码重置
-unset MANPATH # 避免某些系统上的 manpath 混乱
+export GPG_TTY=$(tty) # 确保 GPG TTY 正确，否则 git 签名会报错
+unset MANPATH # 确保终端控制码重置,避免某些系统上的 manpath 混乱

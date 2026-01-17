@@ -12,5 +12,12 @@ image_preview   = true    # 开启图片预览
 max_items      = 200         # 目录文件过多时只预加载部分
 image_delay    = 30          # 毫秒，快速滚动时不渲染图片，极大提升流畅度
 
+[plugin]
+# 强制屏蔽 git fetcher，防止后台扫描大仓库导致卡顿
+fetchers = [
+  { id = "git", name = "*", run = "noop" },
+  { id = "git_status", name = "*", run = "noop" }
+]
+
 # 引入共享部分
 {{ template "yazi_shared.toml" . }}

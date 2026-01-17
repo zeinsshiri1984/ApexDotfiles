@@ -2,6 +2,7 @@
 tap "xo/xo" # USQL 官方源
 tap "derailed/k9s"    # K9s 官方源
 tap "hashicorp/tap"   # Terraform/Vault
+tap "pilat/devbox"
 
 # --- 核心环境 ---
 brew "chezmoi"
@@ -13,10 +14,12 @@ brew "direnv"       # 目录环境切换
 brew "gitleaks"     # 密钥泄露扫描
 #brew "xdg-ninja"
 brew "Copier"
+# brew "devbox"
+brew "antidote"       # Zsh 插件管理
+brew "mise"           # 运行时版本管理 (Python/Node/Go/Java)
 
 # --- Shell 交互层 ---
 brew "zsh"
-brew "sheldon"        # 极速插件管理
 brew "atuin"          # 历史记录同步
 brew "zoxide"         # 目录跳转
 brew "carapace"       # 自动补全
@@ -26,6 +29,7 @@ brew "sevenzip"     # 7-Zip 解压/压缩工具（Homebrew 中官方名称为 se
 brew "poppler"      # PDF 处理工具集
 brew "imagemagick"  # 图像处理工具
 brew "trash-cli"
+brew "broot"           # 树状文件导航
 
 # --- 现代化终端工具---
 brew "zellij", args: ["HEAD"]       # 终端复用 (tmux 替代者)
@@ -104,4 +108,5 @@ brew "glow"           # Markdown 渲染
 
 # --- AI (CLI) ---
 brew 'gemini-cli'
-brew "mods"
+brew "mods"            # AI 管道处理
+brew "aider"           

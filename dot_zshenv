@@ -1,12 +1,17 @@
-# --- XDG 规范 (让 Home 目录更干净) ---
+# --- XDG 规范 ---
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/zsh-$USER}"
+
+# --- Zsh 配置路径 ---
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export HISTFILE="$XDG_STATE_HOME/zsh/history"                    # 历史文件位置，供 Atuin 写入和 Zsh 读取
+export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION" # 补全转储文件路径
+
 # 确保核心目录存在
-for dir in "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_STATE_HOME"; do
-    [[ -d "$dir" ]] || mkdir -p "$dir"
-done
+mkdir -p "$XDG_STATE_HOME/zsh" "$XDG_CACHE_HOME/zsh" "$XDG_RUNTIME_DIR"
 
 # --- 全局变量 ---
 export EDITOR='hx'
@@ -14,59 +19,64 @@ export VISUAL='hx'
 export LANG=en_US.UTF-8
 export PAGER='less'
 
-#yazi
-export YAZI_CONFIG_HOME="$XDG_CONFIG_HOME/yazi"
-
-# Zsh
-export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
-export HISTFILE="$XDG_STATE_HOME/zsh/history"
-export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
-[[ -d "$XDG_STATE_HOME/zsh" ]] || mkdir -p "$XDG_STATE_HOME/zsh"
-[[ -d "$XDG_CACHE_HOME/zsh" ]] || mkdir -p "$XDG_CACHE_HOME/zsh"
-
 # Homebrew
 export HOMEBREW_CACHE="$XDG_CACHE_HOME/Homebrew"
 export HOMEBREW_BUNDLE_FILE="$XDG_CONFIG_HOME/brew/Brewfile"
 export HOMEBREW_NO_ANALYTICS=1
-#tool
-export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+#yazi
+export YAZI_CONFIG_HOME="$XDG_CONFIG_HOME/yazi"
+#less
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
-export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/config"
+#wget
 export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+#gnupg
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
+#ripgrep
+export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/config"
+#atuin
 export ATUIN_CONFIG_DIR="$XDG_CONFIG_HOME/atuin"
+export ATUIN_NOBIND="true" # 禁止 Atuin 自动绑定 Up/Ctrl-R，我们要手动精细控制
+#zellij
 export ZELLIJ_CONFIG_DIR="$XDG_CONFIG_HOME/zellij"
+#Carapace 桥接设置
+export CARAPACE_BRIDGES='zsh,bash,inshellisense'
+
+# --- Devbox ---
+export DEVBOX_NO_ANALYTICS=1
+# --- Mise---
+export MISE_DATA_DIR="$XDG_DATA_HOME/mise"
+export MISE_CONFIG_DIR="$XDG_CONFIG_HOME/mise"
+export MISE_CACHE_DIR="$XDG_CACHE_HOME/mise"
+
+#api-key
+export GEMINI_API_KEY="" # 建议通过 1Password 或 keychain 注入
 
 # 编程语言(不覆盖项目配置的home路径)
-[[ -z "$CARGO_HOME" ]] && export CARGO_HOME="$XDG_DATA_HOME/cargo"
-[[ -z "$RUSTUP_HOME" ]] && export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export GOPATH="$XDG_DATA_HOME/go"
+export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 
-if [[ -z "$GOPATH" ]]; then
-    export GOPATH="$XDG_DATA_HOME/go"
-    export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
-fi
+# docker
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 
-[[ -z "$NPM_CONFIG_USERCONFIG" ]] && export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
-
-# --- Podman 伪装 Docker---
-# 显式指向 Podman Socket，让原本寻找 Docker Socket 的工具找到 Podman
-export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
-export DOCKER_SOCK="$DOCKER_HOST"
-# 禁用 Docker 内容信任 (Podman 不需要)
+# Podman
+export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock" # 显式指向 Podman Socket，让原本寻找 Docker Socket 的工具找到 Podman
+export DOCKER_SOCK="$DOCKER_HOST"                               # 禁用 Docker 内容信任 (Podman 不需要)
 export DOCKER_CONTENT_TRUST=0
-# 兼容 Testcontainers (Java/Go 测试框架)
-export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="$DOCKER_HOST"
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="$DOCKER_HOST"     # 兼容 Testcontainers
 
 # --- 路径增强 ---
-# 将用户级 bin 加入 PATH
 typeset -U PATH # 确保 PATH 不重复
 path=(
-  "$HOME/.local/bin" 
+  "$HOME/.local/bin"                 # 将用户级 bin 加入 PATH 
+  "$CARGO_HOME/bin"
+  "$GOPATH/bin"
   "/home/linuxbrew/.linuxbrew/bin"
   "/home/linuxbrew/.linuxbrew/sbin"
   $path
 )
 export PATH
 
-# 性能优化 (跳过不必要的检查)
-export SKIP_FIX_PATH=true
+export DO_NOT_TRACK=1

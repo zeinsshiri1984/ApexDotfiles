@@ -1,50 +1,26 @@
-# Direnv (hook 模式，进入目录自动激活)
-eval "$(direnv hook zsh)"
+#mise
+zsh-defer -c 'eval "$(mise activate zsh)"'
 
 # Zoxide (接管 cd)
 eval "$(zoxide init zsh --cmd cd)"
 
-# Atuin (历史记录增强 - 绑定 Ctrl+R)
-# 禁用 Up 键绑定，只用 Ctrl+R，保留 Shell 原生 Up 查找上一条习惯
-eval "$(atuin init zsh --disable-up-arrow)"
+# Atuin (History Sync & Ctrl+R)
+eval "$(atuin init zsh --disable-up-arrow)" # 禁用 Up 键接管，我们用 substring-search
 
-# --- Carapace ---
-export CARAPACE_BRIDGES='zsh,bash,inshellisense'
-zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-eval "$(carapace _carapace)"
+# Carapace 注入补全路径，放在 Atuin 之后，Compinit 之后
+# 用 function 包装以避免污染全局命名空间，并设为 fallback
+function _init_carapace() {
+    source <(carapace _carapace)
+}
+zsh-defer -t 0.05 _init_carapace  # 极短延迟加载，确保不阻塞 Prompt，但能快速响应第一次 Tab
 
-# FZF (使用 fd 提速)
+# FZF
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --inline-info"
-export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
-# Ctrl+T 预览文件
-export FZF_CTRL_T_OPTS="
-  --preview 'bat -n --color=always {}'
-  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git' #使用 fd 提速
 
-# --- 修复 Keybindings (解决 Up 键问题) ---
-# 这一步必须在 Atuin 加载之后执行
-autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-# 绑定 Up/Down 到“前缀搜索”（输入 git 按 Up，只显示 git 开头的历史）
-bindkey '^[[A' up-line-or-beginning-search
-bindkey '^[OA' up-line-or-beginning-search
-bindkey '^[[B' down-line-or-beginning-search
-bindkey '^[OB' down-line-or-beginning-search
+# Direnv (进入目录自动激活)
+zsh-defer -c 'eval "$(direnv hook zsh)"'
 
-# 确保 Ctrl+R 是 Atuin
-bindkey '^r' _atuin_search_widget
-
-# --- zsh-autosuggestions 设置---
-# 建议的颜色（灰色）
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'
-# 自动建议的策略：优先匹配历史记录，其次是补全引擎
-export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-# 关键：按右方向键接受建议
-bindkey '^[C' autosuggest-accept
-# 或者按 Ctrl+F 接受
-bindkey '^f' autosuggest-accept
-
-# Manpager (用 bat 看 man 手册)
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+# Manpager(用 bat 看 man 手册)
 export MANROFFOPT="-c"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"

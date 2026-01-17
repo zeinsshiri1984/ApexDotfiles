@@ -20,6 +20,11 @@ prepend_preloaders = [
     { mime = "application/pdf", run = "noop" },
     { mime = "audio/*", run = "noop" }
 ]
+# 强制屏蔽 git fetcher，防止后台扫描大仓库导致卡顿
+fetchers = [
+  { id = "git", name = "*", run = "noop" },
+  { id = "git_status", name = "*", run = "noop" }
+]
 
 # 引入共享部分
 {{ template "yazi_shared.toml" . }}
