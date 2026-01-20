@@ -1,0 +1,10 @@
+default: setup
+
+setup:
+	devbox shell --command 'pipx ensurepath'
+
+lint:
+	devbox shell --command 'ruff .'
+
+test:
+	devbox shell --command 'pytest -q'

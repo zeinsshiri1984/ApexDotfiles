@@ -1,0 +1,107 @@
+# 有Core,UBI,Aqua版本的尽量下独立二进制版本;没有的再选用包管理器版本
+[tools]
+node = "latest"
+python = "latest"
+"ubi:astral-sh/uv" = "latest"
+usage = "latest"                        # Mise 的 CLI 补全引擎
+"ubi:jdx/mise" = "latest"
+
+# Core (System Utilities)
+"ubi:twpayne/chezmoi" = "latest"
+"ubi:cli/cli" = "latest"
+"ubi:casey/just" = "latest"                    # 任务运行器
+"ubi:evilmartians/lefthook" = "latest"         # Git Hooks
+"ubi:gitleaks/gitleaks" = "latest"             # 安全扫描
+"ubi:charmbracelet/gum" = "latest"             # 脚本 UI
+"pipx:copier" = "latest"
+
+# Shell Core (zsh)
+# zsh = "latest"
+#antidote = "latest"                          # Zsh 插件管理器
+
+# Shell Core (Nushell Stack)
+"ubi:starship/starship" = "latest"
+"ubi:atuinsh/atuin" = "latest"                # 历史记录同步
+"ubi:ajeetdsouza/zoxide" = "latest"           # 目录跳转
+"ubi:carapace-sh/carapace" = "latest"         # 自动补全
+"pipx:trash-cli" = "latest"
+"ubi:sharkdp/bat" = "latest"               # cat++
+"ubi:eza-community/eza" = "latest"         # ls++
+"ubi:junegunn/fzf" = "latest"              # 模糊搜索
+"ubi:BurntSushi/ripgrep" = "latest"        # grep++
+"ubi:sharkdp/fd" = "latest"                # find++
+
+# TUI 工作流
+"ubi:sxyazi/yazi" = "latest"                   # 终端文件管理器
+superfile = "latest"        # zellij 文件管理器
+"ubi:zellij-org/zellij" = "latest"             # 终端复用
+"ubi:helix-editor/helix" = "latest"            # 模态编辑器
+"ubi:jesseduffield/lazygit" = "latest"
+tlrc = "latest"             # 简化版 man
+
+# Git / 开发工具补充
+"ubi:dandavison/delta" = "latest"
+"ubi:Wilfred/difftastic" = "latest"            # 语法感知 diff
+"ubi:o2sh/onefetch" = "latest"
+"ubi:boyter/scc" = "latest"
+
+# AI (CLI)
+"ubi:charmbracelet/mods" = "latest"
+"ubi:danielmiessler/fabric" = "latest"
+"ubi:SilasMarvin/lsp-ai" = "latest"
+"npm:@anthropic-ai/claude-code" = "latest"
+"ubi:SaladDay/cc-switch-cli" = "latest"
+codex = "latest"
+"pipx:aider-chat" = "latest"
+# gemini-cli = "latest"
+# opencode = "latest"
+
+# Data Processing
+"ubi:jqlang/jq" = "latest"                     # 很多脚本依赖
+
+# Containers
+"ubi:docker/compose" = "latest"
+"ubi:containers/podman-tui" = "latest"
+# dive = "latest"           # 镜像层分析
+# hadolint = "latest"       # Dockerfile 检查
+# syft = "latest"           # SBOM 生成
+# k9s = "latest"            # Kubernetes TUI
+
+# 安全工具
+# trivy = "latest"
+# rustscan = "latest"
+# lynis = "latest"
+
+# 监控与日志
+"ubi:aristocratos/btop" = "latest"
+"ubi:watchexec/watchexec" = "latest"        # 文件变动执行
+"ubi:tstack/lnav" = "latest"                # 日志查看
+"ubi:bensadeh/tailspin" = "latest"
+"ubi:sachaos/viddy" = "latest"              # watch 替代
+"ubi:rcoh/angle-grinder" = "latest"
+
+"ubi:rs/curlie" = "latest"  # curl/http 增强
+# doggo = "latest"          # dig 增强
+# trippy = "latest"         # mtr 增强 / 网络诊断
+# croc = "latest"           # 局域网文件秒传
+# miniserve = "latest"      # 快速 HTTP 文件服务器
+# websocat = "latest"       # WebSocket 调试
+# zrok = "latest"           # 内网穿透（ngrok 类）
+
+# 测试与性能
+# fio = "latest"            # 磁盘测试
+# oha = "latest"            # HTTP 压测
+# ffuf = "latest"           # Web 模糊测试
+# hyperfine = "latest"      # 命令基准测试
+
+# 数据库
+# sqlfluff = "latest"
+# gobackup = "latest"
+# usql = "latest"           # 通用 SQL CLI（注意来源）
+
+# 文档
+"ubi:charmbracelet/glow" = "latest"
+# pandoc = "latest"
+
+[settings]
+pipx.uvx = true

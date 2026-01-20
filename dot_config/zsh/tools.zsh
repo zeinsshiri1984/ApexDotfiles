@@ -15,11 +15,20 @@ function _init_carapace() {
 zsh-defer -t 0.05 _init_carapace  # 极短延迟加载，确保不阻塞 Prompt，但能快速响应第一次 Tab
 
 # FZF
-export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --inline-info"
-export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git' #使用 fd 提速
-
-# Direnv (进入目录自动激活)
-zsh-defer -c 'eval "$(direnv hook zsh)"'
+# Noctis 默认主题
+export FZF_DEFAULT_OPTS=" \
+--height 40% \
+--layout=reverse \
+--info=inline \
+--border=none \
+--margin=0 --padding=0 \
+--prompt='› ' --pointer='-→' --marker='+' \
+--color=bg+:-1,bg:-1,fg:250,fg+:255 \
+--color=hl:142,hl+:142,header:109 \
+--color=info:242,pointer:167,marker:167,spinner:109"
+# fd 替代 find提速、忽略 .git、忽略隐藏文件
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # Manpager(用 bat 看 man 手册)
 export MANROFFOPT="-c"

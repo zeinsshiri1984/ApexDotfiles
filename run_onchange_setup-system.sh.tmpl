@@ -1,26 +1,14 @@
 #!/bin/bash
-# Brewfile hash: {{ include "Brewfile" | sha256sum }}
-
 set -e # 遇到错误立即停止
 
-echo "📦 [1/5] 同步 Homebrew 工具链..."
-brew update
-# 运行安装，并在安装后清理不在清单中的软件
-brew bundle --file={{ joinPath .chezmoi.sourceDir "Brewfile" }} --verbose --cleanup
-brew upgrade
-
-echo "🚀 生成 Homebrew 静态环境配置..."
-# 把 brew shellenv 的输出重定向到一个文件,.zshrc 读取缓存的2环境
-/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh > "$HOME/.config/zsh/brew_env.zsh"
-
-echo "📦 [2/5] 检查/更新 Devbox..."
+echo "📦 [1/4] 检查/更新 Devbox..."
 if ! command -v devbox &> /dev/null; then
     curl -fsSL https://get.jetify.com/devbox | bash
 else
     devbox version update >/dev/null 2>&1 || true
 fi
 
-echo "📦 [2/5] 检查 ai CLI..."
+echo "📦 [2/4] 检查 ai CLI..."
 if ! command -v claude &> /dev/null; then
     curl -fsSL https://claude.ai/install.sh | bash
 else
@@ -33,7 +21,13 @@ else
     timeout 10s npm update -g @openai/codex || true 
 fi
 
-echo "📦 [3/5] 配置 Podman Socket & Docker Shim..."
+ROOT_MOUNT_OPTS="$(findmnt -no OPTIONS / 2>/dev/null || true)"
+ROOT_IS_RO="false"
+if echo "$ROOT_MOUNT_OPTS" | grep -qE '(^|,)ro(,|$)'; then
+    ROOT_IS_RO="true"
+fi
+
+echo "📦 [3/4] 配置 Podman Socket & Docker Shim..."
 mkdir -p "$HOME/.local/bin"
 
 #  Docker Shim (二进制劫持，解决许多工具脚本 调用 docker 的问题)
@@ -49,19 +43,7 @@ fi
 
 #  Systemd Socket (用户级)
 if command -v systemctl &>/dev/null; then
-    # 确保目录存在
     mkdir -p "$HOME/.config/systemd/user"
-    
-    PODMAN_PREFIX=$(brew --prefix podman)
-    SOCKET_SRC="$PODMAN_PREFIX/lib/systemd/user/podman.socket"
-    SERVICE_SRC="$PODMAN_PREFIX/lib/systemd/user/podman.service"
-    
-    # 链接服务文件 (使用 -f 强制覆盖链接，确保指向最新 brew 版本)
-    if [[ -f "$SOCKET_SRC" ]]; then
-        ln -sf "$SOCKET_SRC" "$HOME/.config/systemd/user/podman.socket"
-        ln -sf "$SERVICE_SRC" "$HOME/.config/systemd/user/podman.service"
-        systemctl --user daemon-reload
-    fi
 
     # 启用并立即启动 Socket
     systemctl --user enable --now podman.socket
@@ -78,17 +60,20 @@ if command -v systemctl &>/dev/null; then
     export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="${XDG_RUNTIME_DIR}/podman/podman.sock"
 fi
 
-echo "📦 [5/5] 默认 Shell 设置 ..."
-TARGET_SHELL="$(which zsh)"
-if [ "$SHELL" != "$TARGET_SHELL" ]; then
-    # 只要路径在 /etc/shells 里，chsh 就能成功
-    grep -q "$TARGET_SHELL" /etc/shells || echo "$TARGET_SHELL" | sudo tee -a /etc/shells >/dev/null
-    sudo chsh -s "$TARGET_SHELL" "$USER"
-fi
+echo "📦 [4/4] 默认 Shell 设置 ..."
+TARGET_SHELL="$(which bash)"
+if [ "$ROOT_IS_RO" = "true" ]; then
+    echo "⚠️  检测到只读根分区，跳过系统级 shell 与 sysctl 修改"
+else
+    if [ "$SHELL" != "$TARGET_SHELL" ]; then
+        grep -q "$TARGET_SHELL" /etc/shells || echo "$TARGET_SHELL" | sudo tee -a /etc/shells >/dev/null
+        sudo chsh -s "$TARGET_SHELL" "$USER"
+    fi
 
-echo "📦 提升文件监听上限  ..."
-if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
-    echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches >/dev/null
+    echo "📦 提升文件监听上限  ..."
+    if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
+        echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches >/dev/null
+    fi
 fi
 
 echo "✅ 用户环境就绪！"

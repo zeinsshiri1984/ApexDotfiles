@@ -1,0 +1,21 @@
+default: list
+
+list:
+	just --list
+
+update:
+	mise install
+	devbox global pull || true
+	devbox global update || true
+	chezmoi apply --keep-going
+
+clean:
+	chezmoi diff
+	mise prune
+
+sync:
+	git -C "$HOME/.local/share/chezmoi" pull --rebase --autostash
+	chezmoi apply --keep-going
+
+ai:
+	nu -c ai-ask

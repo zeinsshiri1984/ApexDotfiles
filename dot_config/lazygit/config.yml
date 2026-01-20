@@ -1,0 +1,19 @@
+gui:
+  showCommandLog: true
+  theme:
+    activeBorderColor:
+      - "#49ace9"
+    inactiveBorderColor:
+      - "#5b858b"
+    optionsTextColor:
+      - "#df769b"
+    selectedLineBgColor:
+      - "#0b1a1c"
+    selectedRangeBgColor:
+      - "#0b1a1c"
+    cherryPickedCommitBgColor:
+      - "#49e9a6"
+    cherryPickedCommitFgColor:
+      - "#0b1a1c"
+    defaultFgColor:
+      - "#e0e6ea"

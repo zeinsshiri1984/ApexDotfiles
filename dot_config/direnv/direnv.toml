@@ -1,7 +1,0 @@
-[whitelist]
-prefix = [ "~/Projects" ] # 只允许自动加载 Projects 目录下的环境
-exact = []
-
-[global]
-load_dotenv = true # 自动加载 .env 文件
-warn_timeout = "5s"

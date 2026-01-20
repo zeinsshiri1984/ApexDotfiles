@@ -2,7 +2,7 @@
 
 // 基础设置
 theme "default"
-default_shell "zsh"
+default_shell "nu"
 default_mode "locked" // 默认锁定，不干扰 Helix 的 Ctrl 键
 mouse_mode true
 copy_clipboard "system"
@@ -29,7 +29,7 @@ ui {
 keybinds {
     //编辑模式都生效的zellij按键,会覆盖Helix按键
     locked {
-        bind "Ctrl g" { SwitchToMode "Normal"; }
+        bind "Ctrl a" { SwitchToMode "Normal"; }
         bind "Ctrl q" {  Detach; }
     }
 
@@ -40,7 +40,36 @@ keybinds {
 
     // 在"renametab" 之外的模式下都生效这两个模式可能需要输入alt转义字符?
     shared_except "renametab"  {
-        bind "Ctrl g" { SwitchToMode "Locked"; }
+        bind "Ctrl f" {
+            Run "bash" "-lc" "command -v spf >/dev/null && spf || superfile" {
+                floating true
+                close_on_exit true
+                x "10%"
+                y "10%"
+                width "80%"
+                height "80%"
+            }
+        }
+        bind "Ctrl g" {
+            Run "lazygit" {
+                floating true
+                close_on_exit true
+                x "5%"
+                y "5%"
+                width "90%"
+                height "90%"
+            }
+        }
+        bind "Ctrl p" {
+            Run "podman-tui" {
+                floating true
+                close_on_exit true
+                x "5%"
+                y "5%"
+                width "90%"
+                height "90%"
+            }
+        }
         bind "Ctrl q" {  Detach; }
         bind "i" { SwitchToMode "Locked"; }
         bind "Esc" { SwitchToMode "Locked"; }

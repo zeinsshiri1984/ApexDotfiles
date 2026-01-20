@@ -54,7 +54,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfile
 <!-- 0)Antidote + zsh-defer+z-shell/F-Sy-H+p10k配置 -->
 <!-- 1)历史管理:Atuin启用 Sync 功能,Atuin 负责在后台将多端同步的历史数据实时导出/同步到本地的 standard zsh history 文件中;Up 键：不被 Atuin 劫持。继续使用 Zsh 原生的 history-substring-search 或基础 Up，读取的是由 Atuin 喂饱的 Zsh 内存堆栈;Ctrl+R绑定 Atuin 的全屏搜索界面 -->
 <!-- 2)弹出补全:fzf + Atuin + (Zsh Built-ins + Carapace)+fzf-tab(禁止预览,用原生UI,与终端视觉统一);Zsh 原生补全负责底层（文件路径、SCP 远程主机、PID 等），Carapace 负责应用层（Docker, K8s, AWS, Git 等现代 CLI）。Carapace 设为 Fallback 或特定注入，二者共存;Atuin提供历史补全数据 -->
-<!-- 3)幽灵补全:zsh-autosuggestions+优先显示Atuin注入的历史记录，如果没有，则尝试调用(Zsh Built-ins + Carapace)的补全建议 -->
+<!-- 3)幽灵补全:zsh-autosuggestions+优先显示Atuin注入的历史记录，如果没有，则尝试调用(Carapace+Zsh Built-ins)的补全建议 -->
 4)快捷键触发,读取当前你输入的内容，发送给 AI，然后用 AI 的返回结果替换或追加到当前命令行:mods+System Prompt+ZLE Widget约束使其返回命令
 5)快捷键触发explain/fix上文报错功能,获取上一条命令的文本,生成修复建议放入 Buffer:mods+System Prompt+ZLE Widget约束使其返回命令
 6)终端ask功能,读取当前你输入的内容发给ai:mods+Fabric+对话模型
@@ -65,13 +65,45 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfile
 9)mise管理python,ts,go,java项目环境;devbox管理cpp,c,zig,rust项目环境
 
 11)atuin历史记录等隐私信息加密后上传github
-12)UI一致性+护眼+极低视觉噪声
+<!-- 12)UI一致性+护眼+极低视觉噪声+Noctis默认主题 -->
 13)atuin的历史记录是否做到:空间不足删重复,忽略连续重复,删除旧重复,搜索不显示重复,保存不含重复,空格开头不记录等策略
 14)podman-docker包
 15)完善二进制工具挂载
 
 10)我说ok才进行下一步,知道了就说ok
-按要求逐步重构或优化以下配置,确保其是务实的,无隐患的,能最大化提升效率和体验的,且性能和可落地性拉满的2026世界第一配置:
+
+
+
+
+
+进zellij之前,即用户环境:nushell
+coding:Nushell
+test/run:zsh
+Debug/Logs:nushell
+Research:nushell
+Data/Ops:nushell
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Badges
 

@@ -1,0 +1,4 @@
+default: build
+
+build:
+	devbox shell --command 'zig build'

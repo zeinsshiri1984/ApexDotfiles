@@ -1,0 +1,159 @@
+# Noctis Theme for Starship
+# Minimalist, semantic, high-performance
+
+add_newline = true
+palette = "noctis"
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$git_state\
+$git_metrics\
+$nodejs\
+$python\
+$rust\
+$golang\
+$java\
+$lua\
+$zig\
+$php\
+$conda\
+$docker_context\
+$kubernetes\
+$fill\
+$cmd_duration\
+$jobs\
+$time\
+$line_break\
+$character"""
+
+[palettes.noctis]
+eucalyptus = "#49e9a6"
+mountain_meadow = "#16b673"
+horizon = "#5b858b"
+eastern_blue = "#16a3b6"
+turquoise = "#49d6e9"
+picton_blue = "#49ace9"
+cornflower_blue = "#7060eb"
+pale_violet_red = "#df769b"
+cinnabar = "#e66533"
+japonica = "#d67e5c"
+galliano = "#d5971a"
+gold_sand = "#e4b781"
+
+# --- Core ---
+
+[directory]
+style = "bold gold_sand"
+format = "[$path]($style)[$read_only]($read_only_style) "
+truncation_length = 3
+truncation_symbol = "…/"
+read_only = " 🔒"
+
+[character]
+success_symbol = "[➜](bold eucalyptus)"
+error_symbol = "[✗](bold cinnabar)"
+vicmd_symbol = "[V](bold picton_blue)"
+
+[fill]
+symbol = " "
+
+# --- Git ---
+
+[git_branch]
+symbol = " "
+style = "eastern_blue"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "pale_violet_red"
+format = "([$all_status$ahead_behind]($style) )"
+conflicted = "🏳"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+untracked = "?${count}"
+stashed = ""
+modified = "!${count}"
+staged = "+${count}"
+renamed = "»${count}"
+deleted = "✘${count}"
+
+[git_metrics]
+disabled = false
+added_style = "bold eucalyptus"
+deleted_style = "bold cinnabar"
+
+# --- Languages ---
+
+[nodejs]
+symbol = " "
+style = "mountain_meadow"
+format = "[$symbol($version )]($style)"
+
+[python]
+symbol = " "
+style = "turquoise"
+format = "[$symbol$pyenv_prefix($version )(\($virtualenv\) )]($style)"
+
+[rust]
+symbol = " "
+style = "japonica"
+format = "[$symbol($version )]($style)"
+
+[golang]
+symbol = " "
+style = "turquoise"
+format = "[$symbol($version )]($style)"
+
+[java]
+symbol = " "
+style = "eastern_blue"
+format = "[$symbol($version )]($style)"
+
+[lua]
+symbol = " "
+style = "picton_blue"
+format = "[$symbol($version )]($style)"
+
+[zig]
+symbol = " "
+style = "galliano"
+format = "[$symbol($version )]($style)"
+
+[php]
+symbol = " "
+style = "cornflower_blue"
+format = "[$symbol($version )]($style)"
+
+# --- Infrastructure ---
+
+[docker_context]
+symbol = " "
+style = "picton_blue"
+format = "[$symbol$context]($style) "
+
+[kubernetes]
+symbol = "☸ "
+style = "cornflower_blue"
+format = "[$symbol$context( \($namespace\))]($style) "
+
+# --- System ---
+
+[cmd_duration]
+min_time = 2000
+style = "horizon"
+format = "[$duration]($style) "
+
+[jobs]
+symbol = " "
+style = "cornflower_blue"
+number_threshold = 1
+format = "[$symbol$number]($style) "
+
+[time]
+disabled = false
+style = "horizon"
+format = "[$time]($style)"
+time_format = "%R"

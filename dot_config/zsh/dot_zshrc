@@ -9,27 +9,19 @@ fi
 
 source "$ZDOTDIR/options.zsh"
 
-# Homebrew 静态加载
-# 如果缓存文件存在，直接 source
-if [[ -f "$ZDOTDIR/brew_env.zsh" ]]; then
-    source "$ZDOTDIR/brew_env.zsh"
-else
-    # 兜底：如果缓存文件丢了，回退到慢速的官方 eval 方法，并后台重新生成缓存
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    (/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh > "$ZDOTDIR/brew_env.zsh" &)
-fi
-
-# Antidote Plugins (Static Loading)
-# 首次运行时生成 static_plugins.zsh，之后直接 source 静态文件
+ 
 zsh_plugins=${ZDOTDIR:-~/.config/zsh}/.zsh_plugins.txt
 zsh_static=${ZDOTDIR:-~/.config/zsh}/zsh_static.zsh
-# 仅在插件列表更新时重新生成静态文件
 if [[ ! -f "$zsh_static" ]] || [[ "$zsh_plugins" -nt "$zsh_static" ]]; then
-    source "$(brew --prefix antidote)/share/antidote/antidote.zsh"
-    antidote bundle < "$zsh_plugins" > "$zsh_static"
-    zcompile "$zsh_static" # 编译加速读取
+    if [[ -f "$ZDOTDIR/antidote/antidote.zsh" ]]; then
+        source "$ZDOTDIR/antidote/antidote.zsh"
+    fi
+    if (( $+functions[antidote] )); then
+        antidote bundle < "$zsh_plugins" > "$zsh_static"
+        zcompile "$zsh_static"
+    fi
 fi
-source "$zsh_static"
+[[ -f "$zsh_static" ]] && source "$zsh_static"
 
 # Load Modules
 source "$ZDOTDIR/tools.zsh"       # 里面有 zsh-defer，优先加载

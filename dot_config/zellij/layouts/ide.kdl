@@ -13,22 +13,59 @@ layout {
         }
     }
 
-    // 定义 Dev Tab (默认进入的 IDE 界面)
-    tab name="Dev" focus=true {
+    tab name="Coding" focus=true {
         pane split_direction="vertical" {
-            // 左侧：编辑器区域
-            // 1. sleep 0.1: 等待窗格尺寸初始化，防止 Helix 崩溃
-            // 2. print ...: 发送 OSC 0 设置窗格名为当前目录名 ($PWD:t)
-            // 3. hx .: 启动 Helix
-            // [[ "$PWD" == "$HOME" ]] && T="~" : 如果是家目录，标题强制为 ~
             pane size="65%" focus=true {
-                command "zsh"
-                args "-c" "sleep 0.1; T=\"${PWD:t}\"; [[ \"$PWD\" == \"$HOME\" ]] && T=\"~\"; print -n \"\\033]0;${T}\\007\"; hx ."
+                command "nu"
+                args "-c" "sleep 100ms; hx ."
             }
             
-            // 右侧：终端区域
             pane size="35%" {
-                command "zsh"
+                command "nu"
+            }
+        }
+    }
+
+    tab name="Test" {
+        pane split_direction="vertical" {
+            pane size="65%" focus=true {
+                command "nu"
+            }
+            pane size="35%" {
+                command "nu"
+            }
+        }
+    }
+
+    tab name="Debug" {
+        pane split_direction="vertical" {
+            pane size="65%" focus=true {
+                command "nu"
+            }
+            pane size="35%" {
+                command "nu"
+            }
+        }
+    }
+
+    tab name="Research" {
+        pane split_direction="vertical" {
+            pane size="65%" focus=true {
+                command "nu"
+            }
+            pane size="35%" {
+                command "nu"
+            }
+        }
+    }
+
+    tab name="Ops" {
+        pane split_direction="vertical" {
+            pane size="65%" focus=true {
+                command "nu"
+            }
+            pane size="35%" {
+                command "nu"
             }
         }
     }

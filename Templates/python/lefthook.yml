@@ -1,0 +1,6 @@
+pre-commit:
+  commands:
+    ruff:
+      run: ruff .
+    gitleaks:
+      run: gitleaks protect --staged --redact

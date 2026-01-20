@@ -1,50 +1,58 @@
 #!/bin/bash
-set -e # 遇到错误立即停止
+set -euo pipefail
 
-echo "🚀 [1/5] 基础环境检测"
-if [ -f /run/ostree-booted ]; then
-    echo "🛡️ 检测到不可变系统 (Silverblue/Bluefin)，跳过 apt/dnf 安装。"
+echo "🚀环境初始化..."
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export PATH="$HOME/.local/bin:$PATH"
+
+OS_ID="$(awk -F= '/^ID=/{print $2}' /etc/os-release 2>/dev/null | tr -d '"')"
+WSL_FLAG=0
+if grep -qi microsoft /proc/version 2>/dev/null; then
+    WSL_FLAG=1
+fi
+GUI_FLAG=0
+if [ -n "${DISPLAY-}" ] || [ "${XDG_SESSION_TYPE-}" = "wayland" ] || [ "${XDG_SESSION_TYPE-}" = "x11" ]; then
+    GUI_FLAG=1
+fi
+
+ROOT_MOUNT_OPTS="$(findmnt -no OPTIONS / 2>/dev/null || true)"
+if echo "$ROOT_MOUNT_OPTS" | grep -qE '(^|,)ro(,|$)'; then
+    echo "✅ 根分区处于只读模式"
 else
-    # 常规系统：确保 build-essential 存在，否则 Homebrew 编译源码会挂
-    if command -v apt-get &>/dev/null; then
-        sudo apt-get update && sudo apt-get install -y build-essential curl file git procps
-    elif command -v dnf &>/dev/null; then
-        sudo dnf groupinstall -y 'Development Tools' && sudo dnf install -y curl file git procps-ng
+    echo "⚠️  根分区为可写，请确保不可变系统策略已启用"
+fi
+
+if ! command -v mise &> /dev/null; then
+    echo "📦安装mise"
+    curl https://mise.run | sh
+fi
+
+eval "$($HOME/.local/bin/mise activate bash)"
+mise use -g chezmoi bw gh just
+
+if ! command -v devbox &> /dev/null; then
+    echo "📦安装devbox"
+    curl -fsSL https://get.jetify.com/devbox | bash
+fi
+
+if ! gh auth status &>/dev/null; then
+    if [ "$GUI_FLAG" -eq 1 ] && [ "$WSL_FLAG" -eq 0 ]; then
+        echo "🔑 正在通过 GitHub CLI 认证..."
+        gh auth login -p ssh -w --git-protocol ssh
+    else
+        echo "🔑 跳过 GUI 交互式 GitHub 认证"
     fi
 fi
 
-echo "🍺 [2/5] Homebrew 状态检查..."
-if ! command -v brew &>/dev/null; then
-    export NONINTERACTIVE=1
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-fi
-# 临时加载环境以供脚本后续使用
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-echo "📦 [3/5]安装 Chezmoi & GitHub CLI..."
-brew install gcc git gh chezmoi
-
-echo "🐳 [4/5] GitHub 认证..."
-if ! gh auth status >/dev/null 2>&1; then
-    echo "⚠️  未检测到 GitHub 登录状态，正在发起登录请求..."
-    # -p ssh: 强制使用 SSH 协议;-w: 使用 Web 浏览器登录;--git-protocol ssh: 确保后续 git clone 操作默认用 git@github.com
-    gh auth login -p ssh -w --git-protocol ssh
-fi
-
-# 再次检查状态
-if ! gh auth status >/dev/null 2>&1; then
-    echo "❌ 登录尝试失败。请检查网络或手动运行 'gh auth login' 后重试。"
-    exit 1
-else
-    echo "✅ GitHub 已认证 (或者刚刚登录成功)"
-fi
-
-echo "⚡️ [5/5]拉取Dotfiles并应用配置..."
-if [ ! -d "$HOME/.local/share/chezmoi" ]; then
+if [ ! -d "$XDG_DATA_HOME/chezmoi" ]; then
+    echo "📦 初始化 Dotfiles..."
     chezmoi init --apply git@github.com:zeinsshiri1984/ApexDotfiles.git
 else
-    # 加上 --keep-going 防止因单个文件冲突导致整个更新停止
-    chezmoi apply --keep-going
+    chezmoi apply --keep-going #--keep-going 防止因单个文件冲突导致整个更新停止
 fi
 
-echo "🎉 系统就绪！请重启终端。"
+echo "📦mise install"
+mise install
+
+echo "🎉 系统已就绪。请将终端启动命令设为 'nu'。"

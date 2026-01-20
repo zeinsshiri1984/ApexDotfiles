@@ -1,0 +1,7 @@
+default: build
+
+build:
+	devbox shell --command 'cmake -B build -G Ninja . && ninja -C build'
+
+test:
+	devbox shell --command 'ctest --test-dir build -q'

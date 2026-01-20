@@ -1,0 +1,28 @@
+palette = { eucalyptus = "#49e9a6", mountain_meadow = "#16b673", horizon = "#5b858b", eastern_blue = "#16a3b6", turquoise = "#49d6e9", picton_blue = "#49ace9", cornflower_blue = "#7060eb", pale_violet_red = "#df769b", cinnabar = "#e66533", japonica = "#d67e5c", galliano = "#d5971a", gold_sand = "#e4b781", bg_dark = "#0b1a1c", fg = "#e0e6ea" }
+
+"ui.background" = { bg = "bg_dark" }
+"ui.cursor" = { fg = "bg_dark", bg = "picton_blue" }
+"ui.linenr" = { fg = "horizon" }
+"ui.linenr.selected" = { fg = "fg", modifiers = ["bold"] }
+"ui.statusline" = { fg = "fg", bg = "bg_dark" }
+"ui.bufferline" = { fg = "fg", bg = "bg_dark" }
+"ui.selection" = { bg = "horizon" }
+"ui.cursorline.primary" = { bg = "bg_dark" }
+"ui.cursorline.secondary" = { bg = "bg_dark" }
+
+"comment" = { fg = "horizon", modifiers = ["italic"] }
+"string" = { fg = "eucalyptus" }
+"string.special" = { fg = "mountain_meadow" }
+"number" = { fg = "cornflower_blue" }
+"boolean" = { fg = "cornflower_blue" }
+"keyword" = { fg = "pale_violet_red" }
+"operator" = { fg = "pale_violet_red" }
+"function" = { fg = "cinnabar" }
+"function.call" = { fg = "eastern_blue" }
+"method" = { fg = "turquoise" }
+"type" = { fg = "japonica" }
+"attribute" = { fg = "galliano" }
+"constant" = { fg = "galliano" }
+"variable" = { fg = "gold_sand" }
+"variable.parameter" = { fg = "gold_sand" }
+"namespace" = { fg = "picton_blue" }

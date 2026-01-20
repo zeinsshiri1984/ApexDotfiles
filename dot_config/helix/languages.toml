@@ -1,0 +1,28 @@
+[language-server.lsp-ai]
+command = "lsp-ai"
+
+[language-server.lsp-ai.config.models.model1]
+type = "open_ai"
+chat_endpoint = "https://api.openai.com/v1/chat/completions"
+model = "gpt-4o-mini"
+auth_token_env_var_name = "OPENAI_API_KEY"
+
+[[language]]
+name = "rust"
+language-servers = ["rust-analyzer", "lsp-ai"]
+
+[[language]]
+name = "go"
+language-servers = ["gopls", "lsp-ai"]
+
+[[language]]
+name = "python"
+language-servers = ["pyright", "lsp-ai"]
+
+[[language]]
+name = "typescript"
+language-servers = ["typescript-language-server", "lsp-ai"]
+
+[[language]]
+name = "javascript"
+language-servers = ["typescript-language-server", "lsp-ai"]

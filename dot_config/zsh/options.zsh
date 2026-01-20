@@ -36,30 +36,41 @@ else
     compinit -d "$ZSH_COMPDUMP"
 fi
 
-# 匹配策略: 大小写不敏感 -> 模糊匹配
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+#补全源顺序：
+# 顺序：1. 基础补全(含Carapace) 2. 扩展名 3. 纠错 4. 文件路径兜底
+zstyle ':completion:*' completer _complete _extensions _match _approximate _files
+# 匹配规则：
+# 1. 基础匹配：大小写不敏感 (a=A)
+# 2. 智能分隔符：输入 f-b 可以匹配 foo-bar, f.b 匹配 foo.bar
+# 3. 子串匹配 (Substring)：输入 'fi' 匹配 'makefile'
+zstyle ':completion:*' matcher-list \
+    'm:{a-zA-Z}={A-Za-z}' \
+    'r:|[._-]=* r:|=*' \
+    'l:|=* r:|=*'
 
-#菜单与显示行为
+#Visuals
 zstyle ':completion:*' menu no                            # 禁用原生菜单，交给 fzf-tab
-zstyle ':completion:*' sort false                            # 禁用默认排序,交给 fzf 排序
-zstyle ':completion:*' file-sort modification             # 排序
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"      # 使用 ls 颜色
-zstyle ':completion:*' prefix-hidden yes
-zstyle ':completion:*' insert-tab false  # 禁止在空行按 Tab 触发补全
-
-# 分组与描述
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS:-di=1;34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43}"         # 使用 ls 颜色
 zstyle ':completion:*' group-name ''                      # 开启自动分组
 zstyle ':completion:*' description 'yes'                  # 启用一般描述
 zstyle ':completion:*:options' verbose yes                # 显示选项的详细说明
 zstyle ':completion:*:options' description 'yes'          # 强制为选项启用描述
 zstyle ':completion:*:options' auto-description '%d'      # 自动生成描述
 
-# 格式化：Noctis 风格，低视觉噪声
-zstyle ':completion:*:descriptions' format $'\n\033[38;5;109m── %d ──\033[0m'
-zstyle ':completion:*:messages' format $'\033[38;5;109m── %d ──\033[0m'
-zstyle ':completion:*:warnings' format $'\033[38;5;167m── No Matches ──\033[0m'
+# 排序
+zstyle ':completion:*' sort false                         # 禁用默认排序,交给 fzf 排序
+zstyle ':completion:*' file-sort modification             # 排序
+
+# 格式化输出：Noctis 风格，低视觉噪声
+zstyle ':completion:*:descriptions' format $'\n\033[1;38;5;109m── %d ──\033[0m'
+zstyle ':completion:*:messages' format $'\033[1;38;5;109m── %d ──\033[0m'
+zstyle ':completion:*:warnings' format $'\033[1;38;5;167m── No Matches ──\033[0m'
 
 #列表过滤
-zstyle ':completion:*:cd:*' ignore-parents parent pwd              # 防止 cd 补全 . 和 ..
 zstyle ':completion::complete:-command-::*' ignored-patterns '*\~' # 忽略备份文件
-zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories # 强制 cd 只补全目录
+zstyle ':completion:*:cd:*' format '── %d ──'
+
+# Fine-tuning
+zstyle ':completion:*' prefix-hidden yes
+zstyle ':completion:*' insert-tab false                   # 禁止在空行按 Tab 触发补全
+zstyle ':completion:*' rehash true                        # 自动发现新安装的命令

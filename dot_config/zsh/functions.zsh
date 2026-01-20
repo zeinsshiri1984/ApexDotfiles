@@ -19,6 +19,10 @@ function gi() {
     fi
 }
 
+function gl () {
+    git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
+}
+
 # --- gh AI 助手集成 ---
 function ask() {
     if [[ -z "$1" ]]; then
@@ -69,13 +73,11 @@ function new() {
         return 1
     fi
     
-    # 使用 Copier (Brew 安装) 渲染模板
+    # 使用 Copier 渲染模板
     copier copy "$template" "$name"
     
     cd "$name" || return
     git init
-    direnv allow
-    
     echo "🎉 Project $name initialized!"
 }
 

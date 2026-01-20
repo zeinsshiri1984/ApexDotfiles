@@ -19,16 +19,13 @@ export VISUAL='hx'
 export LANG=en_US.UTF-8
 export PAGER='less'
 
-# Homebrew
-export HOMEBREW_CACHE="$XDG_CACHE_HOME/Homebrew"
-export HOMEBREW_BUNDLE_FILE="$XDG_CONFIG_HOME/brew/Brewfile"
-export HOMEBREW_NO_ANALYTICS=1
+#bat
+export BAT_CONFIG_PATH="$XDG_CONFIG_HOME/bat/config"
 #yazi
 export YAZI_CONFIG_HOME="$XDG_CONFIG_HOME/yazi"
 #less
+export LESS='-R -F -X -i -M' #保持颜色，搜索高亮，退出时不清屏(X)，不换行(S)，提示符友好(M)
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
-#wget
-export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 #gnupg
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 #ripgrep
@@ -52,11 +49,18 @@ export MISE_CACHE_DIR="$XDG_CACHE_HOME/mise"
 export GEMINI_API_KEY="" # 建议通过 1Password 或 keychain 注入
 
 # 编程语言(不覆盖项目配置的home路径)
+#rust
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+#go
 export GOPATH="$XDG_DATA_HOME/go"
 export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
+#node
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
+#python
+export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
+export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 
 # docker
 export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
@@ -73,8 +77,6 @@ path=(
   "$HOME/.local/bin"                 # 将用户级 bin 加入 PATH 
   "$CARGO_HOME/bin"
   "$GOPATH/bin"
-  "/home/linuxbrew/.linuxbrew/bin"
-  "/home/linuxbrew/.linuxbrew/sbin"
   $path
 )
 export PATH

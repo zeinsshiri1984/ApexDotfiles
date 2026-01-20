@@ -4,27 +4,33 @@ zstyle ':fzf-tab:*' fzf-preview 'none'                           # 禁用预览�
 # Noctis 主题 + 极低视觉噪声 + 动态高度
 # --height=40%: 自适应高度，不超过屏幕 40%
 # --layout=reverse: 列表从下往上延伸，符合视线习惯
-# --info=inline: 只有一行状态栏，极简
 # --border=rounded: 圆角边框，现代化
 # --no-mouse: 纯键盘操作，提升性能
 zstyle ':fzf-tab:*' fzf-flags \
     '--no-preview' \
     '--bind=tab:accept' \
-    '--height=40%' \
+    '--bind=right:accept' \
+    '--height=~40%' \
     '--layout=reverse' \
-    '--info=hidden' \
-    '--border=rounded' \
+    '--info=inline' \
+    '--border=none' \
+    '--padding=0' \
+    '--margin=0' \
     '--no-mouse' \
     '--prompt=› ' \
-    '--pointer=→' \
+    '--pointer=-→' \
     '--marker=+' \
-    '--color=bg+:-1,fg:248,fg+:255,border:240,spinner:109,hl:142' \
-    '--color=prompt:109,header:109,pointer:208,marker:208'
+    '--color=bg+:-1,bg:-1,fg:250,fg+:255' \
+    '--color=hl:142,hl+:142' \
+    '--color=header:109,info:242' \
+    '--color=pointer:167,marker:167,spinner:109'
 
 # 交互
-zstyle ':fzf-tab:*' continuous-trigger '/'       # 目录级联补全
+zstyle ':fzf-tab:*' continuous-trigger '/'       # 输入 / 进入子目录 (级联补全)
 zstyle ':fzf-tab:*' switch-group ',' '.'         # 使用 , . 在分组间快速跳转
-zstyle ':fzf-tab:*' show-group yes               # 必须开启分组显示，否则没有 Header
+zstyle ':fzf-tab:*' show-group yes               # 开启分组显示，否则没有 Header
+zstyle ':fzf-tab:*' group-colors $'\033[38;5;109m'
+zstyle ':fzf-tab:*' prefix ''                    # 不显示冗余的前缀符号
 
 # --- zsh-autosuggestions幽灵补全设置 ---
 # 策略：优先 Atuin 注入的历史，其次是补全引擎

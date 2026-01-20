@@ -1,3 +1,5 @@
+theme = "noctis"
+
 [editor]
 line-number = "relative"   # 相对行号 (Vim/Helix 神器，方便 jump)
 mouse = true               # 允许鼠标点击/滚动
