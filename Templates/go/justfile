@@ -1,0 +1,16 @@
+set shell := ["bash", "-c"]
+
+default:
+	@just --list
+
+setup:
+	@mise install || true
+
+fmt:
+	@gofmt -w .
+
+test:
+	@go test ./...
+
+run:
+	@go run .

@@ -1,13 +1,30 @@
 // 其他的 Zellij 会用默认值
 
 // 基础设置
-theme "default"
-default_shell "nu"
+theme "noctis"
+default_shell "bash" // 通过 bash -> .bashrc -> exec nu 启动，确保环境一致
 default_mode "locked" // 默认锁定，不干扰 Helix 的 Ctrl 键
 mouse_mode true
 copy_clipboard "system"
 copy_on_select true
 attach_to_session true // 不指定会话启动时，自动附加到已存在的会话
+
+// 主题定义 (Noctis)
+themes {
+    noctis {
+        fg "#e0e6ea"
+        bg "#0b1a1c"
+        black "#0b1a1c"
+        red "#e66533"
+        green "#16b673"
+        yellow "#d5971a"
+        blue "#49ace9"
+        magenta "#df769b"
+        cyan "#49d6e9"
+        white "#e0e6ea"
+        orange "#e66533"
+    }
+}
 
 // Session 行为
 session_serialization true    //自动进入 Session 序列化;可保存你的多项目会话状态

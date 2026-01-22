@@ -34,8 +34,8 @@ let modules = [
   ($nu.config-path | path dirname | path join "aliases.nu")
   ($nu.config-path | path dirname | path join "functions.nu")
   ($nu.config-path | path dirname | path join "hooks.nu")
-  ($nu.config-path | path dirname | path join "maintain.nu")
   ($nu.config-path | path dirname | path join "keybindings.nu")
+  ($nu.config-path | path dirname | path join "noctis.nu")
 ]
 for module in $modules {
   if ($module | path exists) {

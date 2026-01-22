@@ -4,7 +4,7 @@ $env.XDG_DATA_HOME = ($home | path join ".local" "share")
 $env.XDG_CACHE_HOME = ($home | path join ".cache")
 $env.XDG_STATE_HOME = ($home | path join ".local" "state")
 if ($env.XDG_RUNTIME_DIR? | is-empty) {
-  $env.XDG_RUNTIME_DIR = ("/tmp/nu-" + $env.USER)
+  $env.XDG_RUNTIME_DIR = ($env.XDG_STATE_HOME | path join "runtime")
 }
 
 mkdir --parents $env.XDG_STATE_HOME $env.XDG_CACHE_HOME $env.XDG_RUNTIME_DIR
@@ -30,8 +30,6 @@ $env.MISE_DATA_DIR = ($env.XDG_DATA_HOME | path join "mise")
 $env.MISE_CONFIG_DIR = ($env.XDG_CONFIG_HOME | path join "mise")
 $env.MISE_CACHE_DIR = ($env.XDG_CACHE_HOME | path join "mise")
 
-$env.GEMINI_API_KEY = ""
-
 $env.CARGO_HOME = ($env.XDG_DATA_HOME | path join "cargo")
 $env.RUSTUP_HOME = ($env.XDG_DATA_HOME | path join "rustup")
 $env.GOPATH = ($env.XDG_DATA_HOME | path join "go")
@@ -56,6 +54,9 @@ $env.PATH = ($extra_paths | append ($env.PATH | split row (char esep)) | uniq)
 
 $env.DO_NOT_TRACK = "1"
 
-$env.FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --info=inline --border=none --margin=0 --padding=0 --prompt='› ' --pointer='-→' --marker='+' --color=bg+:-1,bg:-1,fg:250,fg+:255 --color=hl:142,hl+:142,header:109 --color=info:242,pointer:167,marker:167,spinner:109"
+$env.FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --info=inline --border=none --margin=0 --padding=0 --prompt='› ' --pointer='-→' --marker='+' --color=bg+:-1,bg:-1,fg:#e4b781,fg+:#ffffff --color=hl:#e66533,hl+:#e66533,header:#5b858b --color=info:#5b858b,pointer:#e66533,marker:#7060eb,spinner:#5b858b"
 $env.FZF_DEFAULT_COMMAND = "fd --type f --strip-cwd-prefix --hidden --follow --exclude .git"
 $env.FZF_CTRL_T_COMMAND = $env.FZF_DEFAULT_COMMAND
+
+carapace _carapace nushell | save -f ~/.cache/carapace/init.nu
+source ~/.cache/carapace/init.nu

@@ -1,3 +1,18 @@
+[env]
+XDG_CONFIG_HOME = "{{config.home}}/.config"
+XDG_DATA_HOME = "{{config.home}}/.local/share"
+XDG_CACHE_HOME = "{{config.home}}/.cache"
+XDG_STATE_HOME = "{{config.home}}/.local/state"
+
+# 编程语言工具链变量
+CARGO_HOME = "{{config.home}}/.local/share/cargo"
+GOPATH = "{{config.home}}/.local/share/go"
+PYTHONSTARTUP = "{{config.home}}/.config/python/pythonrc"
+
+# Docker/Podman 核心配置
+DOCKER_HOST = "unix://{{env.XDG_RUNTIME_DIR}}/podman/podman.sock"
+TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE = "unix://{{env.XDG_RUNTIME_DIR}}/podman/podman.sock"
+
 # 有Core,UBI,Aqua版本的尽量下独立二进制版本;没有的再选用包管理器版本
 [tools]
 node = "latest"
@@ -30,14 +45,15 @@ usage = "latest"                        # Mise 的 CLI 补全引擎
 "ubi:junegunn/fzf" = "latest"              # 模糊搜索
 "ubi:BurntSushi/ripgrep" = "latest"        # grep++
 "ubi:sharkdp/fd" = "latest"                # find++
+"ubi:bootandy/dust" = "latest"             # du++ (Nushell 缺失递归统计，用此增强)
 
 # TUI 工作流
 "ubi:sxyazi/yazi" = "latest"                   # 终端文件管理器
-superfile = "latest"        # zellij 文件管理器
+"ubi:yorukot/superfile" = "latest"        # zellij 文件管理器
 "ubi:zellij-org/zellij" = "latest"             # 终端复用
 "ubi:helix-editor/helix" = "latest"            # 模态编辑器
 "ubi:jesseduffield/lazygit" = "latest"
-tlrc = "latest"             # 简化版 man
+"ubi:dbrgn/tealdeer" = "latest"             # tldr (rust version)
 
 # Git / 开发工具补充
 "ubi:dandavison/delta" = "latest"
@@ -51,7 +67,7 @@ tlrc = "latest"             # 简化版 man
 "ubi:SilasMarvin/lsp-ai" = "latest"
 "npm:@anthropic-ai/claude-code" = "latest"
 "ubi:SaladDay/cc-switch-cli" = "latest"
-codex = "latest"
+"npm:@openai/codex" = "latest"
 "pipx:aider-chat" = "latest"
 # gemini-cli = "latest"
 # opencode = "latest"
@@ -60,6 +76,7 @@ codex = "latest"
 "ubi:jqlang/jq" = "latest"                     # 很多脚本依赖
 
 # Containers
+"ubi:docker/cli" = "latest"
 "ubi:docker/compose" = "latest"
 "ubi:containers/podman-tui" = "latest"
 # dive = "latest"           # 镜像层分析

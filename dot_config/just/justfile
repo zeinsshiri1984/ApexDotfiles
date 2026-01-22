@@ -1,21 +1,57 @@
-default: list
+# Justfile for Apex DevEnv
+set shell := ["bash", "-c"]
 
-list:
-	just --list
+default:
+    @just --list
 
+# --- Update & Maintenance ---
+
+# Update all tools and configs (safe, no heavy cleaning)
 update:
-	mise install
-	devbox global pull || true
-	devbox global update || true
-	chezmoi apply --keep-going
+    @~/.local/bin/update-all
 
-clean:
-	chezmoi diff
-	mise prune
+# --- Cleaning Tasks (Manual Trigger) ---
 
-sync:
-	git -C "$HOME/.local/share/chezmoi" pull --rebase --autostash
-	chezmoi apply --keep-going
+# Clean Docker/Podman (prune all unused images/volumes)
+clean-docker:
+    @echo "🐳 Cleaning Docker/Podman resources..."
+    @if command -v podman &> /dev/null; then \
+        podman system prune -a -f --volumes; \
+    elif command -v docker &> /dev/null; then \
+        docker system prune -a -f --volumes; \
+    else \
+        echo "⚠️  No container engine found."; \
+    fi
 
-ai:
-	nu -c ai-ask
+# Clean language caches (Go, Node, Yarn)
+clean-cache:
+    @echo "🧹 Cleaning language caches..."
+    @go clean -modcache 2>/dev/null || true
+    @npm cache clean --force 2>/dev/null || true
+    @yarn cache clean 2>/dev/null || true
+    @echo "✅ Cache cleaned."
+
+# Clean system trash & orphans (Requires sudo for system pkg managers)
+clean-system:
+    @echo "♻️  Cleaning system trash & orphans..."
+    @if command -v trash-empty &> /dev/null; then trash-empty 30; fi
+    @if [ -f /etc/debian_version ] && command -v apt-get &>/dev/null; then \
+        sudo apt-get autoremove -y && sudo apt-get clean; \
+    elif [ -f /etc/fedora-release ] && command -v dnf &>/dev/null; then \
+        sudo dnf autoremove -y && sudo dnf clean all; \
+    fi
+
+# --- Secrets Management ---
+
+# Load secrets from Bitwarden into current session (Nushell only helper)
+# Usage: load-env (just secrets-load <id> | from json)
+secrets-load item_id:
+    @if ! command -v bw &> /dev/null; then echo "❌ bw cli not found"; exit 1; fi
+    @if [ -z "$BW_SESSION" ]; then echo "⚠️  BW_SESSION empty. Run 'bw unlock' first."; exit 1; fi
+    @bw get item {{item_id}} | jq -r '.fields | map({key: .name, value: .value}) | from_entries'
+
+# --- Project Templates ---
+
+# Create a new project from template
+new type name:
+    @nu -c "new {{type}} {{name}}"

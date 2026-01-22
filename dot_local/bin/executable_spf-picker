@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# spf-picker - 供 Helix 调用的 Superfile 选择器 wrapper
+# 用法：在 Helix 配置中绑定，如 ":sh zellij run ... -- spf-picker"
+
+# 强制设置 EDITOR 为我们的 opener
+# 这样在 Superfile 里按 'e' (或 Enter 打开文件) 时，
+# 就会触发 spf-opener 脚本，而不是真的打开 vim/nano
+export EDITOR="spf-opener"
+
+# 启动 Superfile
+exec superfile "$@"

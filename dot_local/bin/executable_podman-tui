@@ -1,4 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
+
+# 默认开启 info 级别日志，以便排查后台命令
+# 遗憾的是 podman-tui 目前没有类似 lazygit 的 'Command Log Panel' UI
+# 我们通过重定向日志到文件，若用户需要 debug，可以在另一个 pane tail -f 这个文件
 export RUST_LOG="${RUST_LOG:-info}"
-exec podman-tui "$@"
+LOG_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/podman-tui.log"
+
+# 确保日志目录存在
+mkdir -p "$(dirname "$LOG_FILE")"
+
+# 启动并记录日志
+# 1. 尝试直接启动
+exec podman-tui "$@" 2>>"$LOG_FILE"
+

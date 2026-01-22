@@ -1,71 +1,74 @@
 layout {
     default_tab_template {
-        // 顶部：显示 Tab 和 Session 名字
+        // 顶部：显示 Tab 和 Session 名字 (Compact Bar)
         pane size=1 borderless=true {
             plugin location="zellij:compact-bar"
         }
         
         children // 中间：主工作区
         
-        // 底部：显示快捷键提示
+        // 底部：显示快捷键提示 (Status Bar)
         pane size=1 borderless=true {
             plugin location="zellij:status-bar"
         }
     }
 
+    // 1. Coding: 主力开发
+    // 左 Pane: Helix (65%)
+    // 右 Pane: Terminal (35%)
     tab name="Coding" focus=true {
         pane split_direction="vertical" {
             pane size="65%" focus=true {
-                command "nu"
-                args "-c" "sleep 100ms; hx ."
+                command "bash" 
+                args "-c" "sleep 0.1; hx ." // 延迟确保 pane 准备好，启动 hx
             }
             
             pane size="35%" {
-                command "nu"
+                // 默认走 default_shell (bash -> nu)
             }
         }
     }
 
+    // 2. Test: 测试与运行
+    // 左 Pane: Zsh (执行测试脚本等)
+    // 右 Pane: Zsh/Nu (监控)
     tab name="Test" {
         pane split_direction="vertical" {
-            pane size="65%" focus=true {
-                command "nu"
+            pane size="50%" {
+                command "zsh" // 显式使用 zsh
             }
-            pane size="35%" {
-                command "nu"
+            pane size="50%" {
+                // 默认 shell
             }
         }
     }
 
+    // 3. Debug: 调试日志
     tab name="Debug" {
         pane split_direction="vertical" {
-            pane size="65%" focus=true {
-                command "nu"
+            pane size="60%" {
             }
-            pane size="35%" {
-                command "nu"
+            pane size="40%" {
             }
         }
     }
 
+    // 4. Research: 查资料/验证 POC
     tab name="Research" {
         pane split_direction="vertical" {
-            pane size="65%" focus=true {
-                command "nu"
+            pane size="50%" {
             }
-            pane size="35%" {
-                command "nu"
+            pane size="50%" {
             }
         }
     }
 
+    // 5. Ops: 运维/Docker/Git
     tab name="Ops" {
         pane split_direction="vertical" {
-            pane size="65%" focus=true {
-                command "nu"
+            pane size="50%" {
             }
-            pane size="35%" {
-                command "nu"
+            pane size="50%" {
             }
         }
     }

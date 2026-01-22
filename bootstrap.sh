@@ -1,30 +1,40 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "🚀环境初始化..."
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_HOME="$HOME/.local/share"
+echo "🚀 Apex DevEnv Bootstrap (Phase 1)..."
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export PATH="$HOME/.local/bin:$PATH"
 
-OS_ID="$(awk -F= '/^ID=/{print $2}' /etc/os-release 2>/dev/null | tr -d '"')"
+mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_STATE_HOME" "$XDG_CACHE_HOME"
+
+# OS Detection
+OS_ID=$(grep -E '^ID=' /etc/os-release | cut -d= -f2 | tr -d '"')
+IS_IMMUTABLE=0
 WSL_FLAG=0
-if grep -qi microsoft /proc/version 2>/dev/null; then
+GUI_FLAG=0
+
+if [ -f /run/ostree-booted ] || [ -f /etc/fedora-backward-compatibility ]; then
+    echo "❄️  Immutable OS detected ($OS_ID)"
+    IS_IMMUTABLE=1
+fi
+
+# WSL Detection
+if [ -n "${WSL_DISTRO_NAME-}" ] || grep -qi microsoft /proc/version 2>/dev/null; then
+    echo "🪟 WSL detected"
     WSL_FLAG=1
 fi
-GUI_FLAG=0
-if [ -n "${DISPLAY-}" ] || [ "${XDG_SESSION_TYPE-}" = "wayland" ] || [ "${XDG_SESSION_TYPE-}" = "x11" ]; then
+
+# GUI Detection (Simple check for DISPLAY or Wayland)
+if [ -n "${DISPLAY-}" ] || [ -n "${WAYLAND_DISPLAY-}" ]; then
     GUI_FLAG=1
 fi
 
-ROOT_MOUNT_OPTS="$(findmnt -no OPTIONS / 2>/dev/null || true)"
-if echo "$ROOT_MOUNT_OPTS" | grep -qE '(^|,)ro(,|$)'; then
-    echo "✅ 根分区处于只读模式"
-else
-    echo "⚠️  根分区为可写，请确保不可变系统策略已启用"
-fi
-
+# 1. Install Mise (The Manager)
 if ! command -v mise &> /dev/null; then
-    echo "📦安装mise"
+    echo "📦 Installing mise..."
     curl https://mise.run | sh
 fi
 
@@ -49,10 +59,17 @@ if [ ! -d "$XDG_DATA_HOME/chezmoi" ]; then
     echo "📦 初始化 Dotfiles..."
     chezmoi init --apply git@github.com:zeinsshiri1984/ApexDotfiles.git
 else
-    chezmoi apply --keep-going #--keep-going 防止因单个文件冲突导致整个更新停止
+    echo "🔄 Updating dotfiles..."
+    chezmoi apply --keep-going
 fi
 
-echo "📦mise install"
-mise install
+# 4. Install All Tools defined in config.toml
+echo "📦 Installing all user environment tools via mise..."
+mise install -y
 
-echo "🎉 系统已就绪。请将终端启动命令设为 'nu'。"
+# 5. Shell Setup
+# We use bash as the login shell, which execs nu in interactive mode via .bashrc
+# So we don't force change shell to nu anymore, but we can ensure bash is default if needed.
+# For Immutable OS, we rely on the user's terminal emulator or OS default being bash.
+
+echo "🎉 Apex DevEnv System Environment Ready!"

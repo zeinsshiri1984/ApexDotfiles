@@ -1,0 +1,13 @@
+set shell := ["bash", "-c"]
+
+default:
+	@just --list
+
+setup:
+	@mise install || true
+
+build:
+	@javac -d out src/Main.java
+
+run:
+	@java -cp out Main

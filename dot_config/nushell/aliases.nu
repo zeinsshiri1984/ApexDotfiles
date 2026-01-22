@@ -6,6 +6,22 @@ alias cat = bat
 alias grep = rg
 alias find = fd
 
+# 行业标准工具 -> Nushell 内置命令或增强工具
+# Nushell 自己的 'ps'/'sys disks' 已经很强大，且返回结构化数据
+
+# df: 使用 Nushell 的 sys disks，并简单格式化
+alias df = sys disks
+
+# du: Nushell 暂无直接等价的递归统计，使用增强工具 dust
+alias du = dust
+
+# top: 依然推荐 btop，因为它是 TUI 且 Nushell 没有内置全屏监控
+alias top = btop 
+
+alias help = tldr
+alias t = tldr
+
+
 alias h = hx
 alias vi = hx
 alias vim = hx
@@ -15,20 +31,13 @@ alias zc = zellij attach -c
 
 alias cc = claude
 alias cx = codex
-alias gm = gemini
+# alias gm = gemini
 
-alias top = btop
-alias ps = procs
-alias df = duf
-alias du = dust -d 1
-alias help = tldr
-alias t = tldr
-alias sed = sd
-alias jq = jaq
+alias jq = jq
 
 alias curl = curlie
-alias dig = doggo
-alias trace = trip
+# alias dig = doggo
+# alias trace = trip
 
 alias ... = cd ../..
 alias .... = cd ../../..

@@ -1,0 +1,11 @@
+# .bash_profile
+
+# Load .profile if it exists
+if [ -f "$HOME/.profile" ]; then
+    . "$HOME/.profile"
+fi
+
+# Load .bashrc if it exists
+if [ -f "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc"
+fi

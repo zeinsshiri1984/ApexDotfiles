@@ -2,23 +2,15 @@
 set -e # 遇到错误立即停止
 
 echo "📦 [1/4] 检查/更新 Devbox..."
+# 检查并安装 Devbox (Jetify)
 if ! command -v devbox &> /dev/null; then
-    curl -fsSL https://get.jetify.com/devbox | bash
+    if [ "$WSL_FLAG" -eq 0 ]; then
+        curl -fsSL https://get.jetify.com/devbox | bash
+    else
+        echo "⚠️  WSL 环境不支持 Devbox，跳过安装。"
+    fi
 else
     devbox version update >/dev/null 2>&1 || true
-fi
-
-echo "📦 [2/4] 检查 ai CLI..."
-if ! command -v claude &> /dev/null; then
-    curl -fsSL https://claude.ai/install.sh | bash
-else
-    timeout 10s claude update || true 
-fi
-
-if ! command -v codex &> /dev/null; then
-    npm install -g @openai/codex
-else
-    timeout 10s npm update -g @openai/codex || true 
 fi
 
 ROOT_MOUNT_OPTS="$(findmnt -no OPTIONS / 2>/dev/null || true)"
@@ -42,11 +34,11 @@ EOF
 fi
 
 #  Systemd Socket (用户级)
-if command -v systemctl &>/dev/null; then
+if command -v systemctl &>/dev/null && systemctl --user list-units &>/dev/null; then
     mkdir -p "$HOME/.config/systemd/user"
 
     # 启用并立即启动 Socket
-    systemctl --user enable --now podman.socket
+    systemctl --user enable --now podman.socket || echo "⚠️  Systemd socket enable failed (ignorable on some systems)"
     
     # 检查 Socket 文件
     if [ -S "$XDG_RUNTIME_DIR/podman/podman.sock" ]; then
@@ -54,23 +46,18 @@ if command -v systemctl &>/dev/null; then
     else
         echo "⚠️  Podman Socket 启动似乎延迟了，请稍后检查。"
     fi
-
-    # 设置 Docker Host 供当前脚本后续使用 (持久化配置在 .zshenv)
-    export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
-    export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="${XDG_RUNTIME_DIR}/podman/podman.sock"
+else
+    echo "⚠️  Systemd 不可用或无权限，跳过 Podman Socket 自动激活。"
 fi
 
-echo "📦 [4/4] 默认 Shell 设置 ..."
-TARGET_SHELL="$(which bash)"
-if [ "$ROOT_IS_RO" = "true" ]; then
-    echo "⚠️  检测到只读根分区，跳过系统级 shell 与 sysctl 修改"
-else
-    if [ "$SHELL" != "$TARGET_SHELL" ]; then
-        grep -q "$TARGET_SHELL" /etc/shells || echo "$TARGET_SHELL" | sudo tee -a /etc/shells >/dev/null
-        sudo chsh -s "$TARGET_SHELL" "$USER"
-    fi
+# 设置 Docker Host 供当前脚本后续使用 (持久化配置在 .profile/.zshenv)
+export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="${XDG_RUNTIME_DIR}/podman/podman.sock"
 
-    echo "📦 提升文件监听上限  ..."
+echo "📦 [4/4] 默认 Shell 设置 ..."
+echo "   -> 采用 Bash -> Exec Nu 策略，跳过 chsh 修改。"
+
+echo "📦 提升文件监听上限  ..."
     if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
         echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches >/dev/null
     fi

@@ -1,19 +1,27 @@
 gui:
+  # 显示后台执行的 Git 命令
   showCommandLog: true
+  
+  # Noctis 主题适配
   theme:
     activeBorderColor:
-      - "#49ace9"
+      - "#49ace9" # Picton Blue
     inactiveBorderColor:
-      - "#5b858b"
+      - "#5b858b" # Horizon
     optionsTextColor:
-      - "#df769b"
+      - "#df769b" # Pale Violet Red
     selectedLineBgColor:
-      - "#0b1a1c"
+      - "#1a2b2d" # 稍微亮一点的背景，区分选中
     selectedRangeBgColor:
-      - "#0b1a1c"
+      - "#1a2b2d"
     cherryPickedCommitBgColor:
-      - "#49e9a6"
+      - "#49e9a6" # Eucalyptus
     cherryPickedCommitFgColor:
-      - "#0b1a1c"
+      - "#0b1a1c" # Bg Dark
     defaultFgColor:
-      - "#e0e6ea"
+      - "#e0e6ea" # Fg
+    searchingActiveBorderColor:
+      - "#e66533" # Cinnabar (搜索时高亮)
+
+  # 图标配置 (需 Nerd Font)
+  showIcons: true
