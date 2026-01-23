@@ -80,6 +80,12 @@ fi
 REPO_URL="git@github.com:zeinsshiri1984/ApexDotfiles.git"
 DOTFILES_DIR="$XDG_DATA_HOME/chezmoi"
 
+# 如果目录存在但不是 git 仓库（比如是个空壳），暴力清理
+if [ -d "$DOTFILES_DIR" ] && [ ! -d "$DOTFILES_DIR/.git" ]; then
+    echo "🧹 Detected corrupt dotfiles directory. Cleaning up..."
+    rm -rf "$DOTFILES_DIR"
+fi
+
 if [ ! -d "$DOTFILES_DIR" ]; then
     echo "⬇️  Cloning Dotfiles..."
     # 尝试 SSH clone，如果因为 Key 问题失败，提示用户
@@ -90,15 +96,20 @@ if [ ! -d "$DOTFILES_DIR" ]; then
     fi
 else
     echo "🔄 Updating Dotfiles..."
-    chezmoi apply --keep-going
+    chezmoi apply --force
 fi
 
 # --- 7. Devbox Installation (Requires Nix) ---
 if ! command -v devbox &> /dev/null; then
     echo "📦 Installing Devbox..."
     # Devbox 安装脚本会自动处理 Nix 安装 (如果不存在)
-    # 在非 Immutable 系统上这可能需要 sudo 权限
-    curl -fsSL https://get.jetify.com/devbox | bash
+    if [ "$IS_IMMUTABLE" -eq 1 ]; then
+        # Immutable OS: 强制安装到用户目录，无需 sudo
+        curl -fsSL https://get.jetify.com/devbox | FORCE=1 INSTALL_DIR="$HOME/.local/bin" bash
+    else
+        # Standard OS: 标准安装 (可能触发 sudo)
+        curl -fsSL https://get.jetify.com/devbox | bash
+    fi
 fi
 
 # --- 8. Finalize ---
