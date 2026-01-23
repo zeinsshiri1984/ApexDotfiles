@@ -34,7 +34,7 @@ The world's top-level development environment configuration
 Execute the following command to deploy the world's first development environment in one click.
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/bootstrap.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/bootstrap.sh)"
 ```
     
 ## Roadmap
