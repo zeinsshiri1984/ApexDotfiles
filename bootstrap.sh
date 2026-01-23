@@ -59,7 +59,7 @@ fi
 # --- 4. Toolchain Bootstrap (Just, Chezmoi, GH) ---
 # 我们先通过 mise 安装这三个核心工具，以便后续操作
 echo "📦 Bootstrapping core tools via Mise..."
-mise use -g -y chezmoi just github-cli bitwarden-cli
+mise use -g -y chezmoi just github-cli
 
 # --- 5. GitHub Authentication (Critical for Dotfiles) ---
 # 只有未登录时才尝试登录
