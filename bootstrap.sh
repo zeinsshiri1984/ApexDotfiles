@@ -9,10 +9,12 @@ export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
-# 将 mise shims 和 local bin 加入 PATH，确保脚本后续可用
-export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 
 mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_STATE_HOME" "$XDG_CACHE_HOME" "$HOME/.local/bin"
+
+# 将 mise shims 和 local bin 加入 PATH，确保脚本后续可用
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
 
 # --- 1. Environment Detection ---
 if [ -f /etc/os-release ]; then
@@ -48,18 +50,9 @@ fi
 if [ "$IS_IMMUTABLE" -eq 0 ]; then
     echo "🔧 Checking base dependencies..."
     if command -v apt-get &> /dev/null; then
-        # Debian/Ubuntu/WSL
-        if ! command -v git &> /dev/null || ! command -v curl &> /dev/null || ! command -v unzip &> /dev/null; then
-             echo "📦 Installing base utils (sudo required)..."
-             sudo apt-get update && sudo apt-get install -y git curl unzip build-essential
-        fi
+        sudo apt-get update && sudo apt-get install -y git curl unzip build-essential
     elif command -v dnf &> /dev/null; then
-        # Fedora/CentOS
-         if ! command -v git &> /dev/null || ! command -v curl &> /dev/null; then
-             sudo dnf install -y git curl unzip @development-tools
-         fi
-    else
-        echo "Unknown package manager. Ensure git, curl, unzip are installed."
+        sudo dnf install -y git curl unzip @development-tools
     fi
 fi
 
@@ -70,7 +63,7 @@ if ! command -v mise &> /dev/null; then
     # Ensure shim is active for this script execution
     eval "$($HOME/.local/bin/mise activate bash)"
 else
-    echo "✅ Mise already installed."
+    echo "✅ Mise detected."
     eval "$(mise activate bash)"
 fi
 

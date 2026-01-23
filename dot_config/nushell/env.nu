@@ -1,11 +1,4 @@
 let home = $env.HOME
-$env.XDG_CONFIG_HOME = ($home | path join ".config")
-$env.XDG_DATA_HOME = ($home | path join ".local" "share")
-$env.XDG_CACHE_HOME = ($home | path join ".cache")
-$env.XDG_STATE_HOME = ($home | path join ".local" "state")
-if ($env.XDG_RUNTIME_DIR? | is-empty) {
-  $env.XDG_RUNTIME_DIR = ($env.XDG_STATE_HOME | path join "runtime")
-}
 
 mkdir --parents $env.XDG_STATE_HOME $env.XDG_CACHE_HOME $env.XDG_RUNTIME_DIR
 
@@ -14,18 +7,19 @@ $env.VISUAL = "hx"
 $env.LANG = "en_US.UTF-8"
 $env.PAGER = "less"
 
+# --- Tool Configuration ---
 $env.BAT_CONFIG_PATH = ($env.XDG_CONFIG_HOME | path join "bat" "config")
 $env.YAZI_CONFIG_HOME = ($env.XDG_CONFIG_HOME | path join "yazi")
-$env.LESS = "-R -F -X -i -M"
-$env.LESSHISTFILE = ($env.XDG_STATE_HOME | path join "less" "history")
 $env.GNUPGHOME = ($env.XDG_DATA_HOME | path join "gnupg")
 $env.RIPGREP_CONFIG_PATH = ($env.XDG_CONFIG_HOME | path join "ripgrep" "config")
-$env.ATUIN_CONFIG_DIR = ($env.XDG_CONFIG_HOME | path join "atuin")
-$env.ATUIN_NOBIND = "true"
 $env.ZELLIJ_CONFIG_DIR = ($env.XDG_CONFIG_HOME | path join "zellij")
+$env.ATUIN_CONFIG_DIR = ($env.XDG_CONFIG_HOME | path join "atuin")
+$env.ATUIN_NOBIND = "true" # Handle bindings manually in config.nu
 $env.CARAPACE_BRIDGES = "zsh,bash,inshellisense"
 
 $env.DEVBOX_NO_ANALYTICS = "1"
+
+# --- Mise Config ---
 $env.MISE_DATA_DIR = ($env.XDG_DATA_HOME | path join "mise")
 $env.MISE_CONFIG_DIR = ($env.XDG_CONFIG_HOME | path join "mise")
 $env.MISE_CACHE_DIR = ($env.XDG_CACHE_HOME | path join "mise")
@@ -58,5 +52,11 @@ $env.FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --info=inline --border=no
 $env.FZF_DEFAULT_COMMAND = "fd --type f --strip-cwd-prefix --hidden --follow --exclude .git"
 $env.FZF_CTRL_T_COMMAND = $env.FZF_DEFAULT_COMMAND
 
-carapace _carapace nushell | save -f ~/.cache/carapace/init.nu
-source ~/.cache/carapace/init.nu
+# --- Cache Generation (Self-Healing) ---
+# Only generate if missing to ensure instant startup
+let carapace_cache = ($env.XDG_CACHE_HOME | path join "carapace" "init.nu")
+if not ($carapace_cache | path exists) {
+    mkdir ($carapace_cache | path dirname)
+    # Use 'do -i' to ignore errors during bootstrap
+    do -i { carapace _carapace nushell | save -f $carapace_cache }
+}

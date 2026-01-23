@@ -1,66 +1,58 @@
 #!/bin/bash
-set -e # 遇到错误立即停止
+set -euo pipefail
 
-echo "📦 [1/4] 检查/更新 Devbox..."
-# 检查并安装 Devbox (Jetify)
-if ! command -v devbox &> /dev/null; then
-    if [ "$WSL_FLAG" -eq 0 ]; then
-        curl -fsSL https://get.jetify.com/devbox | bash
-    else
-        echo "⚠️  WSL 环境不支持 Devbox，跳过安装。"
-    fi
-else
-    devbox version update >/dev/null 2>&1 || true
+echo "⚙️  [System Config] Running idempotent setup..."
+
+# 1. Devbox Check
+if command -v devbox &>/dev/null; then
+  devbox version update >/dev/null 2>&1 || true
 fi
 
-ROOT_MOUNT_OPTS="$(findmnt -no OPTIONS / 2>/dev/null || true)"
-ROOT_IS_RO="false"
-if echo "$ROOT_MOUNT_OPTS" | grep -qE '(^|,)ro(,|$)'; then
-    ROOT_IS_RO="true"
-fi
-
-echo "📦 [3/4] 配置 Podman Socket & Docker Shim..."
+# 2. Podman & Docker Shim Setup
 mkdir -p "$HOME/.local/bin"
-
-#  Docker Shim (二进制劫持，解决许多工具脚本 调用 docker 的问题)
 DOCKER_SHIM="$HOME/.local/bin/docker"
-if [ ! -f "$DOCKER_SHIM" ]; then
-    cat << 'EOF' > "$DOCKER_SHIM"
+
+# 仅当真正的 docker 不在 path 中，或者我们想强制劫持时
+if [ ! -f "$DOCKER_SHIM" ] && ! command -v docker &>/dev/null; then
+  echo "🐳 Creating Podman wrapper for Docker CLI..."
+  cat << 'EOF' > "$DOCKER_SHIM"
 #!/bin/sh
 exec podman "$@"
 EOF
-    chmod +x "$DOCKER_SHIM"
-    echo "   -> Shim 创建成功"
+  chmod +x "$DOCKER_SHIM"
 fi
 
-#  Systemd Socket (用户级)
-if command -v systemctl &>/dev/null && systemctl --user list-units &>/dev/null; then
-    mkdir -p "$HOME/.config/systemd/user"
+# 3. Systemd Socket (User Level)
+# 仅在非容器化环境且 Systemd 可用时尝试
+if command -v systemctl &>/dev/null && [ ! -f /run/.containerenv ]; then
+    if systemctl --user list-units --full --all &>/dev/null; then
+        echo "🔌 Ensuring Podman socket is active..."
+        systemctl --user enable --now podman.socket 2>/dev/null || true
+    fi
+fi
 
-    # 启用并立即启动 Socket
-    systemctl --user enable --now podman.socket || echo "⚠️  Systemd socket enable failed (ignorable on some systems)"
+# 4. Flatpak Apps (GUI Only) - Phase 2 Requirement
+# [ADDED] 仅在有 Flatpak 的环境下执行 (Bluefin/PopOS)
+if command -v flatpak &>/dev/null; then
+    echo "📦 Installing GUI Apps via Flatpak..."
+    # 确保 Flathub 存在
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo --user
     
-    # 检查 Socket 文件
-    if [ -S "$XDG_RUNTIME_DIR/podman/podman.sock" ]; then
-        echo "✅ Podman Socket 已就绪: $XDG_RUNTIME_DIR/podman/podman.sock"
-    else
-        echo "⚠️  Podman Socket 启动似乎延迟了，请稍后检查。"
-    fi
-else
-    echo "⚠️  Systemd 不可用或无权限，跳过 Podman Socket 自动激活。"
+    # 基础 GUI 工具集 (按需添加)
+    # flatpak install -y --noninteractive --user flathub com.mitchellh.ghostty || true
 fi
 
-# 设置 Docker Host 供当前脚本后续使用 (持久化配置在 .profile/.zshenv)
-export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
-export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="${XDG_RUNTIME_DIR}/podman/podman.sock"
-
-echo "📦 [4/4] 默认 Shell 设置 ..."
-echo "   -> 采用 Bash -> Exec Nu 策略，跳过 chsh 修改。"
-
-echo "📦 提升文件监听上限  ..."
-    if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
-        echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches >/dev/null
+# 4. Kernel Tuning (Notify Only for Immutable/No-Sudo)
+# 尝试提升 file watches，失败则静默或警告，不阻塞
+if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
+    CURRENT_LIMIT=$(cat /proc/sys/fs/inotify/max_user_watches)
+    if [ "$CURRENT_LIMIT" -lt 524288 ]; then
+        if command -v sudo &>/dev/null && sudo -n true 2>/dev/null; then
+            echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches >/dev/null
+            echo "✅ Increased file watch limit."
+        else
+            echo "⚠️  File watch limit is low ($CURRENT_LIMIT). Run this manually if tools fail:"
+            echo "   echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches"
+        fi
     fi
 fi
-
-echo "✅ 用户环境就绪！"

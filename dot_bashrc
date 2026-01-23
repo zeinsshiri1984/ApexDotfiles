@@ -1,43 +1,35 @@
-# .bashrc
-
-# If not running interactively, don't do anything
+# Non-interactive? Exit.
 [[ $- != *i* ]] && return
 
-# --- Interactive Session Only ---
-
-# History control
-HISTCONTROL=ignoreboth
-shopt -s histappend
-HISTSIZE=1000
-HISTFILESIZE=2000
-
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
-
-# Make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# Enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+# 1. Mise Activation (Essential)
+# 必须先激活 Mise，才能找到 config.toml 中定义的 Nushell
+if [ -x "$HOME/.local/bin/mise" ]; then
+  eval "$($HOME/.local/bin/mise activate bash)"
 fi
 
-# Load Starship (if mise didn't load it or just to be safe/override)
+# 2. The Handover to Nushell (Interactive Only)
+# 只有在没有进入 Nu 子 shell 时才执行
+if command -v nu &> /dev/null && [ -z "${NU_VERSION-}" ]; then
+    
+    # [Pre-Flight] Ensure Podman Socket (Standard Linux/WSL)
+    # 快速检查，避免每次启动都调用 systemctl
+    if [ ! -S "$XDG_RUNTIME_DIR/podman/podman.sock" ]; then
+        if command -v systemctl &> /dev/null; then
+            systemctl --user start podman.socket &> /dev/null || true
+        fi
+    fi
+
+    # [EXEC] Replace Bash Process
+    # 使用 exec 节省内存并保持 PID
+    exec nu
+fi
+
+# 3. Bash Fallback (Rescue Mode)
+# 如果 Nushell 挂了，这里是最后的防线
+[ -f ~/.profile ] && . ~/.profile
+
 if command -v starship >/dev/null 2>&1; then
     eval "$(starship init bash)"
 fi
-
-# Auto-launch Nushell logic
-# Only if we are in an interactive bash, and we haven't already tried to launch nu (prevent loops if nu crashes)
-# And make sure we are not in a sub-shell or specific context if needed.
-# For now, simple check: if nu exists, exec it.
-if command -v nu >/dev/null 2>&1; then
-    # We use 'exec' to replace the bash process with nushell
-    # This means 'exit' in nushell will close the terminal window/session, which is desired.
-    exec nu
-fi
+alias ls='ls --color=auto'
+alias ll='ls -alF'

@@ -1,44 +1,50 @@
-let starship_cache = ($nu.cache-path | path join "starship" "init.nu")
-if not ($starship_cache | path exists) {
-  mkdir --parents ($starship_cache | path dirname)
-  starship init nu | save -f $starship_cache
-}
-source $starship_cache
-
-let atuin_cache = ($nu.cache-path | path join "atuin" "init.nu")
-if not ($atuin_cache | path exists) {
-  mkdir --parents ($atuin_cache | path dirname)
-  atuin init nu | save -f $atuin_cache
-}
-source $atuin_cache
-
-let carapace_cache = ($nu.cache-path | path join "carapace" "init.nu")
-if not ($carapace_cache | path exists) {
-  mkdir --parents ($carapace_cache | path dirname)
-  carapace _carapace nushell | save -f $carapace_cache
-}
-source $carapace_cache
-
-let mise_cache = ($nu.cache-path | path join "mise" "init.nu")
-if not ($mise_cache | path exists) {
-  mkdir --parents ($mise_cache | path dirname)
-  mise activate nu | save -f $mise_cache
-}
-source $mise_cache
-
-def --wrapped run-bash [script: path, ...args] {
-  ^bash $script ...$args
+$env.config = {
+    show_banner: false
+    edit_mode: vi
+    shell_integration: true
+    # Reduced flicker
+    render_right_prompt_on_last_line: false 
 }
 
-let modules = [
-  ($nu.config-path | path dirname | path join "aliases.nu")
-  ($nu.config-path | path dirname | path join "functions.nu")
-  ($nu.config-path | path dirname | path join "hooks.nu")
-  ($nu.config-path | path dirname | path join "keybindings.nu")
-  ($nu.config-path | path dirname | path join "noctis.nu")
-]
-for module in $modules {
-  if ($module | path exists) {
-    source $module
-  }
+# --- Cache Loader Helper ---
+# Checks for cache file, generates if missing, then sources it
+def source-or-create [name: string, cmd: string] {
+    let cache_file = ($env.XDG_CACHE_HOME | path join $name "init.nu")
+    if not ($cache_file | path exists) {
+        mkdir ($cache_file | path dirname)
+        # Use 'bash -c' as fallback if nu command fails, 
+        # or execute the command string directly if it's a simple nu command
+        if $name == "mise" {
+            mise activate nu | save -f $cache_file
+        } else if $name == "starship" {
+            starship init nu | save -f $cache_file
+        } else if $name == "atuin" {
+            atuin init nu | save -f $cache_file
+        } else if $name == "zoxide" {
+            zoxide init nushell | save -f $cache_file
+        }
+    }
+    source $cache_file
+}
+
+# --- Init Modules ---
+source-or-create "mise" "mise activate nu"
+source-or-create "starship" "starship init nu"
+source-or-create "zoxide" "zoxide init nushell"
+source-or-create "atuin" "atuin init nu"
+
+# Carapace was generated in env.nu because it needs Env Vars to be set early? 
+# Actually config.nu is fine. Let's load it here.
+let carapace_cache = ($env.XDG_CACHE_HOME | path join "carapace" "init.nu")
+if ($carapace_cache | path exists) {
+    source $carapace_cache
+}
+
+# --- Import Submodules ---
+# Put your aliases, functions, etc. in a 'modules' folder for cleanliness
+let modules_path = ($nu.default-config-dir | path join "modules")
+if ($modules_path | path exists) {
+    for file in (ls ($modules_path | path join "*.nu")) {
+        source $file.name
+    }
 }

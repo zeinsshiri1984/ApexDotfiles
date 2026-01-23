@@ -1,8 +1,6 @@
 {
   "packages": [
-    "podman",
     "mosh",
-    "nushell",
     "ffmpeg",
     "p7zip",
     "poppler_utils",

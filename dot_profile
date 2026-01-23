@@ -1,29 +1,20 @@
-# .profile
-
 # XDG Base Directory Specification
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-$XDG_STATE_HOME/runtime}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 
 mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_STATE_HOME" "$XDG_RUNTIME_DIR"
 
-# Add local bin paths
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-if [ -d "$XDG_DATA_HOME/cargo/bin" ] ; then
-    PATH="$XDG_DATA_HOME/cargo/bin:$PATH"
-fi
-if [ -d "$XDG_DATA_HOME/go/bin" ] ; then
-    PATH="$XDG_DATA_HOME/go/bin:$PATH"
-fi
-
-# Load Mise (The Manager)
-if command -v mise >/dev/null 2>&1; then
-  eval "$(mise activate bash)"
-fi
+# --- Path Management ---
+# User Bin > Mise Shims > Cargo > Go > System
+PATH_DIRS=(
+    "$HOME/.local/bin"
+    "$XDG_DATA_HOME/mise/shims"
+    "$XDG_DATA_HOME/cargo/bin"
+    "$XDG_DATA_HOME/go/bin"
+)
 
 # Common Environment Variables
 export EDITOR='hx'
@@ -31,8 +22,9 @@ export VISUAL='hx'
 export LANG=en_US.UTF-8
 export PAGER='less'
 
-# Docker/Podman
+# Docker/Podman Socket (Dynamic UID)
 export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
 export DOCKER_SOCK="$DOCKER_HOST"
-export DOCKER_CONTENT_TRUST=0
 export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="$DOCKER_HOST"
+# Optimization: Trust local content by default for dev
+export DOCKER_CONTENT_TRUST=0
