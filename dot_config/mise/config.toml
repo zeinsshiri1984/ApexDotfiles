@@ -79,7 +79,7 @@ btop = "latest"
 watchexec = "latest"        # 文件变动执行
 lnav = "latest"                # 日志查看
 tailspin = "latest"
-viddy" = "latest              # watch 替代
+viddy = "latest              # watch 替代
 "ubi:rcoh/angle-grinder" = "latest"
 
 # 网络
@@ -113,15 +113,16 @@ glow = "latest"
 pipx.uvx = true
 experimental = true
 secure_mismatches_with_override = true # 允许安装不同架构的包（当找不到完美匹配时）
+plugin_autoinstall = true
 
 [env]
 # 保留基础 XDG 定义，确保 Mise Shims 在任何环境下能正确解析
-XDG_CONFIG_HOME = "{{config.home}}/.config"
-XDG_DATA_HOME = "{{config.home}}/.local/share"
-XDG_CACHE_HOME = "{{config.home}}/.cache"
-XDG_STATE_HOME = "{{config.home}}/.local/state"
+XDG_CONFIG_HOME = "{{env.HOME}}/.config"
+XDG_DATA_HOME = "{{env.HOME}}/.local/share"
+XDG_CACHE_HOME = "{{env.HOME}}/.cache"
+XDG_STATE_HOME = "{{env.HOME}}/.local/state"
 
 # 编程语言工具链变量
-CARGO_HOME = "{{config.home}}/.local/share/cargo"
-GOPATH = "{{config.home}}/.local/share/go"
-PYTHONSTARTUP = "{{config.home}}/.config/python/pythonrc"
+CARGO_HOME = "{{env.HOME}}/.local/share/cargo"
+GOPATH = "{{env.HOME}}/.local/share/go"
+PYTHONSTARTUP = "{{env.HOME}}/.config/python/pythonrc"
