@@ -25,13 +25,10 @@ else
 fi
 
 IS_IMMUTABLE=0
+[ -f /run/ostree-booted ] && IS_IMMUTABLE=1
+echo "🔍 Detected: $OS_ID (Immutable: $IS_IMMUTABLE)"
+
 WSL_FLAG=0
-
-if [ -f /run/ostree-booted ] || [ -f /etc/fedora-backward-compatibility ]; then
-    echo "❄️  Immutable OS detected ($OS_ID). Read-only root assumed."
-    IS_IMMUTABLE=1
-fi
-
 if grep -qi microsoft /proc/version 2>/dev/null || [ -n "${WSL_DISTRO_NAME-}" ]; then
     echo "🪟 WSL detected."
     WSL_FLAG=1
@@ -48,11 +45,38 @@ fi
 
 # --- 2. Base Dependencies (Standard OS Only) ---
 if [ "$IS_IMMUTABLE" -eq 0 ]; then
-    echo "🔧 Checking base dependencies..."
+    echo "🔧 Checking system dependencies..."
     if command -v apt-get &> /dev/null; then
-        sudo apt-get update && sudo apt-get install -y git curl unzip build-essential
+        sudo apt-get update
+        sudo apt-get install -y git curl unzip build-essential podman
     elif command -v dnf &> /dev/null; then
-        sudo dnf install -y git curl unzip @development-tools
+        sudo dnf install -y git curl unzip @development-tools podman
+    fi
+fi
+
+# [Config] Docker Shim (Aliasing podman as docker)
+DOCKER_SHIM="$HOME/.local/bin/docker"
+if [ ! -f "$DOCKER_SHIM" ] && ! command -v docker &>/dev/null; then
+  echo "🐳 Creating Podman wrapper for Docker CLI..."
+  cat << 'EOF' > "$DOCKER_SHIM"
+#!/bin/sh
+exec podman "$@"
+EOF
+  chmod +x "$DOCKER_SHIM"
+fi
+
+# [Config] Kernel Tuning (File Watches for Dev Tools)
+# 仅提示，不强制阻塞 (幂等性)
+if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
+    CURRENT_LIMIT=$(cat /proc/sys/fs/inotify/max_user_watches)
+    if [ "$CURRENT_LIMIT" -lt 524288 ]; then
+        echo "⚠️  Low file watch limit ($CURRENT_LIMIT)."
+        if command -v sudo &>/dev/null; then
+             echo "🔧 Increasing limit to 524288..."
+             echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches >/dev/null
+        else
+             echo "   Run manually: echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches"
+        fi
     fi
 fi
 
@@ -69,7 +93,7 @@ fi
 
 # --- 4. Toolchain Bootstrap (Just, Chezmoi, GH) ---
 echo "📦 Bootstrapping core tools via Mise..."
-mise use -g -y chezmoi just github-cli
+mise use -g -y ubi:twpayne/chezmoi ubi:casey/just ubi:cli/cli
 
 # --- 5. GitHub Authentication (Critical for Dotfiles) ---
 # 只有未登录时才尝试登录
@@ -118,6 +142,4 @@ if ! command -v devbox &> /dev/null; then
     fi
 fi
 
-# --- 8. Finalize ---
-echo "✅ Bootstrap Complete."
-echo "👉 Action Required: Run 'exec bash' or restart your terminal to reload environment."
+echo "✅ Bootstrap Complete.👉 Run 'exec bash' or restart terminal to load Mise/Nushell."

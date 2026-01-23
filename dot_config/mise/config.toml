@@ -1,6 +1,6 @@
 # 有Core,UBI,Aqua版本的尽量下独立二进制版本;没有的再选用包管理器版本
 [tools]
-node = "latest"
+node = "lts"
 python = "latest"
 "ubi:astral-sh/uv" = "latest"
 usage = "latest"                        # Mise 的 CLI 补全引擎
@@ -11,8 +11,9 @@ usage = "latest"                        # Mise 的 CLI 补全引擎
 "ubi:cli/cli" = "latest"
 "ubi:casey/just" = "latest"                    # 任务运行器
 "pipx:copier" = "latest"
+"ubi:dopplerhq/cli" = "latest"
 
-# Shell Core (Nushell Stack)
+# Shell Enhancements
 "ubi:nushell/nushell" = "latest"
 "ubi:starship/starship" = "latest"
 "ubi:atuinsh/atuin" = "latest"                # 历史记录同步
@@ -25,7 +26,7 @@ usage = "latest"                        # Mise 的 CLI 补全引擎
 "ubi:BurntSushi/ripgrep" = "latest"        # grep++
 "ubi:sharkdp/fd" = "latest"                # find++
 "ubi:bootandy/dust" = "latest"             # du++ (Nushell 缺失递归统计，用此增强)
-"ubi:charmbracelet/gum" = "latest"             # 脚本 UI
+"ubi:dbrgn/tealdeer" = "latest"             # tldr (rust version)
 
 # TUI 工作流
 "ubi:sxyazi/yazi" = "latest"                   # 终端文件管理器
@@ -33,9 +34,9 @@ usage = "latest"                        # Mise 的 CLI 补全引擎
 "ubi:zellij-org/zellij" = "latest"             # 终端复用
 "ubi:helix-editor/helix" = "latest"            # 模态编辑器
 "ubi:jesseduffield/lazygit" = "latest"
-"ubi:dbrgn/tealdeer" = "latest"             # tldr (rust version)
 "ubi:o2sh/onefetch" = "latest"
 "ubi:boyter/scc" = "latest"
+"ubi:charmbracelet/gum" = "latest"             # 脚本 UI
 
 # Git插件
 "ubi:dandavison/delta" = "latest"
@@ -111,6 +112,7 @@ experimental = true
 secure_mismatches_with_override = true
 
 [env]
+# 保留基础 XDG 定义，确保 Mise Shims 在任何环境下能正确解析
 XDG_CONFIG_HOME = "{{config.home}}/.config"
 XDG_DATA_HOME = "{{config.home}}/.local/share"
 XDG_CACHE_HOME = "{{config.home}}/.cache"

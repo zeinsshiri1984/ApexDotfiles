@@ -8,19 +8,14 @@ if [ -x "$HOME/.local/bin/mise" ]; then
 fi
 
 # 2. The Handover to Nushell (Interactive Only)
-# 只有在没有进入 Nu 子 shell 时才执行
+# 只有未定义 NU_VERSION 且 nu 命令存在时切换
 if command -v nu &> /dev/null && [ -z "${NU_VERSION-}" ]; then
-    
-    # [Pre-Flight] Ensure Podman Socket (Standard Linux/WSL)
-    # 快速检查，避免每次启动都调用 systemctl
-    if [ ! -S "$XDG_RUNTIME_DIR/podman/podman.sock" ]; then
-        if command -v systemctl &> /dev/null; then
-            systemctl --user start podman.socket &> /dev/null || true
-        fi
+    # 尝试启动 Podman Socket (如果是 Systemd 环境)
+    if [ ! -S "$XDG_RUNTIME_DIR/podman/podman.sock" ] && command -v systemctl &> /dev/null; then
+        systemctl --user start podman.socket &> /dev/null || true
     fi
-
-    # [EXEC] Replace Bash Process
-    # 使用 exec 节省内存并保持 PID
+    
+    # 🚀 Replace Bash
     exec nu
 fi
 
@@ -28,8 +23,5 @@ fi
 # 如果 Nushell 挂了，这里是最后的防线
 [ -f ~/.profile ] && . ~/.profile
 
-if command -v starship >/dev/null 2>&1; then
-    eval "$(starship init bash)"
-fi
 alias ls='ls --color=auto'
 alias ll='ls -alF'
