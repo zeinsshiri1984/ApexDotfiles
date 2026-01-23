@@ -57,6 +57,21 @@ else
     done
 fi
 
+# --- Install Mise (The Static Binary Manager) ---
+if ! command -v mise &> /dev/null; then
+    echo "📦 Installing Mise..."
+    curl https://mise.run | sh
+    # Ensure shim is active for this script execution
+    eval "$($HOME/.local/bin/mise activate bash)"
+else
+    echo "✅ Mise detected."
+    eval "$(mise activate bash)"
+fi
+
+# ---  Toolchain Bootstrap (Just, Chezmoi, GH) ---
+echo "📦 Bootstrapping core tools via Mise..."
+mise use -g -y -q chezmoi just gh usage
+
 echo "🐳 Configuring Container Engine..."
 # 1. 激活 Podman Socket (Rootless)
 if command -v systemctl &>/dev/null; then
@@ -100,21 +115,6 @@ if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
         fi
     fi
 fi
-
-# --- Install Mise (The Static Binary Manager) ---
-if ! command -v mise &> /dev/null; then
-    echo "📦 Installing Mise..."
-    curl https://mise.run | sh
-    # Ensure shim is active for this script execution
-    eval "$($HOME/.local/bin/mise activate bash)"
-else
-    echo "✅ Mise detected."
-    eval "$(mise activate bash)"
-fi
-
-# ---  Toolchain Bootstrap (Just, Chezmoi, GH) ---
-echo "📦 Bootstrapping core tools via Mise..."
-mise use -g -y -q chezmoi just gh usage
 
 # ---  GitHub Authentication (Critical for Dotfiles) ---
 if ! gh auth status &>/dev/null; then
