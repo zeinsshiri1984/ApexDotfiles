@@ -102,7 +102,7 @@ fi
 
 # Toolchain Bootstrap (Just, Chezmoi, GH)
 echo "📦 Bootstrapping core tools via Mise..."
-mise use -g -y -q chezmoi just usage node@lts uv
+mise use -g -y -q just usage node@lts uv
 
 echo "🐳 Configuring Container Engine..."
 # 激活 Podman Socket (Rootless)
