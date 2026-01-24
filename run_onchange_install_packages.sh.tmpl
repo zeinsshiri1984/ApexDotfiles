@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # git仓库同步清单后,chezmoi app检测清单文件哈希改变,触发run_onchange
-# mise.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+# mise.toml hash: {{ include "dot_config/mise/config.toml.tmpl" | sha256sum }}
 # devbox.json hash: {{ include "dot_config/devbox/global.json" | sha256sum }}
 
 set -euo pipefail
