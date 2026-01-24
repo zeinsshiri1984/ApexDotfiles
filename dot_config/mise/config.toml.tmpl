@@ -135,4 +135,4 @@ GOPATH = "{{ .chezmoi.homeDir }}/.local/share/go"
 # Python 启动脚本 (配置 nushell/bash 时会用到)
 PYTHONSTARTUP = "{{ .chezmoi.homeDir }}/.config/python/pythonrc"
 # 确保 Docker Host 始终指向 Podman (兼容 Rootless)
-DOCKER_HOST = "unix://{{ .chezmoi.runtimeDir }}/podman/podman.sock"
+DOCKER_HOST = "unix://{{ env "XDG_RUNTIME_DIR" }}/podman/podman.sock"

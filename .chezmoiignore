@@ -10,3 +10,5 @@ Templates/**
 # 忽略 macOS 系统垃圾
 .DS_Store
 **/.DS_Store
+
+bootstrap.sh

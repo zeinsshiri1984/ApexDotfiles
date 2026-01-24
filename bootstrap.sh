@@ -77,8 +77,6 @@ fi
 echo "📦 Bootstrapping core tools via Mise..."
 mise use -g -y -q chezmoi just gh usage
 
-eval "$(mise activate bash)"
-
 echo "🐳 Configuring Container Engine..."
 # 1. 激活 Podman Socket (Rootless)
 if command -v systemctl &>/dev/null; then
@@ -108,6 +106,9 @@ fi
 # 4. 配置 Docker Host (Bootstrap 阶段临时生效，持久化由 .profile 接管)
 export DOCKER_HOST="unix://$SOCK_PATH"
 export DOCKER_SOCK="$SOCK_PATH"
+
+# mise下载完再activate
+eval "$(mise activate bash)"
 
 # Kernel Tuning (Non-Blocking)
 if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
