@@ -145,6 +145,14 @@ else
 fi
 
 # Devbox Installation (Requires Nix)
+if ! command -v nix &> /dev/null && [ "$IS_IMMUTABLE" -eq 0 ]; then
+    echo "❄️ Installing Nix (Determinate Systems)..."
+    curl -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
+
+    # 刷新环境变量（根据安装器提示，可能需要重新开启终端或 source）
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
 if ! command -v devbox &> /dev/null; then
     echo "📦 Installing Devbox..."
     if [ "$IS_IMMUTABLE" -eq 1 ]; then
