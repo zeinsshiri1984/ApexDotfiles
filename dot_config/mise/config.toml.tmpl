@@ -1,0 +1,142 @@
+# 优先下载独立二进制版本,能用 uv 不用 pipx
+[tools]
+node = "lts"
+python = "latest"
+uv = "latest"
+usage = "latest"              # Mise CLI 补全引擎
+
+# System Utilities
+"ubi:jdx/mise" = "latest"     # 自更新机制
+gh = "latest"
+just = "latest"                    # 任务运行器
+"pipx:copier" = "latest"
+doppler = "latest"
+
+# Shell Core
+nushell = "latest"
+starship = "latest"  # Prompt
+atuin = "latest"     # Shell History
+carapace = "latest"  # Completions
+zoxide = "latest"    # Navigation
+
+# Shell Enhancements
+bat = "latest"       # cat replacement
+eza = "latest"       # ls replacement
+fd = "latest"        # find replacement
+ripgrep = "latest"   # grep replacement
+fzf = "latest"       # fuzzy finder
+dust = "latest"      # du++
+tealdeer = "latest"  # tldr (man 简化)
+"ubi:Byron/trash-rs" = "latest" # rm 安全替代
+
+# TUI Workflow
+yazi = "latest"                     # 终端文件管理器
+"ubi:yorukot/superfile" = "latest"  # zellij 文件管理器
+zellij = "latest"            # 终端复用
+helix = "latest"             # 模态编辑器
+lazygit = "latest"           # Git TUI
+onefetch = "latest"          # Git 信息展示
+scc = "latest"               # 代码统计
+gum = "latest"               # 脚本 UI 交互库
+
+# Git Ecosystem
+delta = "latest"             # 更好的 diff 视觉效果
+difftastic = "latest"        # 语法感知 diff
+lefthook = "latest"          # Git Hooks 管理
+gitleaks = "latest"          # 密钥泄露扫描
+
+#helix Plugins
+"ubi:SilasMarvin/lsp-ai" = "latest"
+
+# AI (CLI)
+mods = "latest"
+"ubi:danielmiessler/fabric" = "latest"
+"npm:@anthropic-ai/claude-code" = "latest"
+"ubi:SaladDay/cc-switch-cli" = "latest"
+"npm:@openai/codex" = "latest"
+"pipx:aider-chat" = "latest"
+# gemini-cli = "latest"
+# opencode = "latest"
+
+# Data Processing
+jq = "latest"               # 行业标准 JSON 处理 (脚本依赖)
+
+# Containers
+docker-cli = "latest"        # 官方客户端 -> 连接 Podman Socket
+docker-compose = "latest"    # 容器编排
+"ubi:containers/podman-tui" = "latest" # Podman TUI
+# dive = "latest"           # 镜像层分析
+# hadolint = "latest"       # Dockerfile 检查
+# syft = "latest"           # SBOM 生成
+# k9s = "latest"            # Kubernetes TUI
+
+# 安全工具
+# trivy = "latest"
+# rustscan = "latest"
+# lynis = "latest"
+
+# 监控与日志
+btop = "latest"              # 资源监控
+watchexec = "latest"         # 文件变动监控执行
+lnav = "latest"              # 高级日志查看器
+tailspin = "latest"          # 日志高亮
+viddy = "latest"             # watch 替代
+"ubi:rcoh/angle-grinder" = "latest" # 终端数据分析
+
+# 网络
+curlie = "latest"           # curl 封装 (像 httpie)
+# doggo = "latest"          # dig 增强
+# trippy = "latest"         # mtr 增强 / 网络诊断
+# croc = "latest"           # 局域网文件秒传
+# miniserve = "latest"      # 快速 HTTP 文件服务器
+# websocat = "latest"       # WebSocket 调试
+# zrok = "latest"           # 内网穿透（ngrok 类）
+
+# 测试与性能
+# fio = "latest"            # 磁盘测试
+# oha = "latest"            # HTTP 压测
+# ffuf = "latest"           # Web 模糊测试
+# hyperfine = "latest"      # 命令基准测试
+
+# 数据库
+# sqlfluff = "latest"
+# gobackup = "latest"
+# usql = "latest"           # 通用 SQL CLI（注意来源）
+
+# Documentation
+glow = "latest"              # Markdown 渲染
+# pandoc = "latest"
+
+# Others
+"ubi:tulir/gomuks" = "latest" # Matrix 客户端
+
+[settings]
+pipx.uvx = true              # 使用 uvx 执行一次性 python 工具
+experimental = true          # 开启实验性特性
+plugin_autoinstall = true
+plugin_autoupdate_last_check_duration = "1 week" # 禁用插件自动短名更新检查，加快启动
+
+# 允许安装架构不匹配的包(比如用于qemu)，并强制校验安全哈希Checksum
+secure_mismatches_with_override = true 
+
+# 安全白名单,指定目录下的 .mise.toml允许自动加载和执行(防止自动执行陌生仓库恶意代码)
+trusted_config_paths = [
+    "~/.config/mise",
+    "~/work",
+    "~/lab"
+]
+
+[env]
+# 保留基础 XDG 定义，确保 Mise Shims 在任何环境下能正确解析
+XDG_CONFIG_HOME = "{{ .chezmoi.homeDir }}/.config"
+XDG_DATA_HOME = "{{ .chezmoi.homeDir }}/.local/share"
+XDG_CACHE_HOME = "{{ .chezmoi.homeDir }}/.cache"
+XDG_STATE_HOME = "{{ .chezmoi.homeDir }}/.local/state"
+
+# 编程语言工具链变量
+CARGO_HOME = "{{ .chezmoi.homeDir }}/.local/share/cargo"
+GOPATH = "{{ .chezmoi.homeDir }}/.local/share/go"
+# Python 启动脚本 (配置 nushell/bash 时会用到)
+PYTHONSTARTUP = "{{ .chezmoi.homeDir }}/.config/python/pythonrc"
+# 确保 Docker Host 始终指向 Podman (兼容 Rootless)
+DOCKER_HOST = "unix://{{ .chezmoi.runtimeDir }}/podman/podman.sock"

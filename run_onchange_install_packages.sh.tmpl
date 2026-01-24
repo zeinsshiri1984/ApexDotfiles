@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# git仓库同步清单后,chezmoi app检测清单文件哈希改变,触发run_onchange
+# mise.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+# devbox.json hash: {{ include "dot_config/devbox/global.json" | sha256sum }}
+
+set -euo pipefail
+
+echo "🔄 Detected configuration change. Updating packages..."
+
+# Mise (Static Binaries)
+if command -v mise &> /dev/null; then
+    echo "📦 Mise: Installing tools..."
+    mise install -y -q
+    # 清理旧版本，保持磁盘清洁
+    mise prune -y
+else
+    echo "⚠️ Mise not found. Skipping."
+fi
+
+# Devbox (System Libs)
+if command -v devbox &> /dev/null; then
+    echo "📦 Devbox: Updating global packages..."
+    # 确保 devbox 全局配置目录存在
+    mkdir -p "$HOME/.local/share/devbox/global"
+    
+    # 强制拉取更新
+    devbox global pull
+    
+    # Immutable OS 上的特殊处理 (如果需要清理或重建 symlinks)
+    devbox global shellenv --init-hook > /dev/null
+else
+    echo "⚠️ Devbox not found. Skipping."2
+fi
+
+echo "✅ Package synchronization complete."

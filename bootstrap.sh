@@ -72,6 +72,12 @@ fi
 echo "📦 Bootstrapping core tools via Mise..."
 mise use -g -y -q chezmoi just gh usage
 
+# 独立安装 Chezmoi (一等公民)
+if ! command -v chezmoi &> /dev/null; then
+    echo "📦 Installing Standalone Chezmoi..."
+    sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+fi
+
 echo "🐳 Configuring Container Engine..."
 # 1. 激活 Podman Socket (Rootless)
 if command -v systemctl &>/dev/null; then
@@ -94,7 +100,7 @@ fi
 if ! command -v docker &>/dev/null; then
     echo "   Installing Official Docker CLI via Mise..."
     # 这里的 docker-cli 是 mise 的插件，下载官方静态二进制
-    mise use -g -y docker-cli
+    mise use -g -y -q docker-cli
 else
     echo "   Docker CLI already present."
 fi
