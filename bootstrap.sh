@@ -82,17 +82,19 @@ fi
 if ! command -v gh &> /dev/null; then
     mise use -g -y -q gh@latest
 fi
-
-if ! mise exec gh auth status &>/dev/null; then
-    if [ -t 0 ]; then
-        echo "🔑 GitHub Auth Required for Dotfiles."
-        mise exec gh -- gh auth login -p ssh -w
-        mise exec gh -- gh auth setup-git # Configure git to use gh as credential helper
+# 优先用已存在的 GITHUB_TOKEN，避免在非交互环境下卡死
+if [ -z "${GITHUB_TOKEN:-}" ]; then
+    if ! mise exec gh auth status &>/dev/null; then
+       if [ -t 0 ]; then
+           echo "🔑 GitHub Auth Required for Dotfiles."
+           mise exec gh -- gh auth login -p ssh -w
+           mise exec gh -- gh auth setup-git # Configure git to use gh as credential helper
+       else
+           echo "❌ Non-interactive shell detected. Cannot authenticate GitHub."
+       fi
     else
-        echo "❌ Non-interactive shell detected. Cannot authenticate GitHub."
+       echo "GitHub authenticated."
     fi
-else
-    echo "GitHub authenticated."
 fi
 
 # mise会读取GITHUB_TOKEN突破匿名用户60次/m的限制
