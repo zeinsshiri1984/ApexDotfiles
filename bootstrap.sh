@@ -27,11 +27,9 @@ echo "🔍 Detected: $OS_ID (Immutable: $IS_IMMUTABLE)"
 
 if grep -qi microsoft /proc/version 2>/dev/null || [ -n "${WSL_DISTRO_NAME-}" ]; then
     echo "🪟 WSL Detected."
-    if ! pidof systemd >/dev/null && ! pidof init | grep -q systemd; then
-        if [ "$PID" != "1" ]; then
-             echo "⚠️  CRITICAL: Systemd not running. Podman Socket requires Systemd."
-             echo "   Add '[boot] systemd=true' to /etc/wsl.conf and restart WSL."
-        fi
+    if [ "$(cat /proc/1/comm 2>/dev/null)" != "systemd" ]; then
+         echo "⚠️  CRITICAL: Systemd not running. Podman Socket requires Systemd."
+         echo "   Add '[boot] systemd=true' to /etc/wsl.conf and restart WSL."
     fi
 fi
 
@@ -54,22 +52,6 @@ else
     done
 fi
 
-# GitHub Authentication (Critical for Dotfiles and mise)
-if ! gh auth status &>/dev/null; then
-    echo "🔑 GitHub Auth Required for Dotfiles."
-    
-    if [ -t 0 ]; then
-        gh auth login -p ssh -w
-        gh auth setup-git     # Configure git to use gh as credential helper
-    else
-        echo "❌ Non-interactive shell detected. Cannot authenticate GitHub."
-    fi
-else
-    echo "GitHub authenticated."
-fi
-# mise会读取token突破匿名用户60次/m的限制
-export GITHUB_TOKEN=$(gh auth token)
-
 # 独立安装 Chezmoi (一等公民)
 if ! command -v chezmoi &> /dev/null; then
     echo "📦 Installing Standalone Chezmoi..."
@@ -86,9 +68,30 @@ else
     echo "✅ Mise detected."
 fi
 
+# GitHub Authentication (Critical for Dotfiles and mise)
+if ! command -v gh &> /dev/null; then
+    mise use -g -y -q gh
+fi
+
+if ! gh auth status &>/dev/null; then
+    echo "🔑 GitHub Auth Required for Dotfiles."
+    if [ -t 0 ]; then
+        gh auth login -p ssh -w
+        gh auth setup-git # Configure git to use gh as credential helper
+    else
+        echo "❌ Non-interactive shell detected. Cannot authenticate GitHub."
+    fi
+else
+    echo "GitHub authenticated."
+fi
+
+if gh auth status &>/dev/null; then
+    export GITHUB_TOKEN="$(gh auth token)" # mise会读取GITHUB_TOKEN突破匿名用户60次/m的限制
+fi
+
 # ---  Toolchain Bootstrap (Just, Chezmoi, GH) ---
 echo "📦 Bootstrapping core tools via Mise..."
-mise use -g -y -q chezmoi just gh usage node@lts uv
+mise use -g -y -q chezmoi just usage node@lts uv
 
 echo "🐳 Configuring Container Engine..."
 # 1. 激活 Podman Socket (Rootless)
