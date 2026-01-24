@@ -12,3 +12,4 @@ Templates/**
 **/.DS_Store
 
 bootstrap.sh
+dot_config/ignore/
