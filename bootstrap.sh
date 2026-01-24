@@ -13,9 +13,6 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_STATE_HOME" "$XDG_CACHE_HOME" \
          "$HOME/.local/bin" "$XDG_DATA_HOME/bash"
 
-# Add local bins to PATH for immediate script usage
-export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
-
 echo "🔍 Detecting Environment..."
 if [ -f /etc/os-release ]; then
     . /etc/os-release
@@ -75,7 +72,7 @@ fi
 
 # ---  Toolchain Bootstrap (Just, Chezmoi, GH) ---
 echo "📦 Bootstrapping core tools via Mise..."
-mise use -g -y -q chezmoi just gh usage node
+mise use -g -y -q chezmoi just gh usage node@lts
 
 echo "🐳 Configuring Container Engine..."
 # 1. 激活 Podman Socket (Rootless)
@@ -107,6 +104,8 @@ fi
 export DOCKER_HOST="unix://$SOCK_PATH"
 export DOCKER_SOCK="$SOCK_PATH"
 
+# Add local bins to PATH for immediate script usage
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
 # mise下载完再activate
 eval "$(mise activate bash)"
 
