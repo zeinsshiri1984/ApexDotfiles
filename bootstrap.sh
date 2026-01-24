@@ -57,6 +57,12 @@ else
     done
 fi
 
+# 独立安装 Chezmoi (一等公民)
+if ! command -v chezmoi &> /dev/null; then
+    echo "📦 Installing Standalone Chezmoi..."
+    sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+fi
+
 # --- Install Mise (The Static Binary Manager) ---
 if ! command -v mise &> /dev/null; then
     echo "📦 Installing Mise..."
@@ -65,18 +71,13 @@ if ! command -v mise &> /dev/null; then
     eval "$($HOME/.local/bin/mise activate bash)"
 else
     echo "✅ Mise detected."
-    eval "$(mise activate bash)"
 fi
 
 # ---  Toolchain Bootstrap (Just, Chezmoi, GH) ---
 echo "📦 Bootstrapping core tools via Mise..."
 mise use -g -y -q chezmoi just gh usage
 
-# 独立安装 Chezmoi (一等公民)
-if ! command -v chezmoi &> /dev/null; then
-    echo "📦 Installing Standalone Chezmoi..."
-    sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
-fi
+eval "$(mise activate bash)"
 
 echo "🐳 Configuring Container Engine..."
 # 1. 激活 Podman Socket (Rootless)
