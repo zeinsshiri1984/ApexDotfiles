@@ -1,6 +1,6 @@
 let home = $env.HOME
 
-mkdir --parents $env.XDG_STATE_HOME $env.XDG_CACHE_HOME $env.XDG_RUNTIME_DIR
+mkdir $env.XDG_STATE_HOME $env.XDG_CACHE_HOME $env.XDG_RUNTIME_DIR
 
 $env.EDITOR = "hx"
 $env.VISUAL = "hx"
