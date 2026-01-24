@@ -54,6 +54,22 @@ else
     done
 fi
 
+# GitHub Authentication (Critical for Dotfiles and mise)
+if ! gh auth status &>/dev/null; then
+    echo "🔑 GitHub Auth Required for Dotfiles."
+    
+    if [ -t 0 ]; then
+        gh auth login -p ssh -w
+        gh auth setup-git     # Configure git to use gh as credential helper
+    else
+        echo "❌ Non-interactive shell detected. Cannot authenticate GitHub."
+    fi
+else
+    echo "GitHub authenticated."
+fi
+# mise会读取token突破匿名用户60次/m的限制
+export GITHUB_TOKEN=$(gh auth token)
+
 # 独立安装 Chezmoi (一等公民)
 if ! command -v chezmoi &> /dev/null; then
     echo "📦 Installing Standalone Chezmoi..."
@@ -121,20 +137,6 @@ if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
              echo "   Run manually: echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches"
         fi
     fi
-fi
-
-# ---  GitHub Authentication (Critical for Dotfiles) ---
-if ! gh auth status &>/dev/null; then
-    echo "🔑 GitHub Auth Required for Dotfiles."
-    
-    if [ -t 0 ]; then
-        gh auth login -p ssh -w
-        gh auth setup-git     # Configure git to use gh as credential helper
-    else
-        echo "❌ Non-interactive shell detected. Cannot authenticate GitHub."
-    fi
-else
-    echo "GitHub authenticated."
 fi
 
 # ---  Dotfiles Init (Chezmoi) ---
