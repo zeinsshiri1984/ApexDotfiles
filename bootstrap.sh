@@ -12,6 +12,9 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 
 mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_STATE_HOME" "$XDG_CACHE_HOME" \
          "$HOME/.local/bin" "$XDG_DATA_HOME/bash"
+         
+# Add local bins to PATH for immediate script usage
+export PATH="$HOME/.local/bin:$XDG_DATA_HOME/mise/shims:$XDG_DATA_HOME/mise/bin:$PATH"
 
 echo "🔍 Detecting Environment..."
 if [ -f /etc/os-release ]; then
@@ -33,17 +36,26 @@ if grep -qi microsoft /proc/version 2>/dev/null || [ -n "${WSL_DISTRO_NAME-}" ];
     fi
 fi
 
-# Checking system dependencies(Standard OS Only)
+# Kernel Tuning (Non-Blocking)
+# 仅在可写且值不足时尝试修改，减少 sudo 触发频率
+if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
+    CURRENT_LIMIT=$(cat /proc/sys/fs/inotify/max_user_watches)
+    if [ "$CURRENT_LIMIT" -lt 524288 ]; then
+        echo "🔧 Performance: Increasing inotify limit..."
+        sudo sysctl -w fs.inotify.max_user_watches=524288 fs.inotify.max_user_instances=512 >/dev/null 2>&1 || true
+    fi
+fi
+
+# Checking system dependencies
 if [ "$IS_IMMUTABLE" -eq 0 ]; then
-echo "🔧 add system dependencies(Standard OS Only)..."
+echo "🔧 Installing system dependencies(Standard OS Only)..."
     if command -v apt-get &> /dev/null; then
-        sudo apt-get update -qq
-        sudo apt-get install -y git curl unzip build-essential podman
+        sudo apt-get update -qq && sudo apt-get install -y git curl unzip build-essential podman
     elif command -v dnf &> /dev/null; then
         sudo dnf install -y -q git curl unzip @development-tools podman
     fi
 else
-    # [Check] Verify crucial tools exist
+    # Verify crucial tools exist
     for cmd in git curl podman; do
         if ! command -v $cmd &> /dev/null; then
             echo "❌ Critical Missing: $cmd. Please overlay install it or use a proper base image."
@@ -52,7 +64,7 @@ else
     done
 fi
 
-# 独立安装 Chezmoi (一等公民)
+# 独立安装 Chezmoi (mise配置损坏时方便修复)
 if ! command -v chezmoi &> /dev/null; then
     echo "📦 Installing Standalone Chezmoi..."
     sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
@@ -62,22 +74,20 @@ fi
 if ! command -v mise &> /dev/null; then
     echo "📦 Installing Mise..."
     curl https://mise.run | sh
-    # Ensure shim is active for this script execution
-    eval "$($HOME/.local/bin/mise activate bash)"
 else
     echo "✅ Mise detected."
 fi
 
 # GitHub Authentication (Critical for Dotfiles and mise)
 if ! command -v gh &> /dev/null; then
-    mise use -g -y -q gh
+    mise use -g -y -q gh@latest
 fi
 
-if ! gh auth status &>/dev/null; then
-    echo "🔑 GitHub Auth Required for Dotfiles."
+if ! mise exec gh auth status &>/dev/null; then
     if [ -t 0 ]; then
-        gh auth login -p ssh -w
-        gh auth setup-git # Configure git to use gh as credential helper
+        echo "🔑 GitHub Auth Required for Dotfiles."
+        mise exec gh -- gh auth login -p ssh -w
+        mise exec gh -- gh auth setup-git # Configure git to use gh as credential helper
     else
         echo "❌ Non-interactive shell detected. Cannot authenticate GitHub."
     fi
@@ -85,85 +95,56 @@ else
     echo "GitHub authenticated."
 fi
 
-if gh auth status &>/dev/null; then
-    export GITHUB_TOKEN="$(gh auth token)" # mise会读取GITHUB_TOKEN突破匿名用户60次/m的限制
+# mise会读取GITHUB_TOKEN突破匿名用户60次/m的限制
+if mise exec gh -- gh auth status &>/dev/null; then
+    export GITHUB_TOKEN=$(mise exec gh -- gh auth token)
 fi
 
-# ---  Toolchain Bootstrap (Just, Chezmoi, GH) ---
+# Toolchain Bootstrap (Just, Chezmoi, GH)
 echo "📦 Bootstrapping core tools via Mise..."
 mise use -g -y -q chezmoi just usage node@lts uv
 
 echo "🐳 Configuring Container Engine..."
-# 1. 激活 Podman Socket (Rootless)
+# 激活 Podman Socket (Rootless)
 if command -v systemctl &>/dev/null; then
-    # 幂等性检查：只要 socket 没 active 就尝试启动
     if ! systemctl --user is-active --quiet podman.socket; then
         echo "   Starting Podman User Socket..."
-        systemctl --user enable --now podman.socket
+        systemctl --user enable --now podman.socket || echo "   ⚠️ Systemd not ready."
     fi
 fi
-# 2. 验证 Socket 路径
+# 验证 Socket 并设置 XDG 规范变量
 SOCK_PATH="$XDG_RUNTIME_DIR/podman/podman.sock"
-if [ ! -S "$SOCK_PATH" ]; then
-    echo "⚠️  Warning: Podman socket not found at $SOCK_PATH"
-    echo "   Please check 'systemctl --user status podman.socket'"
-else
+if [ -S "$SOCK_PATH" ]; then
     echo "   Socket Active: $SOCK_PATH"
+    # 配置 Docker Host (Bootstrap 阶段临时生效，持久化由 .profile 接管)
+    export DOCKER_HOST="unix://$SOCK_PATH"
+    export DOCKER_SOCK="$SOCK_PATH"
 fi
-# 3. 预安装官方 Docker CLI (通过 Mise)
-# 这会从 download.docker.com 获取纯净的二进制文件，不含 Docker Desktop 杂质
-if ! command -v docker &>/dev/null; then
-    echo "   Installing Official Docker CLI via Mise..."
-    # 这里的 docker-cli 是 mise 的插件，下载官方静态二进制
-    mise use -g -y -q docker-cli
-else
-    echo "   Docker CLI already present."
-fi
-# 4. 配置 Docker Host (Bootstrap 阶段临时生效，持久化由 .profile 接管)
-export DOCKER_HOST="unix://$SOCK_PATH"
-export DOCKER_SOCK="$SOCK_PATH"
+# 安装 Docker CLI 作为 Podman 的前端
+mise use -g -y docker-cli
 
-# Add local bins to PATH for immediate script usage
-export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
-# mise下载完再activate
-eval "$(mise activate bash)"
-
-# Kernel Tuning (Non-Blocking)
-if [ -w /proc/sys/fs/inotify/max_user_watches ]; then
-    CURRENT_LIMIT=$(cat /proc/sys/fs/inotify/max_user_watches)
-    if [ "$CURRENT_LIMIT" -lt 524288 ]; then
-        echo "⚠️  Low file watch limit ($CURRENT_LIMIT)."
-        if command -v sudo &>/dev/null; then
-             echo "🔧 Increasing limit to 524288..."
-             echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches >/dev/null
-        else
-             echo "   Run manually: echo 524288 | sudo tee /proc/sys/fs/inotify/max_user_watches"
-        fi
-    fi
-fi
-
-# ---  Dotfiles Init (Chezmoi) ---
+# Dotfiles Init (Chezmoi)
 REPO_URL="git@github.com:zeinsshiri1984/ApexDotfiles.git"
 DOTFILES_DIR="$XDG_DATA_HOME/chezmoi"
 
 if [ ! -d "$DOTFILES_DIR" ]; then
     echo "Cloning Dotfiles..."
-    if ! chezmoi init --apply "$REPO_URL"; then
+    if ! mise exec chezmoi -- chezmoi init --apply "$REPO_URL"; then
         echo "Chezmoi Init failed. Check your SSH keys or internet connection."
     fi
 else
     echo "Updating Dotfiles..."
     # Check if directory is safe
     if [ -d "$DOTFILES_DIR/.git" ]; then
-        chezmoi apply --force
+        mise exec chezmoi -- chezmoi apply --force
     else
         echo "Corrupt dotfiles detected. Re-initializing..."
         rm -rf "$DOTFILES_DIR"
-        chezmoi init --apply "$REPO_URL"
+        mise exec chezmoi -- chezmoi init --apply "$REPO_URL"
     fi
 fi
 
-# ---  Devbox Installation (Requires Nix) ---
+# Devbox Installation (Requires Nix)
 if ! command -v devbox &> /dev/null; then
     echo "📦 Installing Devbox..."
     if [ "$IS_IMMUTABLE" -eq 1 ]; then
@@ -175,4 +156,4 @@ if ! command -v devbox &> /dev/null; then
     fi
 fi
 
-echo "✅ Bootstrap Complete.👉 Run 'exec bash' to reload environment."
+echo "✅ Bootstrap Complete.👉 Please run 'exec bash' or 'source ~/.bashrc'."
