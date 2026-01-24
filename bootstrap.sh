@@ -104,7 +104,7 @@ fi
 
 # Toolchain Bootstrap (Just, Chezmoi, GH)
 echo "📦 Bootstrapping core tools via Mise..."
-mise use -g -y -q just usage node@lts uv
+mise use -g -y -q  uv@latest just@latest usage@latest node@lts
 
 echo "🐳 Configuring Container Engine..."
 # 激活 Podman Socket (Rootless)
@@ -131,7 +131,7 @@ DOTFILES_DIR="$XDG_DATA_HOME/chezmoi"
 
 if [ ! -d "$DOTFILES_DIR" ]; then
     echo "Cloning Dotfiles..."
-    if ! mise exec chezmoi -- chezmoi init --apply "$REPO_URL"; then
+    if ! mise exec chezmoi -- chezmoi init --apply --depth=1 "$REPO_URL"; then
         echo "Chezmoi Init failed. Check your SSH keys or internet connection."
     fi
 else
@@ -142,7 +142,7 @@ else
     else
         echo "Corrupt dotfiles detected. Re-initializing..."
         rm -rf "$DOTFILES_DIR"
-        mise exec chezmoi -- chezmoi init --apply "$REPO_URL"
+        mise exec chezmoi -- chezmoi init --apply --depth=1 "$REPO_URL"
     fi
 fi
 
