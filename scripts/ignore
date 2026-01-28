@@ -1,0 +1,45 @@
+# 优先用已存在的 GITHUB_TOKEN，避免在非交互环境下卡死
+if [ -z "${GITHUB_TOKEN:-}" ]; then
+    if ! mise exec gh auth status &>/dev/null; then
+       if [ -t 0 ]; then
+           echo "🔑 GitHub Auth Required for Dotfiles."
+           mise exec gh -- gh auth login -p ssh -w
+           mise exec gh -- gh auth setup-git # Configure git to use gh as credential helper
+       else
+           echo "❌ Non-interactive shell detected. Cannot authenticate GitHub."
+       fi
+    else
+       echo "GitHub authenticated."
+    fi
+fi
+
+# mise会读取GITHUB_TOKEN突破匿名用户60次/m的限制
+if mise exec gh -- gh auth status &>/dev/null; then
+    export GITHUB_TOKEN=$(mise exec gh -- gh auth token)
+fi
+
+# Toolchain Bootstrap (Just, Chezmoi, GH)
+echo "📦 Bootstrapping core tools via Mise..."
+mise use -g -y -q  uv@latest just@latest usage@latest node@lts
+
+echo "🐳 Configuring Container Engine..."
+
+# Devbox Installation (Requires Nix)
+if ! command -v nix &> /dev/null && [ "$IS_IMMUTABLE" -eq 0 ]; then
+    echo "❄️ Installing Nix (Determinate Systems)..."
+    curl -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
+
+    # 刷新环境变量（根据安装器提示，可能需要重新开启终端或 source）
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
+if ! command -v devbox &> /dev/null; then
+    echo "📦 Installing Devbox..."
+    if [ "$IS_IMMUTABLE" -eq 1 ]; then
+        # Immutable OS: 强制安装到用户目录，无需 sudo
+        curl -fsSL https://get.jetify.com/devbox | FORCE=1 INSTALL_DIR="$HOME/.local/bin" bash
+    else
+        # Standard OS: 标准安装 (可能触发 sudo)
+        curl -fsSL https://get.jetify.com/devbox | bash
+    fi
+fi
