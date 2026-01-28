@@ -1,0 +1,42 @@
+set shell := ["bash", "-c"]
+
+default:
+    @just --list
+
+# === Main Setup Flow ===
+
+# Full initialization
+setup: install-brew-bundle install-mise-tools
+    @echo "Setup complete! Please restart your shell."
+
+# Install Native Packages via Homebrew
+install-brew-bundle:
+    @echo "Installing Brewfile packages..."
+    brew bundle install --global --no-lock
+
+# Install Mise Runtimes
+install-mise-tools:
+    @echo "Installing Mise tools..."
+    mise install
+
+# === Maintenance ===
+
+# Update everything (System, Brew, Mise)
+update:
+    @echo "Updating System..."
+    sudo apt-get update && sudo apt-get upgrade -y
+    @echo "Updating Homebrew..."
+    brew update && brew upgrade
+    @echo "Updating Mise..."
+    mise upgrade
+    mise prune -y
+    @echo "Cleaning up..."
+    brew cleanup
+
+# Apply dotfiles changes
+apply:
+    chezmoi apply
+
+# Edit Justfile
+edit:
+    $EDITOR ~/.justfile

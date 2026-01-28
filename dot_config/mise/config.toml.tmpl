@@ -2,6 +2,8 @@
 [tools]
 node = "lts"
 python = "latest"
+go = "latest"
+rust = "latest"
 
 # Mise CLI 补全引擎
 usage = "latest"              
@@ -9,7 +11,8 @@ usage = "latest"
 # Python 生态
 uv = "latest"
 "pipx:copier" = "latest"
-#"pipx:aider-chat" = "latest"
+"pipx:aider-chat" = "latest"
+"pipx:shell-gpt" = "latest"
 
 # Node 生态
 "npm:@anthropic-ai/claude-code" = "latest"
@@ -28,5 +31,4 @@ auto_install = false
 plugin_autoupdate_last_check_duration = "1 week"
 legacy_version_file = false
 activate_aggressive = false  # 明确行为，避免隐式 hook
-
 trusted_config_paths = ["~/.config/mise"]
