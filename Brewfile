@@ -45,6 +45,7 @@ brew "viddy"
 brew "angle-grinder"
 
 # ===== Containers =====
+brew "podman"
 brew "docker-compose"
 brew "podman-tui"
 # brew "dive"
@@ -74,7 +75,6 @@ brew "mosh"
 # brew "usql"
 
 # === Security ===
-#
 # brew "trivy"
 # brew "rustscan"
 # brew "lynis"

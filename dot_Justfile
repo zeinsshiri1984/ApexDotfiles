@@ -1,0 +1,18 @@
+set shell := ["bash", "-c"]
+
+default:
+    @just --list
+
+# Full Setup: Install packages, apply dotfiles
+setup:
+    @echo "Starting Environment Setup..."
+    brew bundle --file=$HOME/.local/share/chezmoi/Brewfile
+    chezmoi apply
+    mise install
+    @echo "Setup Complete. Please restart your shell."
+
+# Update everything
+update:
+    brew update && brew upgrade
+    mise upgrade
+    chezmoi update
