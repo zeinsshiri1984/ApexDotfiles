@@ -1,0 +1,9 @@
+# Minimal bash glue; no env, no tooling
+
+case $- in
+  *i*)
+    if command -v nu >/dev/null 2>&1; then
+      exec nu
+    fi
+    ;;
+esac

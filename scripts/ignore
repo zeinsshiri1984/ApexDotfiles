@@ -1,3 +1,34 @@
+# Checking GitHub connectivity..."
+check_ssh() {
+    ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"
+}
+
+if check_ssh; then
+    echo "✅ SSH is already configured."
+else
+    echo "⚠️  SSH not detected or keys not loaded."
+    
+    # 如果是交互式环境，调用 gh 进行登录
+    if [ -t 0 ]; then
+        echo "🔐 Initiating GitHub CLI Authentication..."
+        echo "   (Select 'SSH' as preferred protocol when prompted)"
+        
+        # 登录并自动配置 git/ssh
+        gh auth login -p ssh -w
+        
+        # 再次检查
+        if ! check_ssh; then
+             echo "❌ Auth failed. Please check your network or credentials."
+             exit 1
+        fi
+    else
+        echo "❌ Non-interactive shell and no SSH keys found. Cannot proceed."
+        echo "   Please mount SSH keys or run interactively."
+        exit 1
+    fi
+fi
+gh auth setup-git # Configure git to use gh as credential helper
+
 # 优先用已存在的 GITHUB_TOKEN，避免在非交互环境下卡死
 if [ -z "${GITHUB_TOKEN:-}" ]; then
     if ! mise exec gh auth status &>/dev/null; then
