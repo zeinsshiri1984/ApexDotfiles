@@ -1,9 +1,9 @@
-# --- 交互式输入 (仅在首次初始化时询问) ---
+[chezmoi]
+sourceDir = "{{ .chezmoi.sourceDir }}"
+
+# 交互式输入 (仅在首次初始化时询问)
 {{- $email := promptStringOnce . "email" "Git Email address" -}}
 {{- $name := promptStringOnce . "name" "Git Username" -}}
-
-# --- 核心配置 ---
-sourceDir = "{{ .chezmoi.sourceDir }}"
 
 [data]
     email = "{{ $email }}"
@@ -13,6 +13,7 @@ sourceDir = "{{ .chezmoi.sourceDir }}"
 [diff]
     command = "delta"
     pager = "delta"
+    
 # 合并冲突解决
 [merge]
     command = "hx" 
