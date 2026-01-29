@@ -1,6 +1,8 @@
 gui:
-  # 显示后台执行的 Git 命令
-  showCommandLog: true
+  showCommandLog: true # 底部显示 实际 git 命令
+  showBottomLine: true
+  showPanelJumps: false
+  showRandomTip: false
   
   # Noctis 主题适配
   theme:

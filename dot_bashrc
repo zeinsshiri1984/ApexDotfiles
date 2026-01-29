@@ -25,3 +25,8 @@ fi
 if command -v nu >/dev/null 2>&1; then
   exec nu
 fi
+
+if [ -n "${AI_MODE-}" ]; then
+  alias rm='echo "rm disabled in AI mode"'
+  alias sudo='echo "sudo disabled in AI mode"'
+fi

@@ -1,27 +1,22 @@
-set shell := ["zsh", "-c"]
+set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
+set dotenv-load := false
 
-# 默认动作：列出所有命令
 default:
     @just --list
 
-# 编译 (Release)
-build:
-    cargo build --release
+bootstrap:
+    ./scripts/bootstrap.sh
 
-# 运行
-run:
-    cargo run
+tools:
+    brew bundle --no-lock --file=Brewfile
 
-# 代码检查 (Clippy + Format)
-check:
-    cargo fmt -- --check
-    cargo clippy -- -D warnings
+setup:
+    mise install
 
-# 本地测试
-test:
-    cargo test
-    
-# 更新环境 (Devbox + Cargo)
-update:
-    devbox update
-    cargo update
+doctor:
+    mise doctor
+    brew doctor || true
+
+clean:
+    mise uninstall --all || true
+    brew bundle cleanup --force || true

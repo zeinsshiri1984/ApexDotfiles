@@ -69,34 +69,24 @@ keybinds {
     // 在"renametab" 之外的模式下都生效这两个模式可能需要输入alt转义字符?
     shared_except "renametab"  {
         bind "Ctrl f" {
-            Run "bash" "-lc" "command -v spf >/dev/null && spf || superfile" {
-                floating true
-                close_on_exit true
-                x "10%"
-                y "10%"
-                width "80%"
-                height "80%"
+            bind "Ctrl f" {
+                Run "bash" "-lc" "$XDG_CONFIG_HOME/zellij/scripts/yazi-floating.sh"
+                FloatingPane
             }
         }
         bind "Ctrl g" {
-            Run "lazygit" {
-                floating true
-                close_on_exit true
-                x "5%"
-                y "5%"
-                width "90%"
-                height "90%"
-            }
+            Run "bash" "-lc" "$XDG_CONFIG_HOME/zellij/scripts/lazygit-floating.sh"
+            FloatingPane
         }
         bind "Ctrl p" {
-            Run "podman-tui" {
-                floating true
-                close_on_exit true
-                x "5%"
-                y "5%"
-                width "90%"
-                height "90%"
-            }
+            Run "bash" "-lc" "$XDG_CONFIG_HOME/zellij/scripts/podman-tui-floating.sh"
+            FloatingPane
+            floating true
+            close_on_exit true
+            x "5%"
+            y "5%"
+            width "90%"
+            height "90%"
         }
         bind "Ctrl q" {  Detach; }
         bind "i" { SwitchToMode "Locked"; }

@@ -7,3 +7,5 @@ ENV_FILE="$HOME/.config/env/env.sh"
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"
 fi
+
+export PATH="$XDG_CONFIG_HOME/ai:$PATH"
