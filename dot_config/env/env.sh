@@ -12,10 +12,14 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_BIN_HOME="$HOME/.local/bin"
 
 # Stable user PATH
-case ":$PATH:" in
-  *":$XDG_BIN_HOME:"*) ;;
-  *) PATH="$XDG_BIN_HOME:$PATH" ;;
-esac
+if [ -n "$PATH" ]; then
+  case ":$PATH:" in
+    *":$XDG_BIN_HOME:"*) ;;
+    *) PATH="$XDG_BIN_HOME:$PATH" ;;
+  esac
+else
+  PATH="$XDG_BIN_HOME"
+fi
 export PATH
 
 # Editor

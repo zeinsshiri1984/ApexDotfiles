@@ -4,17 +4,12 @@ set -eo pipefail
 # -o pipefail: 管道中任意命令失败则整体失败
 
 # XDG directories (mkdir only; not source of truth)
-: "${XDG_CONFIG_HOME:=$HOME/.config}"
-: "${XDG_DATA_HOME:=$HOME/.local/share}"
-: "${XDG_STATE_HOME:=$HOME/.local/state}"
-: "${XDG_CACHE_HOME:=$HOME/.cache}"
-: "${XDG_BIN_HOME:=$HOME/.local/bin}"
 mkdir -p \
-  "$XDG_CONFIG_HOME" \
-  "$XDG_DATA_HOME" \
-  "$XDG_STATE_HOME" \
-  "$XDG_CACHE_HOME" \
-  "$XDG_BIN_HOME"
+  "$HOME/.config" \
+  "$HOME/.local/share" \
+  "$HOME/.local/state" \
+  "$HOME/.cache" \
+  "$HOME/.local/bin"
          
 echo "XDG directories ensured"
 
@@ -36,10 +31,10 @@ if ! command -v brew >/dev/null 2>&1; then
     "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-# Load brew env for this script only
-if [ -d /home/linuxbrew/.linuxbrew ]; then
+# Load brew env for this script only (DO NOT persist)
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-elif [ -d "$HOME/.linuxbrew" ]; then
+elif [ -x "$HOME/.linuxbrew/bin/brew" ]; then
   eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
 fi
 
@@ -47,10 +42,11 @@ fi
 brew install --quiet \
   just \
   chezmoi \
-  gh
+  gh \
+  mise
 
 # Dotfiles bootstrap
-DOTFILES_DIR="$XDG_DATA_HOME/chezmoi"
+DOTFILES_DIR="$HOME/.local/share/chezmoi"
 REPO_SSH="git@github.com:zeinsshiri1984/ApexDotfiles.git"
 REPO_HTTPS="https://github.com/zeinsshiri1984/ApexDotfiles.git"
 
@@ -74,4 +70,4 @@ else
   fi
 fi
 
-echo "Next step: run 'just setup' to install and configure the environment"
+echo "Bootstrap complete."

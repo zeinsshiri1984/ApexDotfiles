@@ -1,9 +1,27 @@
 # Minimal bash glue; no env, no tooling
 
+# Guard: do not re-enter from Nushell
+if [ -n "${NU_VERSION-}" ]; then
+  return
+fi
+
+# Only in interactive shells
 case $- in
-  *i*)
-    if command -v nu >/dev/null 2>&1; then
-      exec nu
-    fi
-    ;;
+  *i*) ;;
+  *) return ;;
 esac
+
+# Guard: explicit opt-out (for CI, debugging)
+if [ -n "${NO_NU-}" ]; then
+  return
+fi
+
+# Guard: must be a real terminal
+if [ ! -t 0 ] || [ ! -t 1 ]; then
+  return
+fi
+
+# Exec Nushell as the interactive layer
+if command -v nu >/dev/null 2>&1; then
+  exec nu
+fi

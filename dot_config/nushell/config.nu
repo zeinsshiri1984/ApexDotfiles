@@ -1,13 +1,9 @@
-# === 基础行为 ===
-$env.config = {
-  show_banner: false
-  edit_mode: emacs
-}
+# Nushell entrypoint
+# This file must be static and side-effect free.
 
-# === 让 Nu 识别 Bash 注入的 PATH ===
-# 什么都不做（这是重点）
+# Load static settings
+source settings.nu
 
-# === 交互增强（纯消费型） ===
-use ~/.config/nushell/starship.nu
-use ~/.config/nushell/atuin.nu
-use ~/.config/nushell/zoxide.nu
+# Load aliases and functions
+source aliases.nu
+source functions.nu

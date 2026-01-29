@@ -1,13 +1,24 @@
-// 其他的 Zellij 会用默认值
+// Zellij global config,其余未指定选项为默认值
 
-// 基础设置
-theme "noctis"
-default_shell "bash" // 通过 bash -> .bashrc -> exec nu 启动，确保环境一致
-default_mode "locked" // 默认锁定，不干扰 Helix 的 Ctrl 键
-mouse_mode true
-copy_clipboard "system"
-copy_on_select true
-attach_to_session true // 不指定会话启动时，自动附加到已存在的会话
+config {
+  default_shell "bash"
+  scrollback_editor "hx"
+  pane_frames false
+  mouse_mode true
+  auto_layout false
+  simplified_ui true
+  theme "noctis"
+  default_mode "locked" // 默认锁定，不干扰 Helix 的 Ctrl 键
+  copy_clipboard "system"
+  copy_on_select true
+  attach_to_session true // 不指定会话启动时，自动附加到已存在的会话
+}
+
+ui {
+  pane_frames {
+    hide_session_name true
+  }
+}
 
 // 主题定义 (Noctis)
 themes {
@@ -99,10 +110,10 @@ keybinds {
         bind "Alt f" { ToggleFocusFullscreen; } // 全屏/取消全屏 (Focus)
         bind "Alt e" { TogglePaneEmbedOrFloating; } // 悬浮/平铺互转
         // --- Pane 导航 (Vim风格) ---
-        bind "Alt h" "Alt Left" { MoveFocus "Left"; }
-        bind "Alt l" "Alt Right" { MoveFocus "Right"; }
-        bind "Alt j" "Alt Down" { MoveFocus "Down"; }
-        bind "Alt k" "Alt Up" { MoveFocus "Up"; }
+        bind "h" "Alt Left" { MoveFocus "Left"; }
+        bind "l" "Alt Right" { MoveFocus "Right"; }
+        bind "j" "Alt Down" { MoveFocus "Down"; }
+        bind "k" "Alt Up" { MoveFocus "Up"; }
         // --- Pane 大小调整 ---
         bind "Alt =" { Resize "Increase"; }
         bind "Alt -" { Resize "Decrease"; }
