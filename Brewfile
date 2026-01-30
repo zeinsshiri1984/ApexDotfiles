@@ -1,3 +1,5 @@
+tap "homebrew/core"
+tap "homebrew/cask"
 # ===== Shell / Dev Core =====
 brew "gh"
 brew "just"
@@ -89,5 +91,5 @@ brew "p7zip"
 brew "poppler"
 
 #ai
-# brew "mods"
+brew "mods"
 # brew "fabric"

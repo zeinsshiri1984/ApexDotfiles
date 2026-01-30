@@ -8,7 +8,6 @@ if not ($init_file | path exists) {
 }
 
 let init_file = $"($env.XDG_CONFIG_HOME)/starship/init.nu"
-
 if ($init_file | path exists) {
   source $init_file
 }

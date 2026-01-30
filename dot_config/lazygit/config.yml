@@ -3,27 +3,4 @@ gui:
   showBottomLine: true
   showPanelJumps: false
   showRandomTip: false
-  
-  # Noctis 主题适配
-  theme:
-    activeBorderColor:
-      - "#49ace9" # Picton Blue
-    inactiveBorderColor:
-      - "#5b858b" # Horizon
-    optionsTextColor:
-      - "#df769b" # Pale Violet Red
-    selectedLineBgColor:
-      - "#1a2b2d" # 稍微亮一点的背景，区分选中
-    selectedRangeBgColor:
-      - "#1a2b2d"
-    cherryPickedCommitBgColor:
-      - "#49e9a6" # Eucalyptus
-    cherryPickedCommitFgColor:
-      - "#0b1a1c" # Bg Dark
-    defaultFgColor:
-      - "#e0e6ea" # Fg
-    searchingActiveBorderColor:
-      - "#e66533" # Cinnabar (搜索时高亮)
-
-  # 图标配置 (需 Nerd Font)
-  showIcons: true
+  showIcons: true       # 图标配置 (需 Nerd Font)

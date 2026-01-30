@@ -3,6 +3,11 @@
 ENV_FILE="$HOME/.config/env/env.sh"
 [ -r "$ENV_FILE" ] && . "$ENV_FILE"
 
+# Homebrew
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
 # mise provides runtimes and PATH; bash-only, idempotent
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"

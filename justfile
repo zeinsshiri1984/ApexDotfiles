@@ -1,12 +1,11 @@
 set shell := ["bash", "-eu", "-o", "pipefail"]
 
 default:
-  @just --list
-
-bootstrap-tools:
-  @echo "==> Installing global CLI tools via Homebrew"
-  brew bundle --no-lock --file="$HOME/Brewfile"
+  @just --list  
 
 setup:
-  @echo "==> Installing runtimes via mise"
+  brew bundle --no-lock --file="$HOME/Brewfile"
   mise install
+  mise reshim
+  hx --grammar fetch || true
+  hx --grammar build || true
