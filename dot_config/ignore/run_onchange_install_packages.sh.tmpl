@@ -6,19 +6,8 @@
 
 set -euo pipefail
 
-echo "🔄 Detected configuration change. Updating packages..."
-
 # 确保环境变量在脚本中生效
 export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
-
-# Mise (Static Binaries)
-if command -v mise &> /dev/null; then
-    echo "📦 Mise: Installing tools..."
-    mise install -y -q
-    mise prune -y # 清理旧版本，保持磁盘清洁
-else
-    echo "⚠️ Mise not found. Skipping."
-fi
 
 # Devbox sync
 if command -v devbox &> /dev/null; then
@@ -30,5 +19,3 @@ if command -v devbox &> /dev/null; then
 else
     echo "⚠️ Devbox not found. Skipping."
 fi
-
-echo "✅ Package synchronization complete."

@@ -50,17 +50,30 @@ DOTFILES_DIR="$HOME/.local/share/chezmoi"
 REPO_SSH="git@github.com:zeinsshiri1984/ApexDotfiles.git"
 REPO_HTTPS="https://github.com/zeinsshiri1984/ApexDotfiles.git"
 
-if [ -d "$DOTFILES_DIR" ]; then
-  echo "Applying existing dotfiles"
-  chezmoi apply
+if [ -d "$DOTFILES_DIR/.git" ]; then
+  echo "Updating existing dotfiles"
+  chezmoi update
 else
+  if [ -e "$DOTFILES_DIR" ]; then
+    if [ -n "$(ls -A "$DOTFILES_DIR" 2>/dev/null)" ]; then
+      backup_dir="${DOTFILES_DIR}.backup.$(date +%Y%m%d%H%M%S)"
+      mv "$DOTFILES_DIR" "$backup_dir"
+      echo "Moved unexpected existing directory to: $backup_dir"
+    else
+      rmdir "$DOTFILES_DIR" 2>/dev/null || true
+    fi
+  fi
+
   echo "Initializing dotfiles"
 
   if gh auth status >/dev/null 2>&1; then
     echo "Using gh-authenticated clone"
     tmpdir="$(mktemp -d)"
+    trap 'rm -rf "$tmpdir"' EXIT
     gh repo clone zeinsshiri1984/ApexDotfiles "$tmpdir"
     chezmoi init --source "$tmpdir" --apply
+    trap - EXIT
+    rm -rf "$tmpdir"
   elif ssh -o BatchMode=yes -T git@github.com >/dev/null 2>&1; then
     echo "Using SSH clone"
     chezmoi init --apply "$REPO_SSH"
@@ -68,6 +81,14 @@ else
     echo "Using HTTPS clone (may be rate-limited)"
     chezmoi init --apply "$REPO_HTTPS"
   fi
+fi
+
+JUSTFILE="${XDG_CONFIG_HOME:-$HOME/.config}/just/justfile"
+if command -v just >/dev/null 2>&1 && [ -f "$JUSTFILE" ]; then
+  echo "Running just setup"
+  just --justfile "$JUSTFILE" setup
+else
+  echo "just setup skipped (missing just or justfile)"
 fi
 
 echo "Bootstrap complete."

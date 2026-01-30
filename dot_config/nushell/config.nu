@@ -1,9 +1,14 @@
 # Nushell entrypoint
 # This file must be static and side-effect free.
 
-# Load static settings
-source settings.nu
+let config_dir = $nu.default-config-dir
 
-# Load aliases and functions
-source aliases.nu
-source functions.nu
+source ($config_dir | path join "settings.nu")
+
+let hook = ($config_dir | path join "hook.nu")
+if ($hook | path exists) {
+  source $hook
+}
+
+source ($config_dir | path join "aliases.nu")
+source ($config_dir | path join "functions.nu")
