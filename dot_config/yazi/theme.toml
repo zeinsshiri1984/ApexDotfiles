@@ -1,28 +1,7 @@
 [app]
 overall = { bg = "#0b1a1c" }
 
-[mgr]
-cwd = { fg = "#49ace9" }
-hovered = { fg = "#0b1a1c", bg = "#49ace9" }
-preview_hovered = { fg = "#0b1a1c", bg = "#49ace9" }
-border_style = { fg = "#49ace9" }
-
-[tabs]
-active = { fg = "#0b1a1c", bg = "#49ace9", bold = true }
-inactive = { fg = "#e0e6ea", bg = "#0b1a1c" }
-
 [status]
 overall = { fg = "#e0e6ea", bg = "#0b1a1c" }
 progress_normal = { fg = "#16b673", bg = "#0b1a1c" }
 progress_error = { fg = "#e66533", bg = "#0b1a1c" }
-
-[mode]
-normal_main = { fg = "#0b1a1c", bg = "#16b673", bold = true }
-select_main = { fg = "#0b1a1c", bg = "#d5971a", bold = true }
-unset_main = { fg = "#0b1a1c", bg = "#e66533", bold = true }
-
-[which]
-mask = { bg = "#0b1a1c" }
-cand = { fg = "#49ace9" }
-desc = { fg = "#df769b" }
-separator_style = { fg = "#d5971a" }

@@ -7,7 +7,6 @@ config {
   mouse_mode true
   auto_layout false
   simplified_ui true
-  theme "noctis"
   default_mode "locked" // 默认锁定，不干扰 Helix 的 Ctrl 键
   copy_clipboard "system"
   copy_on_select true
@@ -18,23 +17,6 @@ ui {
   pane_frames {
     hide_session_name true
   }
-}
-
-// 主题定义 (Noctis)
-themes {
-    noctis {
-        fg "#e0e6ea"
-        bg "#0b1a1c"
-        black "#0b1a1c"
-        red "#e66533"
-        green "#16b673"
-        yellow "#d5971a"
-        blue "#49ace9"
-        magenta "#df769b"
-        cyan "#49d6e9"
-        white "#e0e6ea"
-        orange "#e66533"
-    }
 }
 
 // Session 行为
