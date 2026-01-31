@@ -59,17 +59,17 @@ DOTFILES_DIR="$HOME/.local/share/chezmoi"
 REPO_SSH="git@github.com:zeinsshiri1984/ApexDotfiles.git"
 REPO_HTTPS="https://github.com/zeinsshiri1984/ApexDotfiles.git"
 CHEZMOI_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/chezmoi/chezmoi.toml"
-CHEZMOI_DATA_ARGS=()
+CHEZMOI_PROMPT_ARGS=()
 
-set_chezmoi_data_args() {
+set_chezmoi_prompt_args() {
   local name
   local email
-  CHEZMOI_DATA_ARGS=()
+  CHEZMOI_PROMPT_ARGS=()
   name="$(git config --global user.name 2>/dev/null || true)"
   email="$(git config --global user.email 2>/dev/null || true)"
 
   if [ -n "$name" ] && [ -n "$email" ]; then
-    CHEZMOI_DATA_ARGS=(--data "name=$name" --data "email=$email")
+    CHEZMOI_PROMPT_ARGS=(--promptString "email=$email" --promptString "name=$name")
   fi
 }
 
@@ -80,9 +80,9 @@ if [ -d "$DOTFILES_DIR/.git" ]; then
      ! grep -Eq '^[[:space:]]*name[[:space:]]*=' "$CHEZMOI_CONFIG" || \
      ! grep -Eq '^[[:space:]]*email[[:space:]]*=' "$CHEZMOI_CONFIG"; then
     echo "Initializing chezmoi config"
-    set_chezmoi_data_args
-    if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
-      chezmoi init --source "$DOTFILES_DIR" --apply "${CHEZMOI_DATA_ARGS[@]}"
+    set_chezmoi_prompt_args
+    if [ "${#CHEZMOI_PROMPT_ARGS[@]}" -gt 0 ]; then
+      chezmoi init --source "$DOTFILES_DIR" --apply "${CHEZMOI_PROMPT_ARGS[@]}"
     else
       chezmoi init --source "$DOTFILES_DIR" --apply
     fi
@@ -104,25 +104,25 @@ else
   if gh auth status >/dev/null 2>&1; then
     echo "Using gh-authenticated clone"
     gh repo clone zeinsshiri1984/ApexDotfiles "$DOTFILES_DIR"
-    set_chezmoi_data_args
-    if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
-      chezmoi init --source "$DOTFILES_DIR" --apply "${CHEZMOI_DATA_ARGS[@]}"
+    set_chezmoi_prompt_args
+    if [ "${#CHEZMOI_PROMPT_ARGS[@]}" -gt 0 ]; then
+      chezmoi init --source "$DOTFILES_DIR" --apply "${CHEZMOI_PROMPT_ARGS[@]}"
     else
       chezmoi init --source "$DOTFILES_DIR" --apply
     fi
   elif ssh -o BatchMode=yes -T git@github.com >/dev/null 2>&1; then
     echo "Using SSH clone"
-    set_chezmoi_data_args
-    if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
-      chezmoi init --apply "${CHEZMOI_DATA_ARGS[@]}" "$REPO_SSH"
+    set_chezmoi_prompt_args
+    if [ "${#CHEZMOI_PROMPT_ARGS[@]}" -gt 0 ]; then
+      chezmoi init --apply "${CHEZMOI_PROMPT_ARGS[@]}" "$REPO_SSH"
     else
       chezmoi init --apply "$REPO_SSH"
     fi
   else
     echo "Using HTTPS clone (may be rate-limited)"
-    set_chezmoi_data_args
-    if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
-      chezmoi init --apply "${CHEZMOI_DATA_ARGS[@]}" "$REPO_HTTPS"
+    set_chezmoi_prompt_args
+    if [ "${#CHEZMOI_PROMPT_ARGS[@]}" -gt 0 ]; then
+      chezmoi init --apply "${CHEZMOI_PROMPT_ARGS[@]}" "$REPO_HTTPS"
     else
       chezmoi init --apply "$REPO_HTTPS"
     fi
