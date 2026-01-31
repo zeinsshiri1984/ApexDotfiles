@@ -74,6 +74,7 @@ get_chezmoi_data_args() {
 if [ -d "$DOTFILES_DIR/.git" ]; then
   echo "Updating existing dotfiles"
   if [ ! -f "$CHEZMOI_CONFIG" ] || \
+     ! grep -Eq '^[[:space:]]*\[data\][[:space:]]*$' "$CHEZMOI_CONFIG" || \
      ! grep -Eq '^[[:space:]]*name[[:space:]]*=' "$CHEZMOI_CONFIG" || \
      ! grep -Eq '^[[:space:]]*email[[:space:]]*=' "$CHEZMOI_CONFIG"; then
     echo "Initializing chezmoi config"
