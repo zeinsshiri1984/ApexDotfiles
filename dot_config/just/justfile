@@ -3,6 +3,9 @@ set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 default:
     @just --list
 
+bootstrap:
+    @bash "$HOME/.local/share/chezmoi/scripts/bootstrap.sh"
+
 setup: user-sync doctor
 
 doctor: host-doctor user-doctor auth-doctor git-doctor

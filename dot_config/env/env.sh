@@ -19,6 +19,28 @@ if [ -n "$PATH" ]; then
 else
   PATH="$XDG_BIN_HOME"
 fi
+
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  case ":$PATH:" in
+    *":/home/linuxbrew/.linuxbrew/bin:"*) ;;
+    *) PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH" ;;
+  esac
+fi
+
+if [ -x "$HOME/.linuxbrew/bin/brew" ]; then
+  case ":$PATH:" in
+    *":$HOME/.linuxbrew/bin:"*) ;;
+    *) PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH" ;;
+  esac
+fi
+
+XDG_AI_HOME="$XDG_CONFIG_HOME/ai"
+if [ -d "$XDG_AI_HOME" ]; then
+  case ":$PATH:" in
+    *":$XDG_AI_HOME:"*) ;;
+    *) PATH="$XDG_AI_HOME:$PATH" ;;
+  esac
+fi
 export PATH
 
 # Editor
