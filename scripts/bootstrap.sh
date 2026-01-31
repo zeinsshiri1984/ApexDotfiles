@@ -1,14 +1,20 @@
 #!/bin/bash
-set -eo pipefail 
+set -eo pipefail
+\IFS=$'\n\t'
 # -u: 变量未定义则报错,一旦后续加参数解析（--dry-run / --yes），-u 会频繁误杀,不利于阶段化执行
 # -o pipefail: 管道中任意命令失败则整体失败
 
 # XDG directories (mkdir only; not source of truth)
+: "${XDG_CONFIG_HOME:=$HOME/.config}"
+: "${XDG_DATA_HOME:=$HOME/.local/share}"
+: "${XDG_STATE_HOME:=$HOME/.local/state}"
+: "${XDG_CACHE_HOME:=$HOME/.cache}"
+
 mkdir -p \
-  "$HOME/.config" \
-  "$HOME/.local/share" \
-  "$HOME/.local/state" \
-  "$HOME/.cache" \
+  "$XDG_CONFIG_HOME" \
+  "$XDG_DATA_HOME" \
+  "$XDG_STATE_HOME" \
+  "$XDG_CACHE_HOME" \
   "$HOME/.local/bin"
          
 echo "XDG directories ensured"
@@ -27,7 +33,9 @@ sudo apt-get install -y -qq \
 
 # Linuxbrew
 if ! command -v brew >/dev/null 2>&1; then
-  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  NONINTERACTIVE=1 /bin/bash -c \
+    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
+    || { echo "brew install failed"; exit 1; }
 fi
 
 # Load brew env for this script only (DO NOT persist)
@@ -40,101 +48,52 @@ elif command -v brew >/dev/null 2>&1; then
   BREW_BIN="$(command -v brew)"
 fi
 
-if [ -n "$BREW_BIN" ]; then
-  eval "$("$BREW_BIN" shellenv)"
-else
+if [ -z "$BREW_BIN" ]; then
   echo "brew not found after install"
   exit 1
 fi
 
-# Minimal first-stage tools
-brew install --quiet \
-  just \
-  chezmoi \
-  gh \
-  mise
-
-# Dotfiles bootstrap
-DOTFILES_DIR="$HOME/.local/share/chezmoi"
-REPO_SSH="git@github.com:zeinsshiri1984/ApexDotfiles.git"
-REPO_HTTPS="https://github.com/zeinsshiri1984/ApexDotfiles.git"
-CHEZMOI_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/chezmoi/chezmoi.toml"
-CHEZMOI_PROMPT_ARGS=()
-
-set_chezmoi_prompt_args() {
-  local name
-  local email
-  CHEZMOI_PROMPT_ARGS=()
-  name="$(git config --global user.name 2>/dev/null || true)"
-  email="$(git config --global user.email 2>/dev/null || true)"
-
-  if [ -n "$name" ] && [ -n "$email" ]; then
-    CHEZMOI_PROMPT_ARGS=(--promptString "email=$email" --promptString "name=$name")
-  fi
+eval "$("$BREW_BIN" shellenv)" || {
+  echo "failed to load brew env"
+  exit 1
 }
 
-if [ -d "$DOTFILES_DIR/.git" ]; then
-  echo "Updating existing dotfiles"
-  if [ ! -f "$CHEZMOI_CONFIG" ] || \
-     ! grep -Eq '^[[:space:]]*\[data\][[:space:]]*$' "$CHEZMOI_CONFIG" || \
-     ! grep -Eq '^[[:space:]]*name[[:space:]]*=' "$CHEZMOI_CONFIG" || \
-     ! grep -Eq '^[[:space:]]*email[[:space:]]*=' "$CHEZMOI_CONFIG"; then
-    echo "Initializing chezmoi config"
-    set_chezmoi_prompt_args
-    if [ "${#CHEZMOI_PROMPT_ARGS[@]}" -gt 0 ]; then
-      chezmoi init --source "$DOTFILES_DIR" --apply "${CHEZMOI_PROMPT_ARGS[@]}"
-    else
-      chezmoi init --source "$DOTFILES_DIR" --apply
-    fi
+# Minimal first-stage tools
+for pkg in just chezmoi gh mise; do
+  if ! command -v "$pkg" >/dev/null 2>&1; then
+    brew install --quiet "$pkg"
   fi
-  chezmoi update --apply
-else
-  if [ -e "$DOTFILES_DIR" ]; then
-    if [ -n "$(ls -A "$DOTFILES_DIR" 2>/dev/null || true)" ]; then
-      backup_dir="${DOTFILES_DIR}.backup.$(date +%Y%m%d%H%M%S)"
-      mv "$DOTFILES_DIR" "$backup_dir"
-      echo "Moved unexpected existing directory to: $backup_dir"
-    else
-      rmdir "$DOTFILES_DIR" 2>/dev/null || true
-    fi
-  fi
+done
 
-  echo "Initializing dotfiles"
+# Dotfiles bootstrap
+# Collect prompt data once
+CHEZMOI_PROMPT_ARGS=()
+name="$(git config --global user.name 2>/dev/null || true)"
+email="$(git config --global user.email 2>/dev/null || true)"
 
-  if gh auth status >/dev/null 2>&1; then
-    echo "Using gh-authenticated clone"
-    gh repo clone zeinsshiri1984/ApexDotfiles "$DOTFILES_DIR"
-    set_chezmoi_prompt_args
-    if [ "${#CHEZMOI_PROMPT_ARGS[@]}" -gt 0 ]; then
-      chezmoi init --source "$DOTFILES_DIR" --apply "${CHEZMOI_PROMPT_ARGS[@]}"
-    else
-      chezmoi init --source "$DOTFILES_DIR" --apply
-    fi
-  elif ssh -o BatchMode=yes -T git@github.com >/dev/null 2>&1; then
-    echo "Using SSH clone"
-    set_chezmoi_prompt_args
-    if [ "${#CHEZMOI_PROMPT_ARGS[@]}" -gt 0 ]; then
-      chezmoi init --apply "${CHEZMOI_PROMPT_ARGS[@]}" "$REPO_SSH"
-    else
-      chezmoi init --apply "$REPO_SSH"
-    fi
-  else
-    echo "Using HTTPS clone (may be rate-limited)"
-    set_chezmoi_prompt_args
-    if [ "${#CHEZMOI_PROMPT_ARGS[@]}" -gt 0 ]; then
-      chezmoi init --apply "${CHEZMOI_PROMPT_ARGS[@]}" "$REPO_HTTPS"
-    else
-      chezmoi init --apply "$REPO_HTTPS"
-    fi
-  fi
+if [ -n "$name" ] && [ -n "$email" ]; then
+  CHEZMOI_PROMPT_ARGS=(
+    --promptString "name=$name"
+    --promptString "email=$email"
+  )
 fi
 
-JUSTFILE="${XDG_CONFIG_HOME:-$HOME/.config}/just/justfile"
-if command -v just >/dev/null 2>&1 && [ -f "$JUSTFILE" ]; then
-  echo "Running just setup"
-  just --justfile "$JUSTFILE" setup
+TMP_SRC="$XDG_DATA_HOME/apexdotfiles-tmp"
+rm -rf "$TMP_SRC"
+
+if gh auth status >/dev/null 2>&1; then
+  gh repo clone zeinsshiri1984/ApexDotfiles "$TMP_SRC"
+elif ssh -o BatchMode=yes -T git@github.com >/dev/null 2>&1; then
+  git clone git@github.com:zeinsshiri1984/ApexDotfiles.git "$TMP_SRC"
 else
-  echo "just setup skipped (missing just or justfile)"
+  git clone https://github.com/zeinsshiri1984/ApexDotfiles.git "$TMP_SRC"
+fi
+
+chezmoi init --source "$TMP_SRC" --apply "${CHEZMOI_PROMPT_ARGS[@]}"
+
+JUSTFILE="$XDG_CONFIG_HOME/just/justfile"
+if command -v just >/dev/null 2>&1 && [ -f "$JUSTFILE" ]; then
+  just --justfile "$JUSTFILE" setup
 fi
 
 echo "Bootstrap complete."
