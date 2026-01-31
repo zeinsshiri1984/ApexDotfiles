@@ -32,19 +32,19 @@ if ! command -v brew >/dev/null 2>&1; then
 fi
 
 # Load brew env for this script only (DO NOT persist)
-BREW=""
+BREW_BIN=""
 if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-  BREW="/home/linuxbrew/.linuxbrew/bin/brew"
+  BREW_BIN="/home/linuxbrew/.linuxbrew/bin/brew"
 elif [ -x "$HOME/.linuxbrew/bin/brew" ]; then
-  BREW="$HOME/.linuxbrew/bin/brew"
+  BREW_BIN="$HOME/.linuxbrew/bin/brew"
 elif command -v brew >/dev/null 2>&1; then
-  BREW="$(command -v brew)"
+  BREW_BIN="$(command -v brew)"
 fi
 
-if [ -n "$BREW" ]; then
-  eval "$("$BREW" shellenv)"
+if [ -n "$BREW_BIN" ]; then
+  eval "$("$BREW_BIN" shellenv)"
 else
-  echo "brew not found after installation"
+  echo "brew not found after install"
   exit 1
 fi
 
@@ -52,7 +52,8 @@ fi
 brew install --quiet \
   just \
   chezmoi \
-  gh
+  gh \
+  mise
 
 # Dotfiles bootstrap
 DOTFILES_DIR="$HOME/.local/share/chezmoi"
@@ -77,13 +78,9 @@ else
 
   if gh auth status >/dev/null 2>&1; then
     echo "Using gh-authenticated clone"
-    tmpdir="$(mktemp -d)"
-    trap 'rm -rf "$tmpdir"' EXIT
-    gh repo clone zeinsshiri1984/ApexDotfiles "$tmpdir"
-    chezmoi init --source "$tmpdir" --apply
-    trap - EXIT
-    rm -rf "$tmpdir"
-  elif command -v ssh >/dev/null 2>&1 && ssh -o BatchMode=yes -T git@github.com >/dev/null 2>&1; then
+    gh repo clone zeinsshiri1984/ApexDotfiles "$DOTFILES_DIR"
+    chezmoi init --source "$DOTFILES_DIR" --apply
+  elif ssh -o BatchMode=yes -T git@github.com >/dev/null 2>&1; then
     echo "Using SSH clone"
     chezmoi init --apply "$REPO_SSH"
   else
