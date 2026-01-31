@@ -64,40 +64,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfi
 8)拥有免费token的cli: https://github.com/google-gemini/gemini-cli+https://github.com/anomalyco/opencode
 9)mise管理python,ts,go,java项目环境;devbox管理cpp,c,zig,rust项目环境
 
-11)atuin历史记录等隐私信息加密后上传github
 <!-- 12)UI一致性+护眼+极低视觉噪声+Noctis默认主题 -->
 13)atuin的历史记录是否做到:空间不足删重复,忽略连续重复,删除旧重复,搜索不显示重复,保存不含重复,空格开头不记录等策略
-14)podman-docker包
 15)完善二进制工具挂载
-
-10)我说ok才进行下一步,知道了就说ok
-
-
-
-
-
-进zellij之前,即用户环境:nushell
-coding:Nushell
-test/run:zsh
-Debug/Logs:nushell
-Research:nushell
-Data/Ops:nushell
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
