@@ -16,4 +16,27 @@ $env.config = {
   }
 
   edit_mode: emacs
+  keybindings: [
+    {
+      name: ai_ask
+      modifier: alt
+      keycode: char_a
+      mode: [emacs, vi_insert]
+      event: { send: executehostcommand cmd: "ai_ask" }
+    }
+    {
+      name: ai_complete
+      modifier: alt
+      keycode: char_c
+      mode: [emacs, vi_insert]
+      event: { send: executehostcommand cmd: "ai_complete" }
+    }
+    {
+      name: ai_fix
+      modifier: alt
+      keycode: char_f
+      mode: [emacs, vi_insert]
+      event: { send: executehostcommand cmd: "ai_fix" }
+    }
+  ]
 }
