@@ -27,8 +27,7 @@ sudo apt-get install -y -qq \
 
 # Linuxbrew
 if ! command -v brew >/dev/null 2>&1; then
-  NONINTERACTIVE=1 /bin/bash -c \
-    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
 # Load brew env for this script only (DO NOT persist)
@@ -65,7 +64,7 @@ if [ -d "$DOTFILES_DIR/.git" ]; then
   chezmoi update --apply
 else
   if [ -e "$DOTFILES_DIR" ]; then
-    if [ -n "$(ls -A "$DOTFILES_DIR" 2>/dev/null)" ]; then
+    if [ -n "$(ls -A "$DOTFILES_DIR" 2>/dev/null || true)" ]; then
       backup_dir="${DOTFILES_DIR}.backup.$(date +%Y%m%d%H%M%S)"
       mv "$DOTFILES_DIR" "$backup_dir"
       echo "Moved unexpected existing directory to: $backup_dir"
