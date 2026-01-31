@@ -10,7 +10,7 @@ bootstrap:
 
 setup: host-sync user-sync auth-sync doctor
 
-doctor: host-doctor user-doctor auth-doctor git-doctor
+doctor: user-doctor auth-doctor git-doctor
 
 sync: dotfiles-sync user-sync
 
@@ -19,25 +19,21 @@ dotfiles-sync:
     @chezmoi update --apply
 
 host-sync:
-    @command -v apt-get >/dev/null 2>&1 || { echo "apt-get not found"; exit 1; }
-    @command -v sudo >/dev/null 2>&1 || { echo "sudo not found"; exit 1; }
     @sudo apt-get update -qq
     @sudo apt-get install -y -qq ca-certificates curl git
 
-host-doctor:
-    @command -v apt-get >/dev/null 2>&1 || { echo "apt-get not found"; exit 1; }
-    @command -v sudo >/dev/null 2>&1 || { echo "sudo not found"; exit 1; }
-    @echo "host ok"
+user-sync: brew mise hx-sync
 
-user-sync: brew-sync mise-sync hx-sync
-
-brew-sync:
+brewtool-sync:
     @command -v brew >/dev/null 2>&1 || { echo "brew missing"; exit 1; }
+    @brew update
+    @brew upgrade
     @brew bundle --no-lock --file="${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/Brewfile"
 
-mise-sync:
+misetool-sync:
     @command -v mise >/dev/null 2>&1 || { echo "mise missing"; exit 1; }
     @mise install
+    @mise upgrade
     @mise reshim
 
 hx-sync:
@@ -93,11 +89,3 @@ git-doctor:
     else \
         echo "git gh credential helper not set"; \
     fi
-
-user-update:
-    @command -v brew >/dev/null 2>&1 || { echo "brew not found"; exit 1; }
-    @command -v mise >/dev/null 2>&1 || { echo "mise not found"; exit 1; }
-    @brew update
-    @brew upgrade
-    @mise upgrade
-    @mise reshim
