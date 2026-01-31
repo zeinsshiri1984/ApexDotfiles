@@ -58,9 +58,32 @@ brew install --quiet \
 DOTFILES_DIR="$HOME/.local/share/chezmoi"
 REPO_SSH="git@github.com:zeinsshiri1984/ApexDotfiles.git"
 REPO_HTTPS="https://github.com/zeinsshiri1984/ApexDotfiles.git"
+CHEZMOI_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/chezmoi/chezmoi.toml"
+
+get_chezmoi_data_args() {
+  local name
+  local email
+  name="$(git config --global user.name 2>/dev/null || true)"
+  email="$(git config --global user.email 2>/dev/null || true)"
+
+  if [ -n "$name" ] && [ -n "$email" ]; then
+    printf '%s\n' "--data" "name=$name" "--data" "email=$email"
+  fi
+}
 
 if [ -d "$DOTFILES_DIR/.git" ]; then
   echo "Updating existing dotfiles"
+  if [ ! -f "$CHEZMOI_CONFIG" ] || \
+     ! grep -Eq '^[[:space:]]*name[[:space:]]*=' "$CHEZMOI_CONFIG" || \
+     ! grep -Eq '^[[:space:]]*email[[:space:]]*=' "$CHEZMOI_CONFIG"; then
+    echo "Initializing chezmoi config"
+    mapfile -t CHEZMOI_DATA_ARGS < <(get_chezmoi_data_args || true)
+    if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
+      chezmoi init --source "$DOTFILES_DIR" --apply "${CHEZMOI_DATA_ARGS[@]}"
+    else
+      chezmoi init --source "$DOTFILES_DIR" --apply
+    fi
+  fi
   chezmoi update --apply
 else
   if [ -e "$DOTFILES_DIR" ]; then
@@ -78,13 +101,28 @@ else
   if gh auth status >/dev/null 2>&1; then
     echo "Using gh-authenticated clone"
     gh repo clone zeinsshiri1984/ApexDotfiles "$DOTFILES_DIR"
-    chezmoi init --source "$DOTFILES_DIR" --apply
+    mapfile -t CHEZMOI_DATA_ARGS < <(get_chezmoi_data_args || true)
+    if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
+      chezmoi init --source "$DOTFILES_DIR" --apply "${CHEZMOI_DATA_ARGS[@]}"
+    else
+      chezmoi init --source "$DOTFILES_DIR" --apply
+    fi
   elif ssh -o BatchMode=yes -T git@github.com >/dev/null 2>&1; then
     echo "Using SSH clone"
-    chezmoi init --apply "$REPO_SSH"
+    mapfile -t CHEZMOI_DATA_ARGS < <(get_chezmoi_data_args || true)
+    if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
+      chezmoi init --apply "${CHEZMOI_DATA_ARGS[@]}" "$REPO_SSH"
+    else
+      chezmoi init --apply "$REPO_SSH"
+    fi
   else
     echo "Using HTTPS clone (may be rate-limited)"
-    chezmoi init --apply "$REPO_HTTPS"
+    mapfile -t CHEZMOI_DATA_ARGS < <(get_chezmoi_data_args || true)
+    if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
+      chezmoi init --apply "${CHEZMOI_DATA_ARGS[@]}" "$REPO_HTTPS"
+    else
+      chezmoi init --apply "$REPO_HTTPS"
+    fi
   fi
 fi
 
