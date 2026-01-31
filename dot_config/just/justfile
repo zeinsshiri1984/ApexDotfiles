@@ -51,7 +51,7 @@ user-doctor:
     @command -v git >/dev/null 2>&1 || { echo "git missing"; exit 1; }
     @echo "user tools ok"
 
-auth-sync: gh-login gh-setup-git doppler-login
+auth-sync: gh-login doppler-login
 
 auth-doctor:
     @command -v gh >/dev/null 2>&1 || { echo "gh missing"; exit 1; }
@@ -65,12 +65,8 @@ gh-login:
     @if [ -n "${GH_TOKEN-}" ]; then \
         printf '%s' "$GH_TOKEN" | gh auth login --with-token >/dev/null; \
         echo "gh authenticated via GH_TOKEN"; \
-        exit 0; \
     fi
     @gh auth login -h github.com -p https
-
-gh-setup-git:
-    @command -v gh >/dev/null 2>&1 || { echo "gh missing"; exit 1; }
     @gh auth setup-git -h github.com
 
 doppler-login:
