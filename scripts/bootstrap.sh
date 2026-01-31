@@ -59,15 +59,17 @@ DOTFILES_DIR="$HOME/.local/share/chezmoi"
 REPO_SSH="git@github.com:zeinsshiri1984/ApexDotfiles.git"
 REPO_HTTPS="https://github.com/zeinsshiri1984/ApexDotfiles.git"
 CHEZMOI_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/chezmoi/chezmoi.toml"
+CHEZMOI_DATA_ARGS=()
 
-get_chezmoi_data_args() {
+set_chezmoi_data_args() {
   local name
   local email
+  CHEZMOI_DATA_ARGS=()
   name="$(git config --global user.name 2>/dev/null || true)"
   email="$(git config --global user.email 2>/dev/null || true)"
 
   if [ -n "$name" ] && [ -n "$email" ]; then
-    printf '%s\n' "--data" "name=$name" "--data" "email=$email"
+    CHEZMOI_DATA_ARGS=(--data "name=$name" --data "email=$email")
   fi
 }
 
@@ -78,7 +80,7 @@ if [ -d "$DOTFILES_DIR/.git" ]; then
      ! grep -Eq '^[[:space:]]*name[[:space:]]*=' "$CHEZMOI_CONFIG" || \
      ! grep -Eq '^[[:space:]]*email[[:space:]]*=' "$CHEZMOI_CONFIG"; then
     echo "Initializing chezmoi config"
-    mapfile -t CHEZMOI_DATA_ARGS < <(get_chezmoi_data_args || true)
+    set_chezmoi_data_args
     if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
       chezmoi init --source "$DOTFILES_DIR" --apply "${CHEZMOI_DATA_ARGS[@]}"
     else
@@ -102,7 +104,7 @@ else
   if gh auth status >/dev/null 2>&1; then
     echo "Using gh-authenticated clone"
     gh repo clone zeinsshiri1984/ApexDotfiles "$DOTFILES_DIR"
-    mapfile -t CHEZMOI_DATA_ARGS < <(get_chezmoi_data_args || true)
+    set_chezmoi_data_args
     if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
       chezmoi init --source "$DOTFILES_DIR" --apply "${CHEZMOI_DATA_ARGS[@]}"
     else
@@ -110,7 +112,7 @@ else
     fi
   elif ssh -o BatchMode=yes -T git@github.com >/dev/null 2>&1; then
     echo "Using SSH clone"
-    mapfile -t CHEZMOI_DATA_ARGS < <(get_chezmoi_data_args || true)
+    set_chezmoi_data_args
     if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
       chezmoi init --apply "${CHEZMOI_DATA_ARGS[@]}" "$REPO_SSH"
     else
@@ -118,7 +120,7 @@ else
     fi
   else
     echo "Using HTTPS clone (may be rate-limited)"
-    mapfile -t CHEZMOI_DATA_ARGS < <(get_chezmoi_data_args || true)
+    set_chezmoi_data_args
     if [ "${#CHEZMOI_DATA_ARGS[@]}" -gt 0 ]; then
       chezmoi init --apply "${CHEZMOI_DATA_ARGS[@]}" "$REPO_HTTPS"
     else
