@@ -19,18 +19,20 @@ dotfiles-sync:
     @chezmoi update --apply
 
 host-sync:
+    @command -v apt-get >/dev/null 2>&1 || { echo "apt-get not found"; exit 1; }
+    @command -v sudo >/dev/null 2>&1 || { echo "sudo not found"; exit 1; }
     @sudo apt-get update -qq
     @sudo apt-get install -y -qq ca-certificates curl git
 
 user-sync: brew mise hx-sync
 
-brewtool-sync:
+brew:
     @command -v brew >/dev/null 2>&1 || { echo "brew missing"; exit 1; }
     @brew update
     @brew upgrade
     @brew bundle --no-lock --file="${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/Brewfile"
 
-misetool-sync:
+mise:
     @command -v mise >/dev/null 2>&1 || { echo "mise missing"; exit 1; }
     @mise install
     @mise upgrade
@@ -61,10 +63,16 @@ auth-doctor:
 
 gh-login:
     @command -v gh >/dev/null 2>&1 || { echo "gh missing"; exit 1; }
-    @if gh auth status >/dev/null 2>&1; then echo "gh already authenticated"; exit 0; fi
+    @if gh auth status >/dev/null 2>&1; then \
+        echo "gh already authenticated"; \
+        gh auth setup-git -h github.com; \
+        exit 0; \
+    fi
     @if [ -n "${GH_TOKEN-}" ]; then \
         printf '%s' "$GH_TOKEN" | gh auth login --with-token >/dev/null; \
         echo "gh authenticated via GH_TOKEN"; \
+        gh auth setup-git -h github.com; \
+        exit 0; \
     fi
     @gh auth login -h github.com -p https
     @gh auth setup-git -h github.com
