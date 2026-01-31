@@ -12,10 +12,3 @@
 # 限制单行最大列数，防止搜索到超长压缩代码行时卡死终端
 --max-columns=150
 --max-columns-preview
-
-# --- 样式与交互 ---
-# 搜索结果配色（类似 grep 的经典高亮）
---colors=line:fg:yellow
---colors=path:fg:magenta
---colors=match:fg:green
---colors=match:style:bold
