@@ -1,6 +1,5 @@
 #!/bin/bash
 set -eo pipefail
-\IFS=$'\n\t'
 # -u: 变量未定义则报错,一旦后续加参数解析（--dry-run / --yes），-u 会频繁误杀,不利于阶段化执行
 # -o pipefail: 管道中任意命令失败则整体失败
 
