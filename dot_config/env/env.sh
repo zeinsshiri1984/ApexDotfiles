@@ -20,6 +20,7 @@ else
   PATH="$XDG_BIN_HOME"
 fi
 
+HOMEBREW_NO_ANALYTICS=1
 if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
   case ":$PATH:" in
     *":/home/linuxbrew/.linuxbrew/bin:"*) ;;
