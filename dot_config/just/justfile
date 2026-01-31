@@ -3,61 +3,96 @@ set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 default:
     @just --list
 
-setup:
+setup: user-sync doctor
+
+doctor: host-doctor user-doctor auth-doctor git-doctor
+
+sync: dotfiles-sync user-sync
+
+dotfiles-sync:
+    @command -v chezmoi >/dev/null 2>&1 || { echo "chezmoi missing"; exit 1; }
+    @chezmoi update --apply
+
+host-sync:
+    @command -v apt-get >/dev/null 2>&1 || { echo "apt-get not found"; exit 1; }
+    @command -v sudo >/dev/null 2>&1 || { echo "sudo not found"; exit 1; }
+    @sudo apt-get update -qq
+    @sudo apt-get install -y -qq ca-certificates curl git
+
+host-doctor:
+    @command -v apt-get >/dev/null 2>&1 || { echo "apt-get not found"; exit 1; }
+    @command -v sudo >/dev/null 2>&1 || { echo "sudo not found"; exit 1; }
+    @echo "host ok"
+
+user-sync: brew-sync mise-sync hx-sync
+
+brew-sync:
+    @command -v brew >/dev/null 2>&1 || { echo "brew missing"; exit 1; }
     @brew bundle --no-lock --file="${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/Brewfile"
+
+mise-sync:
+    @command -v mise >/dev/null 2>&1 || { echo "mise missing"; exit 1; }
     @mise install
     @mise reshim
-    @hx --grammar fetch || true
-    @hx --grammar build || true
 
-# --- Update & Maintenance ---
-
-# Update all tools and configs (safe, no heavy cleaning)
-update:
-    @~/.local/bin/update-all
-
-# --- Cleaning Tasks (Manual Trigger) ---
-
-# Clean Docker/Podman (prune all unused images/volumes)
-clean-docker:
-    @echo "Cleaning container resources..."
-    @if command -v podman &> /dev/null; then \
-        podman system prune -a -f --volumes; \
-    elif command -v docker &> /dev/null; then \
-        docker system prune -a -f --volumes; \
+hx-sync:
+    @if command -v hx >/dev/null 2>&1; then \
+        hx --grammar fetch || true; \
+        hx --grammar build || true; \
     else \
-        echo "No container engine found."; \
+        echo "hx not found; skipped"; \
     fi
 
-# Clean language caches (Go, Node, Yarn)
-clean-cache:
-    @echo "Cleaning language caches..."
-    @go clean -modcache 2>/dev/null || true
-    @npm cache clean --force 2>/dev/null || true
-    @yarn cache clean 2>/dev/null || true
-    @echo "Cache cleaned."
+user-doctor:
+    @command -v brew >/dev/null 2>&1 || { echo "brew missing"; exit 1; }
+    @command -v mise >/dev/null 2>&1 || { echo "mise missing"; exit 1; }
+    @command -v chezmoi >/dev/null 2>&1 || { echo "chezmoi missing"; exit 1; }
+    @command -v git >/dev/null 2>&1 || { echo "git missing"; exit 1; }
+    @echo "user tools ok"
 
-# Clean system trash & orphans (Requires sudo for system pkg managers)
-clean-system:
-    @echo "Cleaning system trash & orphans..."
-    @if command -v trash-empty &> /dev/null; then trash-empty 30; fi
-    @if [ -f /etc/debian_version ] && command -v apt-get &>/dev/null; then \
-        sudo apt-get autoremove -y && sudo apt-get clean; \
-    elif [ -f /etc/fedora-release ] && command -v dnf &>/dev/null; then \
-        sudo dnf autoremove -y && sudo dnf clean all; \
+auth-sync: gh-login gh-setup-git doppler-login
+
+auth-doctor:
+    @command -v gh >/dev/null 2>&1 || { echo "gh missing"; exit 1; }
+    @if gh auth status >/dev/null 2>&1; then echo "gh authenticated"; else echo "gh not authenticated"; fi
+    @command -v doppler >/dev/null 2>&1 || { echo "doppler missing"; exit 1; }
+    @if [ -n "${DOPPLER_TOKEN-}" ]; then echo "DOPPLER_TOKEN set"; else echo "DOPPLER_TOKEN not set"; fi
+
+gh-login:
+    @command -v gh >/dev/null 2>&1 || { echo "gh missing"; exit 1; }
+    @if gh auth status >/dev/null 2>&1; then echo "gh already authenticated"; exit 0; fi
+    @if [ -n "${GH_TOKEN-}" ]; then \
+        printf '%s' "$GH_TOKEN" | gh auth login --with-token >/dev/null; \
+        echo "gh authenticated via GH_TOKEN"; \
+        exit 0; \
+    fi
+    @gh auth login -h github.com -p https
+
+gh-setup-git:
+    @command -v gh >/dev/null 2>&1 || { echo "gh missing"; exit 1; }
+    @gh auth setup-git -h github.com
+
+doppler-login:
+    @command -v doppler >/dev/null 2>&1 || { echo "doppler missing"; exit 1; }
+    @doppler login
+gh-doctor: auth-doctor
+
+doppler-doctor: auth-doctor
+
+git-doctor:
+    @command -v git >/dev/null 2>&1 || { echo "git missing"; exit 1; }
+    @if git config --global --get user.email >/dev/null 2>&1; then echo "git user.email ok"; else echo "git user.email missing"; fi
+    @if git config --global --get user.name >/dev/null 2>&1; then echo "git user.name ok"; else echo "git user.name missing"; fi
+    @if git config --global --get-all credential.https://github.com.helper 2>/dev/null | grep -q "gh auth git-credential"; then \
+        echo "git gh credential helper ok"; \
+    else \
+        echo "git gh credential helper not set"; \
     fi
 
-# --- Secrets Management ---
-
-# Load secrets from Bitwarden into current session (Nushell only helper)
-# Usage: load-env (just secrets-load <id> | from json)
-secrets-load item_id:
-    @if ! command -v bw &> /dev/null; then echo "bw cli not found"; exit 1; fi
-    @if [ -z "${BW_SESSION-}" ]; then echo "BW_SESSION empty. Run 'bw unlock' first."; exit 1; fi
-    @bw get item {{item_id}} | jq -r '.fields | map({key: .name, value: .value}) | from_entries'
-
-# --- Project Templates ---
-
-# Create a new project from template
-new type name:
-    @nu -c "new {{type}} {{name}}"
+user-update:
+    @command -v brew >/dev/null 2>&1 || { echo "brew not found"; exit 1; }
+    @command -v mise >/dev/null 2>&1 || { echo "mise not found"; exit 1; }
+    @brew update
+    @brew upgrade
+    @mise upgrade
+    @mise reshim

@@ -32,18 +32,27 @@ if ! command -v brew >/dev/null 2>&1; then
 fi
 
 # Load brew env for this script only (DO NOT persist)
+BREW=""
 if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  BREW="/home/linuxbrew/.linuxbrew/bin/brew"
 elif [ -x "$HOME/.linuxbrew/bin/brew" ]; then
-  eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
+  BREW="$HOME/.linuxbrew/bin/brew"
+elif command -v brew >/dev/null 2>&1; then
+  BREW="$(command -v brew)"
+fi
+
+if [ -n "$BREW" ]; then
+  eval "$("$BREW" shellenv)"
+else
+  echo "brew not found after installation"
+  exit 1
 fi
 
 # Minimal first-stage tools
 brew install --quiet \
   just \
   chezmoi \
-  gh \
-  mise
+  gh
 
 # Dotfiles bootstrap
 DOTFILES_DIR="$HOME/.local/share/chezmoi"
@@ -52,7 +61,7 @@ REPO_HTTPS="https://github.com/zeinsshiri1984/ApexDotfiles.git"
 
 if [ -d "$DOTFILES_DIR/.git" ]; then
   echo "Updating existing dotfiles"
-  chezmoi update
+  chezmoi update --apply
 else
   if [ -e "$DOTFILES_DIR" ]; then
     if [ -n "$(ls -A "$DOTFILES_DIR" 2>/dev/null)" ]; then
@@ -74,7 +83,7 @@ else
     chezmoi init --source "$tmpdir" --apply
     trap - EXIT
     rm -rf "$tmpdir"
-  elif ssh -o BatchMode=yes -T git@github.com >/dev/null 2>&1; then
+  elif command -v ssh >/dev/null 2>&1 && ssh -o BatchMode=yes -T git@github.com >/dev/null 2>&1; then
     echo "Using SSH clone"
     chezmoi init --apply "$REPO_SSH"
   else
