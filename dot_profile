@@ -4,6 +4,6 @@ ENV_FILE="$HOME/.config/env/env.sh"
 [ -r "$ENV_FILE" ] && . "$ENV_FILE"
 
 # mise provides runtimes and PATH; bash-only, idempotent
-if command -v mise >/dev/null 2>&1; then
+if [ -n "${BASH_VERSION-}" ] && command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"
 fi

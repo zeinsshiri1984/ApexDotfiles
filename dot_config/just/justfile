@@ -6,7 +6,7 @@ default:
 bootstrap:
     @bash "$HOME/.local/share/chezmoi/scripts/bootstrap.sh"
 
-setup: user-sync doctor
+setup: host-sync user-sync auth-sync doctor
 
 doctor: host-doctor user-doctor auth-doctor git-doctor
 

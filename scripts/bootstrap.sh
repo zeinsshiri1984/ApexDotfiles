@@ -89,6 +89,7 @@ else
 fi
 
 chezmoi init --source "$TMP_SRC" --apply "${CHEZMOI_PROMPT_ARGS[@]}"
+rm -rf "$TMP_SRC"
 
 JUSTFILE="$XDG_CONFIG_HOME/just/justfile"
 if command -v just >/dev/null 2>&1 && [ -f "$JUSTFILE" ]; then
