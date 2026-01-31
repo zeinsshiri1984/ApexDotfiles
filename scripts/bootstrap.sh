@@ -24,6 +24,11 @@ if ! command -v apt-get >/dev/null 2>&1; then
   exit 1
 fi
 
+if ! command -v sudo >/dev/null 2>&1; then
+  echo "sudo not found; unsupported host"
+  exit 1
+fi
+
 sudo apt-get update -qq
 sudo apt-get install -y -qq \
   ca-certificates \
@@ -79,6 +84,7 @@ fi
 
 TMP_SRC="$XDG_DATA_HOME/apexdotfiles-tmp"
 rm -rf "$TMP_SRC"
+trap 'rm -rf "$TMP_SRC"' EXIT
 
 if gh auth status >/dev/null 2>&1; then
   gh repo clone zeinsshiri1984/ApexDotfiles "$TMP_SRC"
@@ -89,7 +95,6 @@ else
 fi
 
 chezmoi init --source "$TMP_SRC" --apply "${CHEZMOI_PROMPT_ARGS[@]}"
-rm -rf "$TMP_SRC"
 
 JUSTFILE="$XDG_CONFIG_HOME/just/justfile"
 if command -v just >/dev/null 2>&1 && [ -f "$JUSTFILE" ]; then

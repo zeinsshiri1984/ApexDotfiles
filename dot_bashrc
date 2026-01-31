@@ -21,6 +21,10 @@ if [ ! -t 0 ] || [ ! -t 1 ]; then
   return
 fi
 
+if [ "${TERM-}" = "dumb" ]; then
+  return
+fi
+
 # Exec Nushell as the interactive layer
 if command -v nu >/dev/null 2>&1; then
   exec nu
