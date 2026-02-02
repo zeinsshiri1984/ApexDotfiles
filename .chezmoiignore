@@ -15,3 +15,6 @@ Templates/
 # 系统垃圾
 .DS_Store
 **/.DS_Store
+
+# 自动化
+.github/
