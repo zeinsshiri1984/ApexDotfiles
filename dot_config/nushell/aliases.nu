@@ -6,6 +6,7 @@ alias lla = ls -la
 alias g = git
 
 # Git 常用
+alias gs = git add -A && git commit -m "待生成" && git push 
 alias gs = git status -sb
 alias ga = git add
 alias gc = git commit
