@@ -8,12 +8,15 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   translate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Translate README
         env:
@@ -23,14 +26,13 @@ jobs:
           chmod +x scripts/translate-readme.sh
           scripts/translate-readme.sh README.md
 
-      - name: Commit translations
-        run: |
-          if git diff --quiet; then
-            echo "no changes"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.*.md
-          git commit -m "docs: update README translations"
-          git push
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "docs: update README translations"
+          title: "docs: update README translations"
+          body: "Auto-generated translations via Gemini."
+          branch: "ci/translate-readme"
+          delete-branch: true
+          add-paths: |
+            README.*.md
