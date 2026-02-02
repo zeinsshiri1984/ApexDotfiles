@@ -15,31 +15,31 @@ STATE_FILE="$STATE_DIR/bootstrap.state"
 
 mkdir -p "$STATE_DIR"
 if [ -f "$STATE_FILE" ] && [ "$(cat "$STATE_FILE")" != "done" ]; then
-  printf '\033[1;33m[bootstrap]\033[0m 检测到未完成阶段: %s\n' "$(cat "$STATE_FILE")"
+  printf '[bootstrap] 检测到未完成阶段: %s\n' "$(cat "$STATE_FILE")"
 fi
-trap 'stage="unknown"; [ -f "$STATE_FILE" ] && stage="$(cat "$STATE_FILE")"; printf "\033[1;31m[bootstrap]\033[0m 失败 (stage=%s)\n" "$stage" >&2' ERR
+trap 'stage="unknown"; [ -f "$STATE_FILE" ] && stage="$(cat "$STATE_FILE")"; printf "[bootstrap] 失败 (stage=%s)\n" "$stage" >&2' ERR
 
 # === 阶段 1: XDG 目录 ===
-printf '\033[1;32m[bootstrap]\033[0m 确保 XDG 目录...\n'
+printf '[bootstrap] 确保 XDG 目录...\n'
 printf "xdg\n" > "$STATE_FILE"
 mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_STATE_HOME" "$XDG_CACHE_HOME" "$HOME/.local/bin"
 
 # === 阶段 2: 系统依赖 (幂等) ===
-printf '\033[1;32m[bootstrap]\033[0m 安装系统依赖...\n'
+printf '[bootstrap] 安装系统依赖...\n'
 printf "apt\n" > "$STATE_FILE"
-command -v apt-get >/dev/null 2>&1 || { printf '\033[1;31m[bootstrap]\033[0m 仅支持 Debian/Ubuntu 系统\n' >&2; exit 1; }
-command -v sudo >/dev/null 2>&1 || { printf '\033[1;31m[bootstrap]\033[0m 需要 sudo 权限\n' >&2; exit 1; }
+command -v apt-get >/dev/null 2>&1 || { printf '[bootstrap] 仅支持 Debian/Ubuntu 系统\n' >&2; exit 1; }
+command -v sudo >/dev/null 2>&1 || { printf '[bootstrap] 需要 sudo 权限\n' >&2; exit 1; }
 export DEBIAN_FRONTEND=noninteractive
 sudo apt-get update -qq
 sudo apt-get install -y -qq build-essential ca-certificates curl file git
 
 # === 阶段 3: Linuxbrew ===
-printf '\033[1;32m[bootstrap]\033[0m 初始化 Linuxbrew...\n'
+printf '[bootstrap] 初始化 Linuxbrew...\n'
 printf "brew\n" > "$STATE_FILE"
 if ! command -v brew >/dev/null 2>&1; then
-  printf '\033[1;32m[bootstrap]\033[0m 安装 Linuxbrew...\n'
+  printf '[bootstrap] 安装 Linuxbrew...\n'
   NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
-    || { printf '\033[1;31m[bootstrap]\033[0m Linuxbrew 安装失败\n' >&2; exit 1; }
+    || { printf '[bootstrap] Linuxbrew 安装失败\n' >&2; exit 1; }
 fi
 
 # 加载 brew 环境 (仅本脚本内生效)
@@ -48,17 +48,17 @@ if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
 elif [ -x "$HOME/.linuxbrew/bin/brew" ]; then
   eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
 fi
-command -v brew >/dev/null 2>&1 || { printf '\033[1;31m[bootstrap]\033[0m Linuxbrew 加载失败\n' >&2; exit 1; }
+command -v brew >/dev/null 2>&1 || { printf '[bootstrap] Linuxbrew 加载失败\n' >&2; exit 1; }
 
 # === 阶段 4: 启动级工具 ===
-printf '\033[1;32m[bootstrap]\033[0m 安装启动级工具...\n'
+printf '[bootstrap] 安装启动级工具...\n'
 printf "core-tools\n" > "$STATE_FILE"
 for pkg in chezmoi just gh mise nushell; do
   command -v "$pkg" >/dev/null 2>&1 || brew install --quiet "$pkg"
 done
 
 # === 阶段 5: Dotfiles ===
-printf '\033[1;32m[bootstrap]\033[0m 初始化 dotfiles...\n'
+printf '[bootstrap] 初始化 dotfiles...\n'
 printf "dotfiles\n" > "$STATE_FILE"
 
 # 收集 Git 用户信息 (避免交互式提示)
@@ -70,15 +70,15 @@ git_email="$(git config --global user.email 2>/dev/null || true)"
 
 # chezmoi init: 克隆到标准位置并应用
 if [ -d "$CHEZMOI_SRC/.git" ]; then
-  printf '\033[1;32m[bootstrap]\033[0m dotfiles 已存在，更新并应用...\n'
+  printf '[bootstrap] dotfiles 已存在，更新并应用...\n'
   chezmoi update --apply
 else
-  printf '\033[1;32m[bootstrap]\033[0m 首次初始化 dotfiles...\n'
+  printf '[bootstrap] 首次初始化 dotfiles...\n'
   chezmoi init "$REPO" --apply "${CHEZMOI_ARGS[@]}"
 fi
 
 # === 阶段 6: 用户工具链 ===
-printf '\033[1;32m[bootstrap]\033[0m 运行 just setup...\n'
+printf '[bootstrap] 运行 just setup...\n'
 printf "just\n" > "$STATE_FILE"
 JUSTFILE="$XDG_CONFIG_HOME/just/justfile"
 if [ -f "$JUSTFILE" ]; then
@@ -86,4 +86,4 @@ if [ -f "$JUSTFILE" ]; then
 fi
 
 printf "done\n" > "$STATE_FILE"
-printf '\033[1;32m[bootstrap]\033[0m Bootstrap 完成！重新登录或执行: exec bash -l\n'
+printf '[bootstrap] Bootstrap 完成！重新登录或执行: exec bash -l\n'

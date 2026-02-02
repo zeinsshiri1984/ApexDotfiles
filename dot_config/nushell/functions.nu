@@ -23,6 +23,20 @@ def gi [...langs: string] {
   }
 }
 
+# Yazi: Zellij 内强制降级为 Chafa 预览
+def --wrapped yazi [...args] {
+  if ($env.ZELLIJ? | is-empty) {
+    ^yazi ...$args
+  } else {
+    with-env { TERM: "xterm-kitty" } { ^yazi ...$args }
+  }
+}
+
+# podman-tui: 显示真实执行命令
+def --wrapped podman-tui [...args] {
+  ^podman-tui --show-cmd ...$args
+}
+
 # === AI 函数 (ShellGPT + Groq) ===
 
 # AI Ask: 管道/附件/纯对话

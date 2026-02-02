@@ -31,6 +31,11 @@ _add_path "$HOME/.local/bin"
 export PATH
 unset -f _add_path
 
+# ShellGPT: Groq 兼容 OpenAI Key
+if [ -n "${GROQ_API_KEY-}" ] && [ -z "${OPENAI_API_KEY-}" ]; then
+  export OPENAI_API_KEY="$GROQ_API_KEY"
+fi
+
 # Mise: 仅在 Bash 中激活 (Nushell 不需要)
 if [ -n "${BASH_VERSION-}" ] && command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"

@@ -36,6 +36,12 @@
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap.sh)"
 ```
 
+## AI (ShellGPT + Groq)
+
+1) 设置 `GROQ_API_KEY`（若已设置 `OPENAI_API_KEY` 则不会覆盖）  
+2) 默认走 Groq 的 OpenAI 兼容接口：`https://api.groq.com/openai/v1`  
+3) 默认模型：`llama-3.1-8b-instant`（可在 `~/.config/shell_gpt/.sgptrc` 修改）
+
 ## Roadmap
 
 - 完成 README 多语言版本或移除无效链接  
