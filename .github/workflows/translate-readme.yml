@@ -1,0 +1,36 @@
+name: translate-readme
+
+on:
+  push:
+    paths:
+      - README.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Translate README
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+        run: |
+          chmod +x scripts/translate-readme.sh
+          scripts/translate-readme.sh README.md
+
+      - name: Commit translations
+        run: |
+          if git diff --quiet; then
+            echo "no changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.*.md
+          git commit -m "docs: update README translations"
+          git push
