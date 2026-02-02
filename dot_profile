@@ -1,9 +1,37 @@
-# Entry point for all login / non-interactive shells
+# ~/.profile — 唯一环境变量事实源
+# Bash login / sh / 非交互式脚本均 source 此文件
 
-ENV_FILE="$HOME/.config/env/env.sh"
-[ -r "$ENV_FILE" ] && . "$ENV_FILE"
+# Locale
+export LANG=en_US.UTF-8
 
-# mise provides runtimes and PATH; bash-only, idempotent
+# XDG Base Directory (官方规范)
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+# Editor
+export EDITOR=hx
+export VISUAL=hx
+
+# Homebrew
+export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_ENV_HINTS=1
+
+# PATH 构建 (顺序: 用户 > brew > 系统)
+_add_path() { case ":$PATH:" in *":$1:"*) ;; *) PATH="$1:$PATH" ;; esac; }
+
+# Linuxbrew (两种安装位置)
+[ -x /home/linuxbrew/.linuxbrew/bin/brew ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+[ -x "$HOME/.linuxbrew/bin/brew" ] && eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
+
+# 用户 bin (最高优先级)
+_add_path "$HOME/.local/bin"
+
+export PATH
+unset -f _add_path
+
+# Mise: 仅在 Bash 中激活 (Nushell 不需要)
 if [ -n "${BASH_VERSION-}" ] && command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"
 fi

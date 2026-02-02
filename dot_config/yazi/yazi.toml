@@ -1,6 +1,14 @@
+# Yazi 配置
+
+[manager]
+show_hidden = true
+sort_by = "natural"
+sort_dir_first = true
+
 [opener]
+# 在 Zellij 左侧 Helix pane 打开文件
 edit = [
-  { run = 'zellij action focus-pane --name editor; zellij action write-chars ":open \"$1\"\n"', desc = "Helix", for = "unix" }
+  { run = 'zellij action focus-pane --name editor && zellij action write-chars ":open \"$1\"\n"', desc = "Helix", for = "unix" }
 ]
 
 [open]
@@ -9,5 +17,12 @@ prepend_rules = [
   { mime = "application/json", use = "edit" },
   { mime = "application/toml", use = "edit" },
   { mime = "application/yaml", use = "edit" },
-  { mime = "application/*", use = "edit" }
+  { mime = "application/xml", use = "edit" },
 ]
+
+[preview]
+# Zellij 内自动降级为 chafa (图片预览)
+image_filter = "triangle"
+image_quality = 75
+max_width = 600
+max_height = 900

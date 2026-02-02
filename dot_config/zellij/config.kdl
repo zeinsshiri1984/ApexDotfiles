@@ -1,78 +1,52 @@
 // Zellij global config,其余未指定选项为默认值
 
-config {
-  default_shell "bash"
-  scrollback_editor "hx"
-  pane_frames false
-  mouse_mode true
-  auto_layout false
-  simplified_ui true
-  default_mode "locked" // 默认锁定，不干扰 Helix 的 Ctrl 键
-  copy_clipboard "system"
-  copy_on_select true
-  attach_to_session true // 不指定会话启动时，自动附加到已存在的会话
-}
-
-ui {
-  pane_frames {
-    hide_session_name true
-  }
-}
-
-// Session 行为
-session_serialization true    //自动进入 Session 序列化;可保存你的多项目会话状态
-serialize_pane_viewport true  //自动保存
-mirror_session true           // 允许跨终端同步 session
-on_force_close "detach"       // 关闭终端窗口时默认 Detach 而不是杀死进程
-
-// UI 设置
-pane_frames true          // 是否显示窗格边框
-//default_layout "compact"  // 使用紧凑布局
+// 基础设置
+default_shell "bash"
+scrollback_editor "hx"
+pane_frames true
+mouse_mode true
+simplified_ui true
+default_mode "locked"
+copy_clipboard "system"
+copy_on_select true
 default_layout "ide"
+
+// Session
+session_serialization true
+serialize_pane_viewport true
+on_force_close "detach"
+
+// UI
 ui {
     pane_frames {
         rounded_corners true
+        hide_session_name true
     }
 }
 
-//操作逻辑
+// 快捷键
 keybinds {
-    //编辑模式都生效的zellij按键,会覆盖Helix按键
+    // Locked 模式 (默认)
     locked {
         bind "Ctrl a" { SwitchToMode "Normal"; }
-        bind "Ctrl q" {  Detach; }
+        bind "Ctrl q" { Detach; }
     }
 
+    // RenameTab 模式
     renametab {
         bind "Enter" { SwitchToMode "Locked"; }
         bind "Esc" { UndoRenameTab; SwitchToMode "Locked"; }
     }
 
-    // 在"renametab" 之外的模式下都生效这两个模式可能需要输入alt转义字符?
-    shared_except "renametab"  {
-        bind "Ctrl f" {
-            bind "Ctrl f" {
-                Run "bash" "-lc" "$XDG_CONFIG_HOME/zellij/scripts/yazi-floating.sh"
-                FloatingPane
-            }
-        }
-        bind "Ctrl g" {
-            Run "bash" "-lc" "$XDG_CONFIG_HOME/zellij/scripts/lazygit-floating.sh"
-            FloatingPane
-        }
-        bind "Ctrl p" {
-            Run "bash" "-lc" "$XDG_CONFIG_HOME/zellij/scripts/podman-tui-floating.sh"
-            FloatingPane
-            floating true
-            close_on_exit true
-            x "5%"
-            y "5%"
-            width "90%"
-            height "90%"
-        }
-        bind "Ctrl q" {  Detach; }
-        bind "i" { SwitchToMode "Locked"; }
+    // 除 RenameTab 外的所有模式
+    shared_except "renametab" {
         bind "Esc" { SwitchToMode "Locked"; }
+        bind "Ctrl q" { Detach; }
+
+        // 浮动窗格
+        bind "Alt y" { Run "yazi" { close_on_exit true; }; ToggleFloatingPanes; }
+        bind "Alt g" { Run "lazygit" { close_on_exit true; }; ToggleFloatingPanes; }
+        bind "Alt p" { Run "podman-tui" "--show-cmd" { close_on_exit true; }; ToggleFloatingPanes; }
 
         // --- Pane管理 ---
         bind "Alt n" { NewPane "stacked"; }               // 新建窗格(自动)
@@ -82,16 +56,16 @@ keybinds {
         bind "Alt f" { ToggleFocusFullscreen; } // 全屏/取消全屏 (Focus)
         bind "Alt e" { TogglePaneEmbedOrFloating; } // 悬浮/平铺互转
         // --- Pane 导航 (Vim风格) ---
-        bind "h" "Alt Left" { MoveFocus "Left"; }
-        bind "l" "Alt Right" { MoveFocus "Right"; }
-        bind "j" "Alt Down" { MoveFocus "Down"; }
-        bind "k" "Alt Up" { MoveFocus "Up"; }
+        bind "Alt h" "Alt Left" { MoveFocus "Left"; }
+        bind "Alt l" "Alt Right" { MoveFocus "Right"; }
+        bind "Alt j" "Alt Down" { MoveFocus "Down"; }
+        bind "Alt k" "Alt Up" { MoveFocus "Up"; }
         // --- Pane 大小调整 ---
         bind "Alt =" { Resize "Increase"; }
         bind "Alt -" { Resize "Decrease"; }
 
         // --- Tab管理 ---
-        bind "Alt t" { NewTab; }               // 新建 Tab
+        bind "Alt t" { Run "bash" "-lc" "zj-worktree" { close_on_exit true; }; } // 新建 Worktree Tab
         bind "Alt [" { GoToPreviousTab; }      // 上一个 Tab
         bind "Alt ]" { GoToNextTab; }          // 下一个 Tab
         bind "Alt 1" { GoToTab 1; }            // 快速切换 1-9
@@ -115,7 +89,7 @@ keybinds {
     }
 }
 
-// UI 插件配置
+// 插件
 plugins {
     tab-bar location="zellij:tab-bar"
     status-bar location="zellij:status-bar"

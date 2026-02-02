@@ -1,0 +1,10 @@
+project_name:
+  type: str
+  help: project name (e.g. my_app)
+
+_exclude:
+  - "copier.yaml"
+  - ".git"
+
+_tasks:
+  - just setup

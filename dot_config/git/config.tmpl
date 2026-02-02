@@ -13,7 +13,6 @@
 [init]
     defaultBranch = main
 
-# --- 核心体验优化 ---
 [core]
     pager = delta
     editor = hx               # 使用 Helix 作为默认编辑器
@@ -31,8 +30,7 @@
     light = false             # 适配暗色终端
     side-by-side = true       # 并排显示 diff
     line-numbers = true
-    
-# --- 界面显示优化 ---
+
 [column]
     ui = auto # 分栏显示分支列表，充分利用屏幕空间
 
@@ -43,7 +41,6 @@
 [tag]
     sort = version:refname
 
-# --- 操作自动化 ---
 [merge]
     conflictstyle = zdiff3    # 能够看到 共同祖先/我/他 三方代码，解决冲突的神器
     # 自动合并时如果只是简单重命名，自动处理
@@ -62,10 +59,6 @@
     autoSetupRemote = true     # 自动设置上游分支，不再需要 git push -u
     # 推送时自动推送关联的 tags
     followTags = true
-    
-[maintenance]
-    auto = false # 建议手动管理或通过 cron 触发，避免在编译时自动触发 GC 卡顿
-    strategy = incremental
 
 [fetch]
     # 取回后自动清理远程已删除的分支（保持分支列表干净）
@@ -86,23 +79,22 @@
     autoStash = true
     # 自动压缩 fixup! 提交
     autoSquash = true
-    
+
 [rerere]
     # 开启“重用记录的冲突解决方案”
     # 如果你多次在不同分支遇到同一个冲突，Git 会自动帮你解
     enabled = true
-    autoupdate = true  
+    autoupdate = true
 
 # --- 安全凭证 (委托给 gh) ;HTTPS 操作也不用输密码---
 [credential "https://github.com"]
-    helper = 
+    helper =
     helper = !gh auth git-credential
 
 [credential "https://gist.github.com"]
-    helper = 
+    helper =
     helper = !gh auth git-credential
-    
-# --- 性能优化 (针对超大型仓库) ---
+
 [feature]
     # 开启许多有利于性能的默认设置（如 manyFiles, index.version=4）
     manyFiles = true

@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+name="${1-}"
+if [ -z "$name" ]; then
+  printf "worktree name: "
+  read -r name
+fi
+
+if [ -z "$name" ]; then
+  printf "name required\n" >&2
+  exit 1
+fi
+
+case "$name" in
+  *[!A-Za-z0-9._-]*)
+    printf "invalid name: %s\n" "$name" >&2
+    exit 1
+    ;;
+esac
+
+root="$(git rev-parse --show-toplevel 2>/dev/null)" || {
+  printf "not a git repo\n" >&2
+  exit 1
+}
+
+common="$(git rev-parse --git-common-dir)"
+repo_root="$(cd "$common/.." && pwd -P)"
+repo_name="$(basename "$repo_root")"
+
+state="${XDG_STATE_HOME:-$HOME/.local/state}"
+base="$state/worktrees/$repo_name"
+path="$base/$name"
+
+mkdir -p "$base"
+
+if git worktree list --porcelain | rg -Fx "worktree $path" >/dev/null; then
+  :
+elif [ -e "$path" ]; then
+  printf "path exists but not a worktree: %s\n" "$path" >&2
+  exit 1
+else
+  if git show-ref --quiet "refs/heads/$name"; then
+    git worktree add "$path" "$name"
+  else
+    git worktree add -b "$name" "$path"
+  fi
+fi
+
+if [ -n "${ZELLIJ-}" ] && command -v zellij >/dev/null 2>&1; then
+  layout="${XDG_CONFIG_HOME:-$HOME/.config}/zellij/layouts/ide.kdl"
+  if [ ! -f "$layout" ]; then
+    printf "layout not found: %s\n" "$layout" >&2
+    exit 1
+  fi
+  if zellij action query-tab-names | rg -Fx "$name" >/dev/null; then
+    zellij action go-to-tab-name "$name"
+  else
+    zellij action new-tab --name "$name" --layout "$layout" --cwd "$path"
+  fi
+else
+  printf '%s\n' "$path"
+fi

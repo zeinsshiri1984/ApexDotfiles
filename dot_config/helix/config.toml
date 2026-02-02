@@ -30,13 +30,5 @@ separator = "│"
 "A-o" = ":bn"  # next buffer
 "A-w" = ":bc"  # close buffer (close tab)
 
-# Helix 调用sh 执行 zellij 命令，生成新pane运行 TUI 工具
-# --close-on-exit: 当 Yazi/LazyGit 退出时，浮动窗自动销毁，不会留个空壳
-
-# Ctrl-p: 调用 Superfile (spf) 作为文件选择器
-# 原理：启动 spf-picker -> 用户选中按 'e'/'Enter' -> 触发 spf-opener -> Zellij Action 通知 Helix 打开
-"C-p" = ":sh zellij run -n 'SuperfilePicker' --close-on-exit --floating -x 10%% -y 10%% --width 80%% --height 80%% -- spf-picker"
-
-
-# Ctrl-l: 打开 LazyGit
-"C-l" = ":sh zellij run -n 'Lazygit' --close-on-exit --floating -x 5%% -y 5%% --width 90%% --height 90%% -- lazygit"
+# Lazygit 浮动窗格
+"C-g" = ":sh zellij run -n 'Lazygit' --close-on-exit --floating -x 5% -y 5% --width 90% --height 90% -- lazygit"

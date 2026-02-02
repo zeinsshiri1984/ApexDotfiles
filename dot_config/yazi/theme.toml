@@ -1,7 +1,5 @@
-[app]
-overall = { bg = "#0b1a1c" }
+# Yazi 主题: 使用现成 flavor，尽量接近 Noctis
 
-[status]
-overall = { fg = "#e0e6ea", bg = "#0b1a1c" }
-progress_normal = { fg = "#16b673", bg = "#0b1a1c" }
-progress_error = { fg = "#e66533", bg = "#0b1a1c" }
+[flavor]
+# 需要安装: ya pkg add BennyOe/tokyo-night.yazi
+dark = "tokyo-night"

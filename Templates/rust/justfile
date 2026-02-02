@@ -1,22 +1,44 @@
 set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 set dotenv-load := false
 
+dbx_image := "docker.io/library/ubuntu:24.04"
+dbx_name := `bash -lc 'git rev-parse --show-toplevel 2>/dev/null | xargs basename || basename "$PWD"'`
+proj_root := `bash -lc 'git rev-parse --show-toplevel 2>/dev/null || pwd'`
+
 default:
     @just --list
+
+dbx-create:
+    distrobox create --name {{dbx_name}} --image {{dbx_image}} --pull --yes
+
+dbx-enter:
+    distrobox enter {{dbx_name}}
+
+dbx-bootstrap:
+    distrobox enter {{dbx_name}} -- bash -lc "./scripts/bootstrap.sh"
+
+dbx-destroy:
+    distrobox rm -f {{dbx_name}}
+
+dbx-recreate:
+    distrobox rm -f {{dbx_name}} || true
+    distrobox create --name {{dbx_name}} --image {{dbx_image}} --pull --yes
+    distrobox enter {{dbx_name}} -- bash -lc "./scripts/bootstrap.sh"
+
+ai-shell:
+    distrobox enter {{dbx_name}} -- bash -lc "cd '{{proj_root}}' && exec bash -l"
 
 bootstrap:
     ./scripts/bootstrap.sh
 
-tools:
-    brew bundle --no-lock --file=Brewfile
-
 setup:
-    mise install
+    devbox install
 
-doctor:
-    mise doctor
-    brew doctor || true
+build:
+    devbox run build
 
-clean:
-    mise uninstall --all || true
-    brew bundle cleanup --force || true
+test:
+    devbox run test
+
+watch:
+    devbox run watch

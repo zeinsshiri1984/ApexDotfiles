@@ -1,12 +1,13 @@
 # 优先下载独立二进制版本,能用 uv 不用 pipx
 [tools]
+# Runtime (宿主机全局)
 node = "lts"
 python = "latest"
 go = "latest"
 rust = "latest"
 
-# Mise CLI 补全引擎
-usage = "latest"              
+# mise 补全
+usage = "latest"
 
 # Python 生态
 uv = "latest"
@@ -17,7 +18,6 @@ uv = "latest"
 # Node 生态
 "npm:@anthropic-ai/claude-code" = "latest"
 "npm:@openai/codex" = "latest"
-"npm:gemini-cli" = "latest"
 "npm:opencode"   = "latest"
 
 #二进制
@@ -26,9 +26,7 @@ uv = "latest"
 
 [settings]
 pipx.uvx = true
-experimental = false
 auto_install = false
-plugin_autoupdate_last_check_duration = "1 week"
 legacy_version_file = false
 activate_aggressive = false  # 明确行为，避免隐式 hook
 trusted_config_paths = ["~/.config/mise"]

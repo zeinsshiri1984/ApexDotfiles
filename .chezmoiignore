@@ -1,15 +1,17 @@
+# 不部署到 ~ 的文件
+
+# 项目文件
 README.md
-LICENSE
+License
 .git
 .gitignore
 
-# 忽略模板目录 (由 Copier 使用，而不是 Chezmoi)
-Templates/
-Templates/**
+# 脚本 (手动执行，不部署)
+scripts/
 
-# 忽略 macOS 系统垃圾
+# 项目模板 (由 copier 使用)
+Templates/
+
+# 系统垃圾
 .DS_Store
 **/.DS_Store
-
-bootstrap.sh
-dot_config/ignore/

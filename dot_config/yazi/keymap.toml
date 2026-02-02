@@ -1,3 +1,16 @@
+# Yazi 快捷键
+
 [[manager.prepend_keymap]]
 on = ["<Enter>"]
 run = "open"
+desc = "打开文件"
+
+[[manager.prepend_keymap]]
+on = ["<Esc>"]
+run = "close"
+desc = "关闭 Yazi"
+
+[[manager.prepend_keymap]]
+on = ["q"]
+run = "close"
+desc = "关闭 Yazi"

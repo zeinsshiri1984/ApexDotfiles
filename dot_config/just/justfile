@@ -1,30 +1,32 @@
+# 全局 Justfile
+# 用法: j <task>
+
 set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
 default:
     @just --list
 
-all: setup
+# === 主要任务 ===
 
-bootstrap:
-    @bash "$HOME/.local/share/chezmoi/scripts/bootstrap.sh"
-
+# 完整设置
 setup: host-sync user-sync auth-sync doctor
 
-doctor: user-doctor auth-doctor git-doctor
-
+# 日常同步
 sync: dotfiles-sync user-sync
 
-dotfiles-sync:
-    @command -v chezmoi >/dev/null 2>&1 || { echo "chezmoi missing"; exit 1; }
-    @chezmoi update --apply
+# 健康检查
+doctor: user-doctor auth-doctor
+
+# === 系统层 ===
 
 host-sync:
     @command -v apt-get >/dev/null 2>&1 || { echo "apt-get not found"; exit 1; }
-    @command -v sudo >/dev/null 2>&1 || { echo "sudo not found"; exit 1; }
     @sudo apt-get update -qq
-    @sudo apt-get install -y -qq ca-certificates curl git
+    @sudo apt-get install -y -qq build-essential ca-certificates curl file git
 
-user-sync: brew mise hx-sync
+# === 用户工具 ===
+
+user-sync: brew mise hx-sync yazi-sync
 
 brew:
     @command -v brew >/dev/null 2>&1 || { echo "brew missing"; exit 1; }
@@ -42,54 +44,52 @@ hx-sync:
     @if command -v hx >/dev/null 2>&1; then \
         hx --grammar fetch || true; \
         hx --grammar build || true; \
-    else \
-        echo "hx not found; skipped"; \
     fi
 
-user-doctor:
-    @command -v brew >/dev/null 2>&1 || { echo "brew missing"; exit 1; }
-    @command -v mise >/dev/null 2>&1 || { echo "mise missing"; exit 1; }
+yazi-sync:
+    @if command -v ya >/dev/null 2>&1; then \
+        ya pkg add BennyOe/tokyo-night.yazi || true; \
+    fi
+
+# === Dotfiles ===
+
+dotfiles-sync:
     @command -v chezmoi >/dev/null 2>&1 || { echo "chezmoi missing"; exit 1; }
-    @command -v git >/dev/null 2>&1 || { echo "git missing"; exit 1; }
-    @echo "user tools ok"
+    @chezmoi update --apply
 
-auth-sync: gh-login doppler-login
+# === 认证 ===
 
-auth-doctor:
-    @command -v gh >/dev/null 2>&1 || { echo "gh missing"; exit 1; }
-    @if gh auth status >/dev/null 2>&1; then echo "gh authenticated"; else echo "gh not authenticated"; fi
-    @command -v doppler >/dev/null 2>&1 || { echo "doppler missing"; exit 1; }
-    @if [ -n "${DOPPLER_TOKEN-}" ]; then echo "DOPPLER_TOKEN set"; else echo "DOPPLER_TOKEN not set"; fi
+auth-sync: gh-login
 
 gh-login:
     @command -v gh >/dev/null 2>&1 || { echo "gh missing"; exit 1; }
     @if gh auth status >/dev/null 2>&1; then \
-        echo "gh already authenticated"; \
+        echo "gh: already authenticated"; \
         gh auth setup-git -h github.com; \
-        exit 0; \
-    fi
-    @if [ -n "${GH_TOKEN-}" ]; then \
-        printf '%s' "$GH_TOKEN" | gh auth login --with-token >/dev/null; \
-        echo "gh authenticated via GH_TOKEN"; \
+    elif [ -n "${GH_TOKEN-}" ]; then \
+        printf '%s' "$$GH_TOKEN" | gh auth login --with-token; \
         gh auth setup-git -h github.com; \
-        exit 0; \
-    fi
-    @gh auth login -h github.com -p https
-    @gh auth setup-git -h github.com
-
-doppler-login:
-    @command -v doppler >/dev/null 2>&1 || { echo "doppler missing"; exit 1; }
-    @doppler login
-gh-doctor: auth-doctor
-
-doppler-doctor: auth-doctor
-
-git-doctor:
-    @command -v git >/dev/null 2>&1 || { echo "git missing"; exit 1; }
-    @if git config --global --get user.email >/dev/null 2>&1; then echo "git user.email ok"; else echo "git user.email missing"; fi
-    @if git config --global --get user.name >/dev/null 2>&1; then echo "git user.name ok"; else echo "git user.name missing"; fi
-    @if git config --global --get-all credential.https://github.com.helper 2>/dev/null | grep -q "gh auth git-credential"; then \
-        echo "git gh credential helper ok"; \
     else \
-        echo "git gh credential helper not set"; \
+        gh auth login -h github.com -p https; \
+        gh auth setup-git -h github.com; \
     fi
+
+# === 健康检查 ===
+
+user-doctor:
+    @echo "Checking tools..."
+    @command -v brew >/dev/null 2>&1 && echo "  brew: ok" || echo "  brew: missing"
+    @command -v mise >/dev/null 2>&1 && echo "  mise: ok" || echo "  mise: missing"
+    @command -v chezmoi >/dev/null 2>&1 && echo "  chezmoi: ok" || echo "  chezmoi: missing"
+    @command -v nu >/dev/null 2>&1 && echo "  nushell: ok" || echo "  nushell: missing"
+    @command -v hx >/dev/null 2>&1 && echo "  helix: ok" || echo "  helix: missing"
+    @command -v zellij >/dev/null 2>&1 && echo "  zellij: ok" || echo "  zellij: missing"
+    @command -v yazi >/dev/null 2>&1 && echo "  yazi: ok" || echo "  yazi: missing"
+    @command -v lazygit >/dev/null 2>&1 && echo "  lazygit: ok" || echo "  lazygit: missing"
+    @command -v sgpt >/dev/null 2>&1 && echo "  shell-gpt: ok" || echo "  shell-gpt: missing"
+
+auth-doctor:
+    @echo "Checking auth..."
+    @if gh auth status >/dev/null 2>&1; then echo "  github: ok"; else echo "  github: not authenticated"; fi
+    @if git config --global user.email >/dev/null 2>&1; then echo "  git email: ok"; else echo "  git email: missing"; fi
+    @if git config --global user.name >/dev/null 2>&1; then echo "  git name: ok"; else echo "  git name: missing"; fi

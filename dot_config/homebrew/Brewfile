@@ -1,22 +1,24 @@
-tap "homebrew/core"
-tap "homebrew/cask"
-# ===== Shell / Dev Core =====
+# Brewfile — 宿主机通用 CLI
+# 原则: 启动级/逃生级 + 日常工具，不含项目级依赖
+
+# === 核心 ===
 brew "gh"
 brew "just"
 brew "nushell"
 brew "starship"
 brew "carapace"
 brew "mise"
-brew "doppler"
 
-# ===== CLI Enhancements =====
+# === CLI 增强 ===
 brew "fd"
 brew "ripgrep"
 brew "dust"
 brew "tealdeer"
 brew "gtrash"
+brew "jq"
+brew "gemini-cli"
 
-# ===== TUI Workflow =====
+# === TUI 工作流 ===
 brew "yazi"
 brew "zellij"
 brew "helix"
@@ -25,15 +27,12 @@ brew "onefetch"
 brew "scc"
 brew "gum"
 
-# ===== Git Ecosystem =====
+# === Git ===
+brew "git"
 brew "git-delta"
-brew "difftastic"
 brew "lefthook"
 brew "gitleaks"
 brew "git-lfs"
-
-# ===== Data =====
-brew "jq"
 
 # ===== Monitor =====
 brew "btop"
@@ -47,6 +46,7 @@ brew "angle-grinder"
 brew "podman"
 brew "docker-compose"
 brew "podman-tui"
+brew "distrobox"
 # brew "dive"
 # brew "hadolint"
 # brew "syft"
@@ -86,7 +86,4 @@ brew "glow"
 brew "ffmpeg"
 brew "p7zip"
 brew "poppler"
-
-#ai
-brew "mods"
-# brew "fabric"
+brew "chafa"

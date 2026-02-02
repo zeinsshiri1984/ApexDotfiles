@@ -1,23 +1,17 @@
-[chezmoi]
-sourceDir = "{{ .chezmoi.sourceDir }}"
+# chezmoi 配置
 
-# 交互式输入 (仅在首次初始化时询问)
-{{ $email := promptStringOnce . "email" "Git Email address" }}
-{{ $name := promptStringOnce . "name" "Git Username" }}
+{{ $email := promptStringOnce . "email" "Git email" -}}
+{{ $name := promptStringOnce . "name" "Git username" -}}
 
 [data]
-    email = "{{ $email }}"
-    name = "{{ $name }}"
+email = "{{ $email }}"
+name = "{{ $name }}"
 
-# 开启 Diff 比较时的颜色与分页
 [diff]
-    command = "delta"
-    pager = "delta"
-    
-# 合并冲突解决
-[merge]
-    command = "hx" 
+pager = "delta"
 
-# 默认编辑器
+[merge]
+command = "hx"
+
 [edit]
-    command = "hx"
+command = "hx"
