@@ -1,196 +1,115 @@
-# Noctis Theme Palette
+# Starship 配置
+# 基础: nerd-font-symbols preset
+# 增量: Noctis 配色覆盖
+
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# === Noctis 调色板 ===
 # https://github.com/liviuschera/noctis
 [palettes.noctis]
-noctis_bg = "#0b1a1c"
-noctis_fg = "#e0e6ea"
-noctis_red = "#e66533"
-noctis_green = "#16b673"
-noctis_yellow = "#d5971a"
-noctis_blue = "#49ace9"
-noctis_magenta = "#df769b"
-noctis_cyan = "#49d6e9"
-noctis_white = "#ffffff"
-noctis_orange = "#e66533"
+bg = "#0b1a1c"
+fg = "#e0e6ea"
+red = "#e66533"
+green = "#16b673"
+yellow = "#d5971a"
+blue = "#49ace9"
+magenta = "#df769b"
+cyan = "#49d6e9"
 
-# --- Global Config ---
 palette = "noctis"
-add_newline = true
 
-# P10k Style Format
-# Left: OS -> Dir -> Git -> Package -> Languages -> Docker/Cloud -> Jobs -> Status
-# Right: Time -> Duration
-format = """
-$os\
-$directory\
-$git_branch\
-$git_status\
-$package\
-$c\
-$cmake\
-$cobol\
-$daml\
-$dart\
-$deno\
-$dotnet\
-$elixir\
-$elm\
-$erlang\
-$fennel\
-$golang\
-$guix_shell\
-$haskell\
-$haxe\
-$helm\
-$java\
-$julia\
-$kotlin\
-$gradle\
-$lua\
-$nim\
-$nodejs\
-$ocaml\
-$opa\
-$perl\
-$php\
-$pulumi\
-$purescript\
-$python\
-$raku\
-$rlang\
-$red\
-$ruby\
-$rust\
-$scala\
-$solidity\
-$swift\
-$terraform\
-$vlang\
-$vagrant\
-$zig\
-$buf\
-$nix_shell\
-$conda\
-$meson\
-$spack\
-$memory_usage\
-$aws\
-$gcloud\
-$openstack\
-$azure\
-$env_var\
-$crystal\
-$custom\
-$sudo\
-$cmd_duration\
-$line_break\
-$jobs\
-$battery\
-$time\
-$status\
-$container\
-$shell\
-$character"""
+# === 增量配置 (颜色 + 符号) ===
 
-# --- Module Configs ---
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"
 
-[os]
-disabled = false
-style = "bold noctis_blue"
-
-[os.symbols]
-Windows = " "
-Ubuntu = " "
-SUSE = " "
-Raspbian = " "
-Mint = " "
-Macos = " "
-Manjaro = " "
-Linux = " "
-Gentoo = " "
-Fedora = " "
-Alpine = " "
-Amazon = " "
-Android = " "
-Arch = " "
-Artix = " "
-CentOS = " "
-Debian = " "
-Redhat = " "
-RedHatEnterprise = " "
-
-[directory]
-style = "bold noctis_cyan"
-read_only = " "
-truncation_length = 3
-truncation_symbol = "…/"
-
-[git_branch]
-symbol = " "
-style = "bold noctis_magenta"
-
-[git_status]
-style = "bold noctis_red"
-
-[package]
-symbol = " "
-style = "bold noctis_yellow"
-
-# Languages (High Information Density)
-[nodejs]
-symbol = " "
-style = "bold noctis_green"
-
-[rust]
-symbol = " "
-style = "bold noctis_orange"
-
-[golang]
-symbol = " "
-style = "bold noctis_cyan"
-
-[python]
-symbol = " "
-style = "bold noctis_blue"
-
-[java]
-symbol = " "
-style = "bold noctis_red"
-
-[docker_context]
-symbol = " "
-style = "bold noctis_blue"
-
-[kubernetes]
-symbol = "☸ "
-style = "bold noctis_blue"
-
-# Cloud
-[aws]
-symbol = "  "
-style = "bold noctis_orange"
-
-[gcloud]
-symbol = " "
-style = "bold noctis_blue"
-
-# Status & Time
 [cmd_duration]
+style = "bold yellow"
 min_time = 2_000
-style = "bold noctis_yellow"
 
 [time]
 disabled = false
-format = '[$time]($style) '
-time_format = "%T"
-style = "bold noctis_fg"
+style = "fg"
 
-[status]
-disabled = false
-symbol = "✘"
-style = "bold noctis_red"
-success_symbol = "" # Only show if failed
+[directory]
+style = "bold cyan"
+read_only = " 󰌾"
 
-[character]
-success_symbol = "[❯](bold noctis_green)"
-error_symbol = "[❯](bold noctis_red)"
-vimcmd_symbol = "[❮](bold noctis_green)"
+[git_branch]
+symbol = " "
+style = "bold magenta"
+
+[git_status]
+style = "bold red"
+
+[package]
+symbol = "󰏗 "
+
+# === 语言 (nerd-font-symbols) ===
+[aws]
+symbol = " "
+
+[buf]
+symbol = " "
+
+[c]
+symbol = " "
+
+[conda]
+symbol = " "
+
+[dart]
+symbol = " "
+
+[docker_context]
+symbol = " "
+
+[golang]
+symbol = " "
+
+[java]
+symbol = " "
+
+[kotlin]
+symbol = " "
+
+[lua]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[python]
+symbol = " "
+
+[ruby]
+symbol = " "
+
+[rust]
+symbol = "󱘗 "
+
+[swift]
+symbol = " "
+
+[zig]
+symbol = " "
+
+# === OS 符号 ===
+[os.symbols]
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = " "
+Debian = " "
+Fedora = " "
+Linux = " "
+Macos = " "
+Manjaro = " "
+Mint = " "
+NixOS = " "
+Raspbian = " "
+Redhat = " "
+Ubuntu = " "
+Windows = "󰍲 "
