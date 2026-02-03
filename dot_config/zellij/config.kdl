@@ -46,7 +46,7 @@ keybinds {
         // 浮动窗格
         bind "Alt y" { Run "yazi" { close_on_exit true; }; ToggleFloatingPanes; }
         bind "Alt g" { Run "lazygit" { close_on_exit true; }; ToggleFloatingPanes; }
-        bind "Alt p" { Run "podman-tui" "--show-cmd" { close_on_exit true; }; ToggleFloatingPanes; }
+        bind "Alt p" { Run "podman-tui" { close_on_exit true; }; ToggleFloatingPanes; }
 
         // --- Pane管理 ---
         bind "Alt n" { NewPane "stacked"; }               // 新建窗格(自动)

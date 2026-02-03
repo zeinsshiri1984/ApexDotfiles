@@ -1,5 +1,6 @@
-# Yazi 主题: 使用现成 flavor，尽量接近 Noctis
+# Yazi 主题: 使用现成 flavor
+# Noctis 在 Yazi 生态无官方包，tokyo-night 风格最接近 (深色+青蓝色调)
+# 安装: ya pkg add yazi-rs/flavors:tokyo-night
 
 [flavor]
-# 需要安装: ya pkg add BennyOe/tokyo-night.yazi
 dark = "tokyo-night"

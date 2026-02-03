@@ -33,6 +33,9 @@ brew:
     @brew update
     @brew upgrade
     @brew bundle --file="${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/Brewfile"
+    @# 清理不在 Brewfile 中的包和孤儿依赖
+    @brew bundle cleanup --force --file="${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/Brewfile" || true
+    @brew autoremove || true
 
 mise:
     @command -v mise >/dev/null 2>&1 || { echo "mise missing"; exit 1; }
@@ -41,6 +44,8 @@ mise:
         export GITHUB_TOKEN="$$(gh auth token)"; \
     fi; \
     mise install && mise reshim
+    @# 清理不在配置中的版本
+    @mise prune --yes || true
 
 hx-sync:
     @if command -v hx >/dev/null 2>&1; then \
@@ -50,7 +55,7 @@ hx-sync:
 
 yazi-sync:
     @if command -v ya >/dev/null 2>&1; then \
-        ya pkg add BennyOe/tokyo-night.yazi || true; \
+        ya pkg add yazi-rs/flavors:tokyo-night || true; \
     fi
 
 # === Dotfiles ===
