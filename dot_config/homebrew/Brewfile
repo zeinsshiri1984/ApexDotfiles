@@ -55,6 +55,7 @@ brew "distrobox"
 # brew "k9s"
 
 # 网络
+brew "mihomo"               # 代理核心 (Clash Meta)
 brew "curlie"               # curl 封装 (像 httpie)
 brew "mosh"
 # brew "doggo"

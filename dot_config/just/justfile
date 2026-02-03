@@ -6,6 +6,57 @@ set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 default:
     @just --list
 
+# === 代理 (首先运行) ===
+
+# 启动 mihomo 代理 (首次运行会提示输入订阅地址)
+proxy:
+    @config="${XDG_CONFIG_HOME:-$HOME/.config}/mihomo/config.yaml"; \
+    if [ ! -f "$$config" ] || grep -q "未配置订阅" "$$config"; then \
+        echo "mihomo 配置不存在或未配置订阅，请运行 chezmoi apply 输入订阅地址"; \
+        exit 1; \
+    fi; \
+    if pgrep -x mihomo >/dev/null 2>&1; then \
+        echo "mihomo 已运行 (pid: $$(pgrep -x mihomo))"; \
+    else \
+        echo "启动 mihomo..."; \
+        nohup mihomo -d "${XDG_CONFIG_HOME:-$HOME/.config}/mihomo" >/dev/null 2>&1 & \
+        sleep 1; \
+        if pgrep -x mihomo >/dev/null 2>&1; then \
+            echo "mihomo 启动成功 (pid: $$(pgrep -x mihomo))"; \
+            echo "请运行: export PROXY_ENABLED=1 && source ~/.profile"; \
+        else \
+            echo "mihomo 启动失败"; \
+            exit 1; \
+        fi; \
+    fi
+
+# 停止 mihomo
+proxy-stop:
+    @if pgrep -x mihomo >/dev/null 2>&1; then \
+        pkill -x mihomo; \
+        echo "mihomo 已停止"; \
+    else \
+        echo "mihomo 未运行"; \
+    fi
+
+# 检查代理状态
+proxy-status:
+    @echo "=== Mihomo ===" 
+    @if pgrep -x mihomo >/dev/null 2>&1; then \
+        echo "  status: running (pid: $$(pgrep -x mihomo))"; \
+    else \
+        echo "  status: stopped"; \
+    fi
+    @echo "=== Proxy Env ==="
+    @if [ "${http_proxy-}" ]; then \
+        echo "  http_proxy: $$http_proxy"; \
+    else \
+        echo "  http_proxy: (not set)"; \
+    fi
+    @echo "=== Connectivity ==="
+    @curl -s --connect-timeout 3 --proxy http://127.0.0.1:7890 https://www.google.com >/dev/null 2>&1 \
+        && echo "  google: ok" || echo "  google: failed"
+
 # === 主要任务 ===
 
 # 完整设置 (顺序: 系统依赖 → gh认证 → 用户工具 → 健康检查)

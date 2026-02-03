@@ -41,6 +41,15 @@ if [ -n "${GROQ_API_KEY-}" ] && [ -z "${OPENAI_API_KEY-}" ]; then
   export OPENAI_API_KEY="$GROQ_API_KEY"
 fi
 
+# Proxy (mihomo)
+# 启用代理: export PROXY_ENABLED=1 或运行 j proxy-on
+if [ "${PROXY_ENABLED-}" = "1" ]; then
+  export http_proxy="http://127.0.0.1:7890"
+  export https_proxy="http://127.0.0.1:7890"
+  export all_proxy="socks5://127.0.0.1:7890"
+  export no_proxy="localhost,127.0.0.1,::1,.local"
+fi
+
 # Mise: 仅在 Bash 中激活 (Nushell 不需要)
 if [ -n "${BASH_VERSION-}" ] && command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"
