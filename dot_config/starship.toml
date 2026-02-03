@@ -71,7 +71,7 @@ style = "fg:#e3e5e5 bg:#769ff0"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
-read_only = " 󰌾"
+read_only = " "
 
 [directory.substitutions]
 "Documents" = "󰈙 "
@@ -81,7 +81,7 @@ read_only = " 󰌾"
 
 # === Git ===
 [git_branch]
-symbol = ""
+symbol = " "
 style = "bg:#394260"
 format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
 
@@ -119,7 +119,7 @@ Windows = "󰍲 "
 
 # === 包管理 ===
 [package]
-symbol = "󰏗 "
+symbol = " "
 style = "bg:#212736"
 format = '[[ $symbol $version ](fg:#769ff0 bg:#212736)]($style)'
 
@@ -245,7 +245,7 @@ style = "bg:#212736"
 format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
 [rust]
-symbol = "󱘗 "
+symbol = " "
 style = "bg:#212736"
 format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
