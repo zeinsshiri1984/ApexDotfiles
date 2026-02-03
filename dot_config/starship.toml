@@ -1,102 +1,74 @@
 # Starship 配置
-# 基础: nerd-font-symbols preset
-# 增量: Noctis 配色覆盖
+# 基础: tokyo-night preset
+# 增量: 更多语言 + OS + 云服务 + 容器 + 实用模块
 
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# === Noctis 调色板 ===
-# https://github.com/liviuschera/noctis
-[palettes.noctis]
-bg = "#0b1a1c"
-fg = "#e0e6ea"
-red = "#e66533"
-green = "#16b673"
-yellow = "#d5971a"
-blue = "#49ace9"
-magenta = "#df769b"
-cyan = "#49d6e9"
+# === Tokyo Night 主题 (扩展版) ===
+format = """
+[░▒▓](#a3aed2)\
+$os\
+[](bg:#769ff0 fg:#a3aed2)\
+$directory\
+[](fg:#769ff0 bg:#394260)\
+$git_branch\
+$git_status\
+[](fg:#394260 bg:#212736)\
+$c\
+$rust\
+$golang\
+$nodejs\
+$python\
+$java\
+$kotlin\
+$lua\
+$zig\
+$ruby\
+$swift\
+$dart\
+$docker_context\
+$conda\
+[](fg:#212736 bg:#1d2230)\
+$aws\
+$gcloud\
+$kubernetes\
+$cmd_duration\
+$time\
+[ ](fg:#1d2230)\
+$line_break\
+$status\
+$character"""
 
-palette = "noctis"
-
-# === 增量配置 (颜色 + 符号) ===
-
-[character]
-success_symbol = "[❯](bold green)"
-error_symbol = "[❯](bold red)"
-vimcmd_symbol = "[❮](bold green)"
-
-[cmd_duration]
-style = "bold yellow"
-min_time = 2_000
-
-[time]
-disabled = false
-style = "fg"
-
+# === 目录 ===
 [directory]
-style = "bold cyan"
+style = "fg:#e3e5e5 bg:#769ff0"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
 read_only = " 󰌾"
 
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+# === Git ===
 [git_branch]
-symbol = " "
-style = "bold magenta"
+symbol = ""
+style = "bg:#394260"
+format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
 
 [git_status]
-style = "bold red"
+style = "bg:#394260"
+format = '[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)'
 
-[package]
-symbol = "󰏗 "
+# === OS ===
+[os]
+disabled = false
+style = "bg:#a3aed2 fg:#090c0c"
+format = "[$symbol ]($style)"
 
-# === 语言 (nerd-font-symbols) ===
-[aws]
-symbol = " "
-
-[buf]
-symbol = " "
-
-[c]
-symbol = " "
-
-[conda]
-symbol = " "
-
-[dart]
-symbol = " "
-
-[docker_context]
-symbol = " "
-
-[golang]
-symbol = " "
-
-[java]
-symbol = " "
-
-[kotlin]
-symbol = " "
-
-[lua]
-symbol = " "
-
-[nodejs]
-symbol = " "
-
-[python]
-symbol = " "
-
-[ruby]
-symbol = " "
-
-[rust]
-symbol = "󱘗 "
-
-[swift]
-symbol = " "
-
-[zig]
-symbol = " "
-
-# === OS 符号 ===
 [os.symbols]
 Alpine = " "
 Amazon = " "
@@ -113,3 +85,115 @@ Raspbian = " "
 Redhat = " "
 Ubuntu = " "
 Windows = "󰍲 "
+
+# === 语言 (tokyo-night 风格) ===
+[c]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[python]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[java]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[lua]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[zig]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[ruby]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[swift]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[dart]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+# === 容器 ===
+[docker_context]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol $context ](fg:#769ff0 bg:#212736)]($style)'
+
+[conda]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol $environment ](fg:#769ff0 bg:#212736)]($style)'
+
+[kubernetes]
+disabled = false
+symbol = "☸"
+style = "bg:#1d2230"
+format = '[[ $symbol $context ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+# === 云服务 ===
+[aws]
+symbol = " "
+style = "bg:#1d2230"
+format = '[[ $symbol ($profile) ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+[gcloud]
+symbol = " "
+style = "bg:#1d2230"
+format = '[[ $symbol ($project) ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+# === 实用信息 ===
+[cmd_duration]
+min_time = 2_000
+style = "bg:#1d2230"
+format = '[[  $duration ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:#1d2230"
+format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+[status]
+disabled = false
+symbol = "✘"
+format = '[$symbol $status ]($style)'
+style = "bold red"
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"
