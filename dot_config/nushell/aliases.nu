@@ -5,8 +5,18 @@ alias la = ls -a
 alias lla = ls -la
 alias g = git
 
+# 现代工具替代;如需使用原始命令，在 nushell 中用 ^ 前缀调用，例如 ^find
+alias find = fd                    # fd: 更快的 find
+alias grep = rg                    # ripgrep: 更快的 grep
+alias du = dust                    # dust: 更直观的磁盘用量
+alias top = btop                   # btop: 更美观的系统监控
+alias man = tldr                   # tealdeer: 简明版 man
+alias rm = gtrash put              # gtrash: 安全删除到回收站
+alias curl = curlie                # curlie: httpie 风格的 curl
+alias diff = delta                 # delta: 更美观的 diff
+alias watch = viddy                # viddy: 更强的 watch
+
 # Git 常用
-alias gs = git add -A && git commit -m "待生成" && git push 
 alias gs = git status -sb
 alias ga = git add
 alias gc = git commit

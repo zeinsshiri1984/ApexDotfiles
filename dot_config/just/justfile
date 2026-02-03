@@ -8,8 +8,8 @@ default:
 
 # === 主要任务 ===
 
-# 完整设置
-setup: host-sync user-sync auth-sync doctor
+# 完整设置 (顺序: 系统依赖 → gh认证 → 用户工具 → 健康检查)
+setup: host-sync auth-sync user-sync doctor
 
 # 日常同步
 sync: dotfiles-sync user-sync
@@ -36,9 +36,11 @@ brew:
 
 mise:
     @command -v mise >/dev/null 2>&1 || { echo "mise missing"; exit 1; }
-    @mise install
-    @mise upgrade
-    @mise reshim
+    @# 使用 gh token 绕过 GitHub API 限流
+    @if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then \
+        export GITHUB_TOKEN="$$(gh auth token)"; \
+    fi; \
+    mise install && mise reshim
 
 hx-sync:
     @if command -v hx >/dev/null 2>&1; then \

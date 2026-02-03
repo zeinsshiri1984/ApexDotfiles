@@ -8,6 +8,8 @@ brew "nushell"
 brew "starship"
 brew "carapace"
 brew "mise"
+brew "uv"       # Python 包管理器 (pipx 后端)
+brew "usage"    # mise 补全
 
 # === CLI 增强 ===
 brew "fd"

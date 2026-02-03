@@ -1,4 +1,6 @@
-# 优先下载独立二进制版本,能用 uv 不用 pipx
+# mise 工具配置
+# uv/usage 由 brew 安装，避免 GitHub API 限流
+
 [tools]
 # Runtime (宿主机全局)
 node = "lts"
@@ -6,23 +8,18 @@ python = "latest"
 go = "latest"
 rust = "latest"
 
-# mise 补全
-usage = "latest"
-
 # Python 生态
-uv = "latest"
 "pipx:copier" = "latest"
-"pipx:aider-chat" = "latest"
 "pipx:shell-gpt" = "latest"
+# (可选，首次可跳过，后期运行: mise use pipx:aider-chat ubi:SilasMarvin/lsp-ai)
+# "pipx:aider-chat" = "latest"
 
 # Node 生态
 "npm:@anthropic-ai/claude-code" = "latest"
 "npm:@openai/codex" = "latest"
-"npm:opencode"   = "latest"
 
-#二进制
-# ===ai===
-"ubi:SilasMarvin/lsp-ai" = "latest"
+# AI 辅助 (可选，需要 GitHub API，后期运行: mise use ubi:SilasMarvin/lsp-ai)
+# "ubi:SilasMarvin/lsp-ai" = "latest"
 
 [settings]
 pipx.uvx = true
