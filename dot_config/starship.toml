@@ -1,10 +1,10 @@
 # Starship 配置
 # 基础: tokyo-night preset
-# 增量: 更多语言 + OS + 云服务 + 容器 + 实用模块
+# 增量: 完整语言 + OS + 云服务 + 容器 + 实用模块
 
 "$schema" = 'https://starship.rs/config-schema.json'
 
-# === Tokyo Night 主题 (扩展版) ===
+# === Tokyo Night 主题 (完整版) ===
 format = """
 [░▒▓](#a3aed2)\
 $os\
@@ -14,29 +14,55 @@ $directory\
 $git_branch\
 $git_status\
 [](fg:#394260 bg:#212736)\
+$package\
 $c\
-$rust\
-$golang\
-$nodejs\
-$python\
-$java\
-$kotlin\
-$lua\
-$zig\
-$ruby\
-$swift\
+$cmake\
 $dart\
-$docker_context\
+$deno\
+$dotnet\
+$elixir\
+$elm\
+$erlang\
+$fennel\
+$golang\
+$haskell\
+$helm\
+$java\
+$julia\
+$kotlin\
+$gradle\
+$lua\
+$nim\
+$nodejs\
+$ocaml\
+$perl\
+$php\
+$python\
+$ruby\
+$rust\
+$scala\
+$swift\
+$terraform\
+$zig\
+$buf\
+$nix_shell\
 $conda\
+$docker_context\
 [](fg:#212736 bg:#1d2230)\
+$memory_usage\
 $aws\
 $gcloud\
+$azure\
 $kubernetes\
 $cmd_duration\
+$jobs\
 $time\
 [ ](fg:#1d2230)\
 $line_break\
+$battery\
 $status\
+$container\
+$shell\
 $character"""
 
 # === 目录 ===
@@ -74,8 +100,11 @@ Alpine = " "
 Amazon = " "
 Android = " "
 Arch = " "
+Artix = " "
+CentOS = " "
 Debian = " "
 Fedora = " "
+Gentoo = " "
 Linux = " "
 Macos = " "
 Manjaro = " "
@@ -83,8 +112,16 @@ Mint = " "
 NixOS = " "
 Raspbian = " "
 Redhat = " "
+RedHatEnterprise = " "
+SUSE = " "
 Ubuntu = " "
 Windows = "󰍲 "
+
+# === 包管理 ===
+[package]
+symbol = "󰏗 "
+style = "bg:#212736"
+format = '[[ $symbol $version ](fg:#769ff0 bg:#212736)]($style)'
 
 # === 语言 (tokyo-night 风格) ===
 [c]
@@ -92,77 +129,188 @@ symbol = " "
 style = "bg:#212736"
 format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
-[rust]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[golang]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[nodejs]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[python]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[java]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[kotlin]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[lua]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[zig]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[ruby]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[swift]
-symbol = ""
+[cmake]
+symbol = " "
 style = "bg:#212736"
 format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
 [dart]
-symbol = ""
+symbol = " "
 style = "bg:#212736"
 format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
 
-# === 容器 ===
-[docker_context]
-symbol = ""
+[deno]
+symbol = " "
 style = "bg:#212736"
-format = '[[ $symbol $context ](fg:#769ff0 bg:#212736)]($style)'
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[dotnet]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[elixir]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[elm]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[erlang]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[fennel]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[golang]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[haskell]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[helm]
+symbol = "⎈ "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[java]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[julia]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[kotlin]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[gradle]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[lua]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[nim]
+symbol = "󰆥 "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[nodejs]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[ocaml]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[perl]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[php]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[python]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[ruby]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[rust]
+symbol = "󱘗 "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[scala]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[swift]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[terraform]
+symbol = "󱁢 "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[zig]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[buf]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+# === 环境 ===
+[nix_shell]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol $state ](fg:#769ff0 bg:#212736)]($style)'
 
 [conda]
-symbol = ""
+symbol = " "
 style = "bg:#212736"
 format = '[[ $symbol $environment ](fg:#769ff0 bg:#212736)]($style)'
 
-[kubernetes]
+[docker_context]
+symbol = " "
+style = "bg:#212736"
+format = '[[ $symbol $context ](fg:#769ff0 bg:#212736)]($style)'
+
+# === 系统 ===
+[memory_usage]
 disabled = false
-symbol = "☸"
+threshold = 75
+symbol = "󰍛 "
 style = "bg:#1d2230"
-format = '[[ $symbol $context ](fg:#a0a9cb bg:#1d2230)]($style)'
+format = '[[ $symbol $ram ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+[jobs]
+symbol = " "
+style = "bg:#1d2230"
+format = '[[ $symbol $number ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+[battery]
+full_symbol = "󰁹 "
+charging_symbol = "󰂄 "
+discharging_symbol = "󰂃 "
+
+[[battery.display]]
+threshold = 30
+style = "bold red"
 
 # === 云服务 ===
 [aws]
@@ -175,6 +323,17 @@ symbol = " "
 style = "bg:#1d2230"
 format = '[[ $symbol ($project) ](fg:#a0a9cb bg:#1d2230)]($style)'
 
+[azure]
+symbol = "󰠅 "
+style = "bg:#1d2230"
+format = '[[ $symbol ($subscription) ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+[kubernetes]
+disabled = false
+symbol = "☸ "
+style = "bg:#1d2230"
+format = '[[ $symbol $context ](fg:#a0a9cb bg:#1d2230)]($style)'
+
 # === 实用信息 ===
 [cmd_duration]
 min_time = 2_000
@@ -183,15 +342,22 @@ format = '[[  $duration ](fg:#a0a9cb bg:#1d2230)]($style)'
 
 [time]
 disabled = false
-time_format = "%R"
+time_format = "%T"
 style = "bg:#1d2230"
 format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
 
 [status]
 disabled = false
-symbol = "✘"
-format = '[$symbol $status ]($style)'
+symbol = "✘ "
+format = '[$symbol$status ]($style)'
 style = "bold red"
+
+[container]
+symbol = "⬢ "
+format = '[$symbol $name ]($style)'
+
+[shell]
+disabled = true
 
 [character]
 success_symbol = "[❯](bold green)"
