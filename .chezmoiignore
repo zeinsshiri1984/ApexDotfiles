@@ -1,7 +1,7 @@
 # 不部署到 ~ 的文件
 
 # 项目文件
-README.md
+README*.*
 License
 .git
 .gitignore
