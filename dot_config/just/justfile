@@ -1,10 +1,21 @@
-# 全局 Justfile
-# 用法: j <task>
-
 set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
 default:
     @just --list
+
+nala:
+    echo "开始重新测试镜像源..."
+    sudo nala fetch
+    echo "清理本地缓存..."
+    sudo nala clean
+    echo "更新索引并升级包..."
+    sudo nala update
+    sudo nala upgrade -y
+    echo "移除冗余依赖与残留配置..."
+    sudo nala autoremove -y
+    sudo nala autopurge -y
+    echo "修复潜在的依赖损坏..."
+    sudo apt --fix-broken install
 
 # === 代理 (首先运行) ===
 
