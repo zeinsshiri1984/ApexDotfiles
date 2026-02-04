@@ -23,6 +23,31 @@ if [ -f "$STATE_FILE" ] && [ "$(cat "$STATE_FILE")" != "done" ]; then
 fi
 trap 'stage="unknown"; [ -f "$STATE_FILE" ] && stage="$(cat "$STATE_FILE")"; printf "[bootstrap] 失败 (stage=%s)\n" "$stage" >&2' ERR
 
+# === 阶段 0: 环境预检 (清除代理干扰) ===
+printf '[bootstrap] [0/7] 环境预检...\n'
+printf "precheck\n" > "$STATE_FILE"
+
+# 清除所有代理环境变量
+unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY no_proxy NO_PROXY 2>/dev/null || true
+
+# 检测并停止代理服务 (mihomo/clash 会劫持 DNS)
+for proxy_proc in mihomo clash clash-meta; do
+  if pgrep -x "$proxy_proc" >/dev/null 2>&1; then
+    printf '[bootstrap] 检测到 %s 正在运行，尝试停止...\n' "$proxy_proc"
+    pkill -x "$proxy_proc" 2>/dev/null || true
+    sleep 1
+  fi
+done
+
+# 验证网络可达性 (使用镜像源测试)
+printf '[bootstrap] 验证网络连接...\n'
+if ! curl -sf --connect-timeout 5 -o /dev/null "$BREW_MIRROR"; then
+  printf '[bootstrap] 警告: 无法连接 %s\n' "$BREW_MIRROR" >&2
+  printf '[bootstrap] 请检查网络或手动停止代理服务后重试\n' >&2
+  exit 1
+fi
+printf '[bootstrap] [0/7] 完成\n'
+
 # === 阶段 1: XDG 目录 ===
 printf '[bootstrap] [1/7] 创建 XDG 目录...\n'
 printf "xdg\n" > "$STATE_FILE"
