@@ -1,0 +1,52 @@
+set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
+
+default:
+    @just --list
+
+host:
+    just nala
+    just mihomo
+
+# 系统包与镜像维护
+nala:
+    echo "正在重新测试并优化最快镜像源..."
+    sudo nala fetch --auto --https-only -y
+    echo "同步软件包索引..."
+    sudo nala update
+    echo "执行系统升级..."
+    sudo nala upgrade -y
+    echo "清理冗余依赖..."
+    sudo nala autoremove -y
+    sudo nala autopurge -y
+    echo "修复潜在依赖损坏..."
+    sudo apt --fix-broken install
+
+mihomo:
+    echo "mihomo内核升级..."
+    curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest \
+      | grep browser_download_url \
+      | grep linux-amd64 \
+      | grep -v compatible \
+      | grep '.gz"' \
+      | head -n 1 \
+      | cut -d '"' -f 4 \
+      | xargs -n1 curl -L -o /tmp/mihomo.gz
+    gunzip -f /tmp/mihomo.gz
+    chmod +x /tmp/mihomo
+    sudo mv -f /tmp/mihomo /usr/local/bin/mihomo
+    sudo systemctl restart mihomo
+    
+    echo "升级 UI 面板..."
+    curl -s https://api.github.com/repos/MetaCubeX/metacubexd/releases/latest \
+      | grep browser_download_url \
+      | grep compressed-dist.tgz \
+      | head -n 1 \
+      | cut -d '"' -f 4 \
+      | xargs -n1 curl -L -o /tmp/metacubexd.tgz
+    sudo rm -rf /etc/mihomo/ui/*
+    sudo tar -xzf /tmp/metacubexd.tgz -C /etc/mihomo/ui
+    rm -f /tmp/metacubexd.tgz
+    sudo systemctl restart mihomo
+
+    LOCAL_IP=$(hostname -I | awk '{print $1}')
+    echo "订阅管理在浏览器打开：http://$LOCAL_IP:9090/ui"
