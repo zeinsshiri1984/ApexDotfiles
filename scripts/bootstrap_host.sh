@@ -91,7 +91,7 @@ sudo systemctl enable mihomo >/dev/null 2>&1
 sudo systemctl restart mihomo
 
 LOCAL_IP=$(hostname -I | awk '{print $1}')
-echo "部署环境初始化完毕。后续请执行 just nala 或 just mihomo 或just mihomo-tips进行维护。"
+echo "部署环境初始化完毕。GeoIP / GeoSite / rule-provider 将在首次订阅加载时自动下载，无需手动干预;后续执行 just nala 或 just mihomo 或just mihomo-tips进行维护。"
 echo "在浏览器打开webUI管理：http://$LOCAL_IP:9090/ui"
 echo "Mihomo 服务管理（原生命令）："
 echo "  启动:   sudo systemctl start mihomo"
