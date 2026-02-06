@@ -1,94 +1,16 @@
 set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
-# 完整设置 (顺序: 系统依赖 → gh认证 → 用户工具 → 健康检查)
-setup: host-sync auth-sync user-sync doctor
+default:
+    @just --list
 
-# 日常同步
-sync: dotfiles-sync user-sync
-
-# 健康检查
-doctor: user-doctor auth-doctor
-
-# === 系统层 ===
-
-host-sync:
-    @command -v apt-get >/dev/null 2>&1 || { echo "apt-get not found"; exit 1; }
-    @sudo apt-get update -qq
-    @sudo apt-get install -y -qq build-essential ca-certificates curl file git
-
-# === 用户工具 ===
-
-user-sync: brew mise hx-sync yazi-sync
+user:
+    @just brew
+    @just chezmoi
 
 brew:
-    @command -v brew >/dev/null 2>&1 || { echo "brew missing"; exit 1; }
-    @brew update
-    @brew upgrade
-    @brew bundle --file="${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/Brewfile"
-    @# 清理不在 Brewfile 中的包和孤儿依赖
-    @brew bundle cleanup --force --file="${XDG_CONFIG_HOME:-$HOME/.config}/homebrew/Brewfile" || true
-    @brew autoremove || true
-
-mise:
-    @command -v mise >/dev/null 2>&1 || { echo "mise missing"; exit 1; }
-    @# 使用 gh token 绕过 GitHub API 限流
-    @if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then \
-        export GITHUB_TOKEN="$$(gh auth token)"; \
-    fi; \
-    mise install && mise reshim
-    @# 清理不在配置中的版本
-    @mise prune --yes || true
-
-hx-sync:
-    @if command -v hx >/dev/null 2>&1; then \
-        hx --grammar fetch || true; \
-        hx --grammar build || true; \
-    fi
-
-yazi-sync:
-    @if command -v ya >/dev/null 2>&1; then \
-        ya pkg add yazi-rs/flavors:tokyo-night || true; \
-    fi
-
-# === Dotfiles ===
-
-dotfiles-sync:
-    @command -v chezmoi >/dev/null 2>&1 || { echo "chezmoi missing"; exit 1; }
-    @chezmoi update --apply
-
-# === 认证 ===
-
-auth-sync: gh-login
-
-gh-login:
-    @command -v gh >/dev/null 2>&1 || { echo "gh missing"; exit 1; }
-    @if gh auth status >/dev/null 2>&1; then \
-        echo "gh: already authenticated"; \
-        gh auth setup-git -h github.com; \
-    elif [ -n "${GH_TOKEN-}" ]; then \
-        printf '%s' "$$GH_TOKEN" | gh auth login --with-token; \
-        gh auth setup-git -h github.com; \
-    else \
-        gh auth login -h github.com -p https; \
-        gh auth setup-git -h github.com; \
-    fi
-
-# === 健康检查 ===
-
-user-doctor:
-    @echo "Checking tools..."
-    @command -v brew >/dev/null 2>&1 && echo "  brew: ok" || echo "  brew: missing"
-    @command -v mise >/dev/null 2>&1 && echo "  mise: ok" || echo "  mise: missing"
-    @command -v chezmoi >/dev/null 2>&1 && echo "  chezmoi: ok" || echo "  chezmoi: missing"
-    @command -v nu >/dev/null 2>&1 && echo "  nushell: ok" || echo "  nushell: missing"
-    @command -v hx >/dev/null 2>&1 && echo "  helix: ok" || echo "  helix: missing"
-    @command -v zellij >/dev/null 2>&1 && echo "  zellij: ok" || echo "  zellij: missing"
-    @command -v yazi >/dev/null 2>&1 && echo "  yazi: ok" || echo "  yazi: missing"
-    @command -v lazygit >/dev/null 2>&1 && echo "  lazygit: ok" || echo "  lazygit: missing"
-    @command -v sgpt >/dev/null 2>&1 && echo "  shell-gpt: ok" || echo "  shell-gpt: missing"
-
-auth-doctor:
-    @echo "Checking auth..."
-    @if gh auth status >/dev/null 2>&1; then echo "  github: ok"; else echo "  github: not authenticated"; fi
-    @if git config --global user.email >/dev/null 2>&1; then echo "  git email: ok"; else echo "  git email: missing"; fi
-    @if git config --global user.name >/dev/null 2>&1; then echo "  git name: ok"; else echo "  git name: missing"; fi
+    @echo "更新 Homebrew 仓库..."
+    brew update
+    @echo "升级已安装公式..."
+    brew upgrade
+    @echo "清理旧版本..."
+    brew cleanup

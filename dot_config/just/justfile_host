@@ -6,6 +6,7 @@ default:
 host:
     @just nala
     @just mihomo
+    @just podman
 
 # 系统包与镜像维护
 nala:
@@ -60,3 +61,44 @@ mihomo-tips:
     echo "  重启:   sudo systemctl restart mihomo"; \
     echo "  状态:   systemctl status mihomo"; \
     echo "  日志查看: journalctl -u mihomo -f"
+
+podman:
+    @just podman-tips
+    @just podman-images
+    @just podman-clean
+
+podman-tips:
+    @echo "Podman 版本与运行模式:"
+    podman --version
+    podman info --debug | sed -n '1,120p'
+
+    @echo "验证代理环境（containers.conf）:"
+    podman info --debug | grep -i proxy || true
+
+    @echo "  查看镜像:        podman images"
+    @echo "  查看容器:        podman ps -a"
+    @echo "  拉取镜像:        podman pull alpine"
+    @echo "  运行容器:        podman run --rm -it alpine sh"
+    @echo "  停止容器:        podman stop <container>"
+    @echo "  删除容器:        podman rm <container>"
+    @echo "  查看日志:        podman logs <container>"
+    @echo "  查看信息:        podman info"
+    @echo "  Docker 兼容层:   docker ps"
+
+podman-images:
+    @echo "列出本地镜像:"
+    podman images
+
+    @echo "  拉取镜像:        podman pull <image>"
+    @echo "  删除镜像:        podman rmi <image>"
+    @echo "  查看容器:        podman ps -a"
+    @echo "  运行容器:        podman run --rm -it <image> sh"
+    @echo "  停止容器:        podman stop <container>"
+    @echo "  删除容器:        podman rm <container>"
+    @echo "  查看日志:        podman logs <container>"
+    @echo "  查看信息:        podman info"
+
+podman-clean:
+    @echo "清理停止的容器与悬空镜像（安全）..."
+    podman container prune -f
+    podman image prune -f

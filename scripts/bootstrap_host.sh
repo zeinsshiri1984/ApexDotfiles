@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 echo "更新软件包列表..."
 sudo apt update
@@ -13,11 +14,20 @@ echo "执行软件包同步与升级..."
 sudo nala update
 sudo nala upgrade -y
 
-echo "安装系统基础依赖..."
-sudo nala install -y build-essential ca-certificates wget curl unzip git file tar gzip
+echo "安装系统基础依赖和服务..."
+sudo nala install -y \
+  build-essential \
+  ca-certificates \
+  wget curl \
+  unzip \
+  git \
+  file \
+  tar gzip \
+  xdg-user-dirs \
+  podman podman-docker
 
 echo "获取 Mihomo & Metacubexd最新版本下载链接..."
-LATEST_URL=$(
+MIHOMO_URL=$(
   curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest \
   | grep browser_download_url \
   | grep linux-amd64 \
@@ -90,8 +100,32 @@ sudo systemctl daemon-reload
 sudo systemctl enable mihomo >/dev/null 2>&1
 sudo systemctl restart mihomo
 
+echo "配置 Podman 搜索域..."
+sudo mkdir -p /etc/containers
+sudo tee /etc/containers/registries.conf >/dev/null <<EOF
+unqualified-search-registries = ["docker.io", "quay.io"]
+EOF
+
+echo "配置 Podman 代理，指向本地 Mihomo (7890 端口)..."
+mkdir -p ~/.config/containers
+tee ~/.config/containers/containers.conf >/dev/null <<EOF
+[engine]
+env = [
+  "HTTP_PROXY=http://127.0.0.1:7890",
+  "HTTPS_PROXY=http://127.0.0.1:7890",
+  "NO_PROXY=localhost,127.0.0.1"
+]
+EOF
+
+# 如果是 Rootless 模式，Podman 还需要读取~/.config下的配置
+mkdir -p ~/.config/containers
+tee ~/.config/containers/containers.conf >/dev/null <<EOF
+[engine]
+env = ["HTTP_PROXY=http://127.0.0.1:7890", "HTTPS_PROXY=http://127.0.0.1:7890"]
+EOF
+
 LOCAL_IP=$(hostname -I | awk '{print $1}')
-echo "部署环境初始化完毕。GeoIP / GeoSite / rule-provider 将在首次订阅加载时自动下载，无需手动干预;后续执行 just nala 或 just mihomo 或just mihomo-tips进行维护。"
+echo "host环境部署完毕。GeoIP / GeoSite / rule-provider 将在首次订阅加载时自动下载，无需手动干预;后续执行 just nala 或 just mihomo 或just mihomo-tips或just podman进行维护。"
 echo "在浏览器打开webUI管理：http://$LOCAL_IP:9090/ui"
 echo "Mihomo 服务管理（原生命令）："
 echo "  启动:   sudo systemctl start mihomo"
@@ -99,3 +133,8 @@ echo "  停止:   sudo systemctl stop mihomo"
 echo "  重启:   sudo systemctl restart mihomo"
 echo "  状态:   systemctl status mihomo"
 echo "  日志查看: journalctl -u mihomo -f"
+echo " podman原生命令:"
+echo "  检查配置:       podman info"
+echo "  拉取镜像:       podman pull alpine (已自动走代理)"
+echo "  查看镜像/容器:  podman images / podman ps -a"
+echo "  别名测试:       docker ps"
