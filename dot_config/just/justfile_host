@@ -4,25 +4,25 @@ default:
     @just --list
 
 host:
-    just nala
-    just mihomo
+    @just nala
+    @just mihomo
 
 # 系统包与镜像维护
 nala:
-    echo "正在重新测试并优化最快镜像源..."
+    @echo "正在重新测试并优化最快镜像源..."
     sudo nala fetch --auto --https-only -y
-    echo "同步软件包索引..."
+    @echo "同步软件包索引..."
     sudo nala update
-    echo "执行系统升级..."
+    @echo "执行系统升级..."
     sudo nala upgrade -y
-    echo "清理冗余依赖..."
+    @echo "清理冗余依赖..."
     sudo nala autoremove -y
     sudo nala autopurge -y
-    echo "修复潜在依赖损坏..."
+    @echo "修复潜在依赖损坏..."
     sudo apt --fix-broken install
 
 mihomo:
-    echo "mihomo内核升级..."
+    @echo "mihomo 内核升级..."
     curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest \
       | grep browser_download_url \
       | grep linux-amd64 \
@@ -34,9 +34,8 @@ mihomo:
     gunzip -f /tmp/mihomo.gz
     chmod +x /tmp/mihomo
     sudo mv -f /tmp/mihomo /usr/local/bin/mihomo
-    sudo systemctl restart mihomo
-    
-    echo "升级 UI 面板..."
+
+    @echo "升级 UI 面板..."
     curl -s https://api.github.com/repos/MetaCubeX/metacubexd/releases/latest \
       | grep browser_download_url \
       | grep compressed-dist.tgz \
@@ -46,7 +45,18 @@ mihomo:
     sudo rm -rf /etc/mihomo/ui/*
     sudo tar -xzf /tmp/metacubexd.tgz -C /etc/mihomo/ui
     rm -f /tmp/metacubexd.tgz
+
+    @echo "重启 Mihomo 服务以应用升级..."
     sudo systemctl restart mihomo
 
-    LOCAL_IP=$(hostname -I | awk '{print $1}')
-    echo "订阅管理在浏览器打开：http://$LOCAL_IP:9090/ui"
+    @just mihomo-tips
+
+mihomo-tips:
+    @LOCAL_IP=$(hostname -I | awk '{print $1}'); \
+    echo "在浏览器打开 WebUI 管理：http://$LOCAL_IP:9090/ui"; \
+    echo "Mihomo 服务管理（原生命令）："; \
+    echo "  启动:   sudo systemctl start mihomo"; \
+    echo "  停止:   sudo systemctl stop mihomo"; \
+    echo "  重启:   sudo systemctl restart mihomo"; \
+    echo "  状态:   systemctl status mihomo"; \
+    echo "  日志查看: journalctl -u mihomo -f"

@@ -36,62 +36,33 @@ META_UI_URL=$(
 )
 
 echo "下载安装 Mihomo..."
-wget -O /tmp/mihomo.gz "$LATEST_URL"
+wget -qO /tmp/mihomo.gz "$MIHOMO_URL"
 gunzip -f /tmp/mihomo.gz
 chmod +x /tmp/mihomo
 sudo mv -f /tmp/mihomo /usr/local/bin/mihomo
 
 echo "部署 Metacubexd Web UI..."
 sudo mkdir -p /etc/mihomo/ui
-wget -O /tmp/metacubexd.tgz "$META_UI_URL"
+wget -qO /tmp/metacubexd.tgz "$META_UI_URL"
 sudo rm -rf /etc/mihomo/ui/*
 sudo tar -xzf /tmp/metacubexd.tgz -C /etc/mihomo/ui
 rm -f /tmp/metacubexd.tgz
 
 echo "生成配置文件..."
-CONFIG_FILE="/etc/mihomo/config.yaml"
-SUB_FILE="/etc/mihomo/subscription.url"
+sudo mkdir -p /etc/mihomo
+sudo tee /etc/mihomo/config.yaml >/dev/null <<EOF
+mixed-port: 7890                # HTTP/SOCKS5 混合端口
+allow-lan: true                 # 允许局域网访问
+bind-address: '*'               # 监听所有网卡
 
-SUB_URL=""
-if [ -t 0 ]; then
-    read -p "请输入订阅链接 (回车留空则使用纯净模板): " SUB_URL
-fi
-
-if [ -n "$SUB_URL" ]; then
-  echo "写入订阅地址..."
-  echo "$SUB_URL" | sudo tee "$SUB_FILE" >/dev/null
-
-  echo "下载订阅配置..."
-  if ! sudo curl -L -o "$CONFIG_FILE" "$SUB_URL"; then
-    echo "订阅下载失败，回退到最小模板。"
-    sudo rm -f "$SUB_FILE"
-    SUB_URL=""
-  fi
-fi
-
-# 如果没有订阅或下载失败，写入最小化模板
-if [ -z "$SUB_URL" ]; then
-  echo "写入最小配置模板..."
-  sudo tee "$CONFIG_FILE" >/dev/null <<EOF
-port: 7890
-socks-port: 7891
-allow-lan: true
 mode: rule
 log-level: info
-EOF
-fi
 
-echo "正在注入 WebUI 强制参数..."
-sudo sed -i '/^external-controller:/d' "$CONFIG_FILE"
-sudo sed -i '/^external-ui:/d' "$CONFIG_FILE"
-sudo sed -i '/^secret:/d' "$CONFIG_FILE"
-sudo sed -i '/^ipv6:/d' "$CONFIG_FILE"
-
-sudo tee -a "$CONFIG_FILE" >/dev/null <<EOF
-ipv6: true
-external-controller: 0.0.0.0:9090
-external-ui: ui
+external-controller: 0.0.0.0:9090  # API 监听地址
+external-ui: /etc/mihomo/ui
 secret: ''
+
+ipv6: true
 EOF
 
 echo "部署 systemd 服务..."
@@ -120,9 +91,11 @@ sudo systemctl enable mihomo >/dev/null 2>&1
 sudo systemctl restart mihomo
 
 LOCAL_IP=$(hostname -I | awk '{print $1}')
-echo "部署环境初始化完毕。后续请执行 just nala 或 just mihomo 进行维护。"
-echo "订阅管理在浏览器打开：http://$LOCAL_IP:9090/ui"
-echo "如果不通，请检查云服务商防火墙是否放行 TCP:9090"
-echo "运行状态："
-echo "  systemctl status mihomo"
-echo "  journalctl -u mihomo"
+echo "部署环境初始化完毕。后续请执行 just nala 或 just mihomo 或just mihomo-tips进行维护。"
+echo "在浏览器打开webUI管理：http://$LOCAL_IP:9090/ui"
+echo "Mihomo 服务管理（原生命令）："
+echo "  启动:   sudo systemctl start mihomo"
+echo "  停止:   sudo systemctl stop mihomo"
+echo "  重启:   sudo systemctl restart mihomo"
+echo "  状态:   systemctl status mihomo"
+echo "  日志查看: journalctl -u mihomo -f"
