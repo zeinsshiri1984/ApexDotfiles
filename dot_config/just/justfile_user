@@ -17,26 +17,65 @@ brew:
 
 gh:
     # 交互式登录 (支持重复执行以刷新权限)
-    gh auth login -w -p https -s repo,workflow,gist
+    gh auth login -w -p https -s repo,workflow,gist,read:packages
+    
+    # 配置 git 复用 gh 的 token (修改 ~/.gitconfig)
+    gh auth setup-git
     
     # 基础 Git 幂等配置
     git config --global init.defaultBranch main
     git config --global core.quotepath false
     git config --global pull.rebase true
 
-    # 让 git 读写 GitHub 私有库时直接复用 gh 的 token
-    gh auth setup-git
+    @just gh-tips
     
 mise:
     @echo "mise 自动识别 GITHUB_TOKEN 环境变量解决 GitHub API 速率限制"
+    @export GITHUB_TOKEN=$(gh auth token 2>/dev/null)
+    
     # [安装] 根据 config.toml 安装新增的工具
-    ~/.local/bin/mise install --yes
+    mise install --yes
     
     # [升级] 将已安装的工具升级至 config.toml 允许的最新版本
-    ~/.local/bin/mise upgrade --yes
+    mise upgrade --yes
     
     # [清理] 卸载 config.toml 中已删除的工具及孤儿版本
-    ~/.local/bin/mise prune --yes
+    mise prune --yes
     
     # 刷新垫片 (shims) 确保环境变量一致
-    ~/.local/bin/mise reshim
+    mise reshim
+
+    @just mise-tips
+
+gh-tips:
+    @echo " [身份/权限]"
+    @echo "  gh auth status          # 查看当前登录状态及权限范围"
+    @echo "  gh auth token           # 打印当前 Token (常用于脚本注入)"
+    @echo "  gh auth refresh         # 刷新或扩充权限范围"
+    @echo "  gh auth switch          # 切换账号"
+    @echo " [仓库操作]"
+    @echo "  gh repo clone <name>    # 快速克隆 (支持缩写如 'user/repo')"
+    @echo "  gh repo create          # 交互式创建新仓库"
+    @echo "  gh repo view --web      # 在浏览器中直接打开当前项目页面"
+    @echo " [PR/Issue 管理]"
+    @echo "  gh pr list / status     # 查看当前 PR 列表或状态"
+    @echo "  gh pr create --web      # 在网页端发起 PR (最推荐用法)"
+    @echo "  gh pr checkout <num>    # 快速检出某个 PR 的分支到本地"
+    @echo " [其他]"
+    @echo "  gh run list / watch     # 查看 GitHub Actions 运行状态"
+    
+mise-tips:
+    @echo " [工具查询]"
+    @echo "  mise ls                 # 列出当前所有已安装工具及版本"
+    @echo "  mise ls-remote <tool>   # 列出工具支持的所有版本"
+    @echo "  mise current            # 显示当前目录下生效的工具版本"
+    @echo "  mise which <bin>        # 查找某个工具的实际二进制路径"
+    @echo " [版本管理]"
+    @echo "  mise use <tool>@latest  # 安装并切换工具 (自动写入 config.toml)"
+    @echo "  mise uninstall <tool>   # 卸载特定工具"
+    @echo " [运行时]"
+    @echo "  mise exec -- <cmd>      # 在当前工具环境下执行命令"
+    @echo "  mise env                # 打印当前环境变量 (诊断用)"
+    @echo " [维护]"
+    @echo "  mise doctor             # 诊断配置、插件及路径问题"
+    @echo "  mise tasks ls           # 查看 mise 定义的本地任务"

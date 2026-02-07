@@ -4,7 +4,7 @@
 # Locale
 export LANG=en_US.UTF-8
 
-# XDG Base Directory (官方规范)
+# XDG Base Directory
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
@@ -14,35 +14,29 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export EDITOR=hx
 export VISUAL=hx
 
-# Homebrew
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_ENV_HINTS=1
-# 国内镜像 (清华源)
-export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git"
-export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git"
-export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles"
-export HOMEBREW_API_DOMAIN="https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles/api"
-
-# PATH 构建 (顺序: 用户 > brew > 系统)
-_add_path() { case ":$PATH:" in *":$1:"*) ;; *) PATH="$1:$PATH" ;; esac; }
-
-# Linuxbrew (两种安装位置)
-[ -x /home/linuxbrew/.linuxbrew/bin/brew ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-[ -x "$HOME/.linuxbrew/bin/brew" ] && eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
-
-# 用户 bin (最高优先级)
-_add_path "$HOME/.local/bin"
-
-export PATH
-unset -f _add_path
-
-# ShellGPT: Groq 兼容 OpenAI Key
-if [ -n "${GROQ_API_KEY-}" ] && [ -z "${OPENAI_API_KEY-}" ]; then
-  export OPENAI_API_KEY="$GROQ_API_KEY"
+#mise
+export PATH="$HOME/.local/bin:$PATH"
+export GITHUB_TOKEN=$(gh auth token 2>/dev/null)
+# 仅在 Bash 中激活(nushell会继承)
+if [ -n "${BASH_VERSION-}" ] && command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate bash)"
 fi
 
-# Proxy (mihomo)
-# 启用代理: export PROXY_ENABLED=1 或运行 j proxy-on
+# Homebrew
+export NONINTERACTIVE=1
+export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_ENV_HINTS=1
+
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [ -x "$HOME/.linuxbrew/bin/brew" ]; then
+  eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
+fi
+
+export PATH
+
+# mihomo
+# 启用代理: export PROXY_ENABLED=1 或运行 jhost mihomo
 if [ "${PROXY_ENABLED-}" = "1" ]; then
   export http_proxy="http://127.0.0.1:7890"
   export https_proxy="http://127.0.0.1:7890"
@@ -50,7 +44,7 @@ if [ "${PROXY_ENABLED-}" = "1" ]; then
   export no_proxy="localhost,127.0.0.1,::1,.local"
 fi
 
-# Mise: 仅在 Bash 中激活 (Nushell 不需要)
-if [ -n "${BASH_VERSION-}" ] && command -v mise >/dev/null 2>&1; then
-  eval "$(mise activate bash)"
+# ShellGPT
+if [ -n "${GROQ_API_KEY-}" ] && [ -z "${OPENAI_API_KEY-}" ]; then
+  export OPENAI_API_KEY="$GROQ_API_KEY"
 fi

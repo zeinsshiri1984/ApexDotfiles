@@ -1,5 +1,4 @@
-# ~/.bashrc — Bash 交互式配置
-# 职责: 仅负责启动 Nushell，不承担交互增强
+# ~/.bashrc — Bash 交互式配置;负责启动 Nushell
 
 # 防止从 Nushell 重入
 [ -n "${NU_VERSION-}" ] && return
