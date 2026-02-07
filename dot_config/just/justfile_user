@@ -3,14 +3,40 @@ set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 default:
     @just --list
 
-user:
-    @just brew
-    @just chezmoi
-
 brew:
-    @echo "更新 Homebrew 仓库..."
+    @echo "升级brew及同步远程仓库元数据"
     brew update
-    @echo "升级已安装公式..."
+    @echo "同步Brewfile"
+    brew bundle --file=~/.config/homebrew/Brewfile --cleanup --force
+    @echo "升级所有已安装工具到最新版本"
     brew upgrade
-    @echo "清理旧版本..."
+    @echo "移除孤儿依赖"
+    brew autoremove
+    @echo "清理旧版本下载缓存和锁定的二进制文件"
     brew cleanup
+
+gh:
+    # 交互式登录 (支持重复执行以刷新权限)
+    gh auth login -w -p https -s repo,workflow,gist
+    
+    # 基础 Git 幂等配置
+    git config --global init.defaultBranch main
+    git config --global core.quotepath false
+    git config --global pull.rebase true
+
+    # 让 git 读写 GitHub 私有库时直接复用 gh 的 token
+    gh auth setup-git
+    
+mise:
+    @echo "mise 自动识别 GITHUB_TOKEN 环境变量解决 GitHub API 速率限制"
+    # [安装] 根据 config.toml 安装新增的工具
+    ~/.local/bin/mise install --yes
+    
+    # [升级] 将已安装的工具升级至 config.toml 允许的最新版本
+    ~/.local/bin/mise upgrade --yes
+    
+    # [清理] 卸载 config.toml 中已删除的工具及孤儿版本
+    ~/.local/bin/mise prune --yes
+    
+    # 刷新垫片 (shims) 确保环境变量一致
+    ~/.local/bin/mise reshim

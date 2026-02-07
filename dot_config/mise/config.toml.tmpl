@@ -1,5 +1,4 @@
 [tools]
-# Runtime (宿主机全局)
 node = "lts"
 python = "latest"
 go = "latest"
@@ -8,15 +7,14 @@ rust = "latest"
 # Python 生态
 "pipx:copier" = "latest"
 "pipx:shell-gpt" = "latest"
-# (可选，首次可跳过，后期运行: mise use pipx:aider-chat ubi:SilasMarvin/lsp-ai)
 # "pipx:aider-chat" = "latest"
 
 # Node 生态
 "npm:@anthropic-ai/claude-code" = "latest"
 "npm:@openai/codex" = "latest"
 
-# AI 辅助 (可选，需要 GitHub API，后期运行: mise use ubi:SilasMarvin/lsp-ai)
-# "ubi:SilasMarvin/lsp-ai" = "latest"
+#helix 插件
+"ubi:SilasMarvin/lsp-ai" = "latest"
 
 [settings]
 pipx.uvx = true

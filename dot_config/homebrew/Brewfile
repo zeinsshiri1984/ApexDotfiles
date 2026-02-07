@@ -1,61 +1,55 @@
-# Brewfile — 宿主机通用 CLI
-# 原则: 启动级/逃生级 + 日常工具，不含项目级依赖
-
-# === 核心 ===
+# === user env核心 ===
 brew "gh"
 brew "just"
 brew "nushell"
-brew "starship"
-brew "carapace"
 brew "mise"
-brew "uv"       # Python 包管理器 (pipx 后端)
-brew "usage"    # mise 补全
 
 # === CLI 增强 ===
+brew "starship"
+brew "carapace"
+brew "uv"       # Python 包管理器 (pipx 后端)
+brew "usage"    # mise 补全
 brew "fd"
 brew "ripgrep"
 brew "dust"
 brew "tealdeer"
 brew "gtrash"
 brew "jq"
-brew "gemini-cli"
+brew "gum"
 
-# === TUI 工作流 ===
+# === ai+TUI 工作流 ===
 brew "yazi"
 brew "zellij"
 brew "helix"
 brew "lazygit"
 brew "onefetch"
 brew "scc"
-brew "gum"
+brew "gemini-cli"
+brew "distrobox"
+brew "btop"
+brew "podman-tui"
 
 # === Git ===
-brew "git"
 brew "git-delta"
-brew "lefthook"
-brew "gitleaks"
+# brew "lefthook"
+# brew "gitleaks"
 brew "git-lfs"
 
 # ===== Monitor =====
-brew "btop"
-brew "watchexec"
-brew "lnav"
+#brew "watchexec"
+#brew "lnav"
 brew "tailspin"
 brew "viddy"
-brew "angle-grinder"
+#brew "angle-grinder"
 
 # ===== Containers =====
-brew "podman"
 brew "docker-compose"
-brew "podman-tui"
-brew "distrobox"
 # brew "dive"
 # brew "hadolint"
 # brew "syft"
 # brew "k9s"
 
 # 网络
-brew "mihomo"               # 代理核心 (Clash Meta)
 brew "curlie"               # curl 封装 (像 httpie)
 brew "mosh"
 # brew "doggo"
@@ -82,7 +76,6 @@ brew "mosh"
 # brew "lynis"
 
 # ===== Docs =====
-brew "glow"
 # brew "pandoc"
 
 # =====yazi预览 =====
@@ -90,3 +83,4 @@ brew "ffmpeg"
 brew "p7zip"
 brew "poppler"
 brew "chafa"
+brew "glow"
