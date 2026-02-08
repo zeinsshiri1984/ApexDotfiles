@@ -46,7 +46,7 @@ keybinds {
         // 浮动窗格
         bind "Alt y" {
             floating_pane {
-                command "yazi"
+                command "yz"
             }
         }
         bind "Alt g" {

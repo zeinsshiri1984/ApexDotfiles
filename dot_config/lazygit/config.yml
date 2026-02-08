@@ -1,6 +1,3 @@
 gui:
-  showCommandLog: true # 底部显示 实际 git 命令
-  showBottomLine: true
-  showPanelJumps: false
-  showRandomTip: false
-  showIcons: true       # 图标配置 (需 Nerd Font)
+  showCommandLog: true
+  commandLogSize: 8
