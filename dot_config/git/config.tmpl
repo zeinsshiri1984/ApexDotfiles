@@ -19,6 +19,7 @@
     autocrlf = input          # 避免换行符噩梦
     ignorecase = false        # 大小写敏感
     fsmonitor = true          # 大型项目性能优化
+    quotepath = false
     # 强制 Git 忽略文件遵循 XDG
     excludesfile = ~/.config/git/ignore
 
@@ -88,11 +89,9 @@
 
 # --- 安全凭证 (委托给 gh) ;HTTPS 操作也不用输密码---
 [credential "https://github.com"]
-    helper =
     helper = !gh auth git-credential
 
 [credential "https://gist.github.com"]
-    helper =
     helper = !gh auth git-credential
 
 [feature]

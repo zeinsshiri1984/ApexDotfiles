@@ -19,14 +19,6 @@ gh:
     # 交互式登录 (支持重复执行以刷新权限)
     gh auth login -w -p https -s repo,workflow,gist,read:packages
     
-    # 配置 git 复用 gh 的 token (修改 ~/.gitconfig)
-    gh auth setup-git
-    
-    # 基础 Git 幂等配置
-    git config --global init.defaultBranch main
-    git config --global core.quotepath false
-    git config --global pull.rebase true
-
     @just gh-tips
     
 mise:
