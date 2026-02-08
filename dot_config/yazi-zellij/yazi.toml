@@ -1,0 +1,29 @@
+[manager]
+show_hidden = true
+sort_by = "natural"
+sort_dir_first = true
+theme = "tokyo-night"
+
+[opener]
+hx-zellij = [
+  { run = '''
+    sh -c '
+      zellij action focus-left || exit 0
+      zellij action write-chars -- "hx"
+      for f in "$@"; do
+        zellij action write-chars -- " \"$f\""
+      done
+      zellij action write 13
+      zellij action focus-right || true
+    ' sh "$@"
+  ''', desc = "Open in hx (zellij)" }
+]
+
+[open]
+prepend_rules = [
+  { mime = "text/*", use = "hx-zellij" },
+  { mime = "application/json", use = "hx-zellij" },
+  { mime = "application/toml", use = "hx-zellij" },
+  { mime = "application/yaml", use = "hx-zellij" },
+  { mime = "application/xml", use = "hx-zellij" },
+]

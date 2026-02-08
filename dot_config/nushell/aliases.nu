@@ -41,3 +41,9 @@ def --wrapped j [...args] {
 alias zj = zellij
 alias zja = zellij attach
 alias zjl = zellij list-sessions
+
+#yazi
+# 普通终端
+alias y='yazi'
+# zellij 内
+alias yz='YAZI_CONFIG_HOME=$HOME/.config/yazi-zellij yazi'

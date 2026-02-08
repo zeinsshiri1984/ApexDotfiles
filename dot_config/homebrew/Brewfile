@@ -61,7 +61,7 @@ brew "mosh"
 # 测试与性能
 # brew "fio"
 # brew "oha"
-# brew "ffuf"
+# brew "ffuf"   
 # brew "hyperfine"
 
 # 数据库
@@ -78,8 +78,9 @@ brew "mosh"
 # brew "pandoc"
 
 # =====yazi预览 =====
-brew "ffmpeg"
+brew "ffmpegthumbnailer"
 brew "p7zip"
 brew "poppler"
 brew "chafa"
 brew "glow"
+brew "bat"

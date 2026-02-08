@@ -1,0 +1,46 @@
+# -------- text --------
+[[previewer]]
+mime = "text/*"
+run = "bat --color=always --style=plain --paging=never \"$1\""
+
+# -------- structured text --------
+[[previewer]]
+mime = "application/json"
+run = "bat --color=always --style=plain --paging=never \"$1\""
+
+[[previewer]]
+mime = "application/toml"
+run = "bat --color=always --style=plain --paging=never \"$1\""
+
+[[previewer]]
+mime = "application/yaml"
+run = "bat --color=always --style=plain --paging=never \"$1\""
+
+[[previewer]]
+mime = "application/xml"
+run = "bat --color=always --style=plain --paging=never \"$1\""
+
+# -------- markdown --------
+[[previewer]]
+mime = "text/markdown"
+run = "glow -s dark \"$1\""
+
+# -------- image --------
+[[previewer]]
+mime = "image/*"
+run = "yazi-preview \"$1\""
+
+# pdf
+[[previewer]]
+mime = "application/pdf"
+run = "yazi-preview \"$1\""
+
+# video
+[[previewer]]
+mime = "video/*"
+run = "yazi-preview \"$1\""
+
+# archive
+[[previewer]]
+mime = "application/*"
+run = "7z l \"$1\""
