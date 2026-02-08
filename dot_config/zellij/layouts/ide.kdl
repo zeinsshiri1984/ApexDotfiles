@@ -1,11 +1,6 @@
-// IDE 布局: 左 Helix | 右 Terminal
-
 layout {
-    pane split_direction="vertical" {
-        pane name="editor" command="hx" size="60%"
-        pane name="terminal" size="40%"
+    pane size=65 {
+        command "hx"
     }
-    pane size=1 borderless=true {
-        plugin location="zellij:compact-bar"
-    }
+    pane size=35
 }

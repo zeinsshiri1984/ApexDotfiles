@@ -44,9 +44,26 @@ keybinds {
         bind "Ctrl q" { Detach; }
 
         // 浮动窗格
-        bind "Alt y" { Run "yazi" { close_on_exit true; }; ToggleFloatingPanes; }
-        bind "Alt g" { Run "lazygit" { close_on_exit true; }; ToggleFloatingPanes; }
-        bind "Alt p" { Run "podman-tui" { close_on_exit true; }; ToggleFloatingPanes; }
+        bind "Alt y" {
+            floating_pane {
+                command "yazi"
+            }
+        }
+        bind "Alt g" {
+            floating_pane {
+                command "lazygit"
+            }
+        }
+        bind "Alt p" {
+            floating_pane {
+                command "podman-tui"
+            }
+        }
+        bind "Alt b" {
+            floating_pane {
+                command "btop"
+            }
+        }
 
         // --- Pane管理 ---
         bind "Alt n" { NewPane "stacked"; }               // 新建窗格(自动)
