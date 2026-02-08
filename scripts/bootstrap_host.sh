@@ -24,6 +24,7 @@ sudo nala install -y \
   file \
   tar gzip \
   xdg-user-dirs \
+  uidmap slirp4netns fuse-overlayfs \
   podman podman-docker
 
 echo "获取 Mihomo & Metacubexd最新版本下载链接..."
@@ -100,28 +101,60 @@ sudo systemctl daemon-reload
 sudo systemctl enable mihomo >/dev/null 2>&1
 sudo systemctl restart mihomo
 
-echo "配置 Podman 搜索域..."
+echo "配置 Podman 无根模式权限(解决无根模式无法绑定低端口的问题)..."
+echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-podman-privileged-ports.conf
+sudo sysctl --system >/dev/null
+
+echo "启用用户驻留，确保用户退出 SSH 后容器不挂掉"
+sudo loginctl enable-linger $(whoami)
+
+echo "配置 Podman 全局镜像源 (Root/Rootless 通用)..."
 sudo mkdir -p /etc/containers
 sudo tee /etc/containers/registries.conf >/dev/null <<EOF
 unqualified-search-registries = ["docker.io", "quay.io"]
+
+[[registry]]
+prefix = "docker.io"
+location = "docker.io"
+# 如果 Mihomo 很稳，其实不需要 mirror，但留着防备
+[[registry.mirror]]
+location = "docker.m.daocloud.io"
 EOF
 
-echo "配置 Podman 代理，指向本地 Mihomo (7890 端口)..."
-mkdir -p ~/.config/containers
-tee ~/.config/containers/containers.conf >/dev/null <<EOF
+# containers.conf: 核心配置
+# 修正点：使用 host.containers.internal 指向宿主机
+cat <<EOF > ~/.config/containers/containers.conf
+[containers]
+log_size_max = 52428800
+
 [engine]
+events_logger = "file"
+# 这里配置环境变量，让所有容器启动时默认走代理
+# 注意：host.containers.internal 是 Podman 特有的宿主机 DNS
 env = [
-  "HTTP_PROXY=http://127.0.0.1:7890",
-  "HTTPS_PROXY=http://127.0.0.1:7890",
-  "NO_PROXY=localhost,127.0.0.1"
+  "HTTP_PROXY=http://host.containers.internal:7890",
+  "HTTPS_PROXY=http://host.containers.internal:7890",
+  "NO_PROXY=localhost,127.0.0.1,::1,host.containers.internal"
 ]
 EOF
 
-# 如果是 Rootless 模式，Podman 还需要读取~/.config下的配置
+echo "配置 Podman 用户级代理 (仅针对当前用户 Rootless)"
+# 给当前用户配置默认代理，防止干扰 sudo podman 运行系统服务
 mkdir -p ~/.config/containers
-tee ~/.config/containers/containers.conf >/dev/null <<EOF
+cat <<EOF > ~/.config/containers/containers.conf
+[containers]
+# 限制日志大小
+log_size_max = 52428800
+
 [engine]
-env = ["HTTP_PROXY=http://127.0.0.1:7890", "HTTPS_PROXY=http://127.0.0.1:7890"]
+# 事件日志驱动
+events_logger = "file"
+# 让容器内部自动走宿主机代理;host.containers.internal 自动解析为宿主机 IP
+env = [
+  "HTTP_PROXY=http://host.containers.internal:7890",
+  "HTTPS_PROXY=http://host.containers.internal:7890",
+  "NO_PROXY=localhost,127.0.0.1,::1,host.containers.internal"
+]
 EOF
 
 LOCAL_IP=$(hostname -I | awk '{print $1}')

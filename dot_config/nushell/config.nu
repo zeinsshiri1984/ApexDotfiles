@@ -1,7 +1,3 @@
-# Nushell 入口
-
-$env.config.show_banner = false
-
 $env.config = {
   show_banner: false
 
@@ -16,6 +12,10 @@ $env.config = {
     quick: true
     partial: true
     algorithm: "fuzzy"
+    external: {
+      enable: true # 必须开启，否则 Carapace 不工作
+      max_results: 100
+    }
   }
 
   edit_mode: emacs
@@ -27,8 +27,10 @@ $env.config = {
 
 }
 
+source ($nu.default-config-dir | path join "cache/mise.nu")
+source ($nu.default-config-dir | path join "cache/starship.nu")
+source ($nu.default-config-dir | path join "cache/carapace.nu")
+
 source aliases.nu
 source functions.nu
-source completions.nu
-source prompt.nu
 source keybindings.nu

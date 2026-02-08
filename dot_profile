@@ -14,15 +14,15 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export EDITOR=hx
 export VISUAL=hx
 
-#mise
+#用户bin加入路径
 export PATH="$HOME/.local/bin:$PATH"
-export GITHUB_TOKEN=$(gh auth token 2>/dev/null)
-# 仅在 Bash 中激活(nushell会继承)
+
+#仅在 Bash 中激活的mise钩子
 if [ -n "${BASH_VERSION-}" ] && command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"
 fi
 
-# Homebrew
+# Linuxbrew
 export NONINTERACTIVE=1
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
@@ -31,17 +31,6 @@ if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 elif [ -x "$HOME/.linuxbrew/bin/brew" ]; then
   eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
-fi
-
-export PATH
-
-# mihomo
-# 启用代理: export PROXY_ENABLED=1 或运行 jhost mihomo
-if [ "${PROXY_ENABLED-}" = "1" ]; then
-  export http_proxy="http://127.0.0.1:7890"
-  export https_proxy="http://127.0.0.1:7890"
-  export all_proxy="socks5://127.0.0.1:7890"
-  export no_proxy="localhost,127.0.0.1,::1,.local"
 fi
 
 # ShellGPT

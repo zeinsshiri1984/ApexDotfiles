@@ -8,7 +8,6 @@ brew "mise"
 brew "starship"
 brew "carapace"
 brew "uv"       # Python 包管理器 (pipx 后端)
-brew "usage"    # mise 补全
 brew "fd"
 brew "ripgrep"
 brew "dust"
