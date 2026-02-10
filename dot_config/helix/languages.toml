@@ -1,35 +1,25 @@
-# LSP-AI: Gemini 免费模型
-# 需要设置环境变量: GEMINI_API_KEY (https://aistudio.google.com/apikey)
+# Rust
+[language-server.rust-analyzer]
+command = "rust-analyzer"
 
-[language-server.lsp-ai]
-command = "lsp-ai"
+# C/C++ (clangd)
+[language-server.clangd]
+command = "clangd"
 
-[language-server.lsp-ai.config.models.gemini]
-type = "gemini"
-chat_endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
-model = "gemini-2.0-flash"
-auth_token_env_var_name = "GEMINI_API_KEY"
+# Python (pyright)
+[language-server.pyright]
+command = "pyright-langserver"
+args = ["--stdio"]
 
-[language-server.lsp-ai.config.completion]
-model = "gemini"
-parameters = { max_tokens = 128 }
+# Java (jdt.ls)
+[language-server.eclipse-jdt-ls]
+command = "jdtls"
 
-[[language]]
-name = "rust"
-language-servers = ["rust-analyzer", "lsp-ai"]
+# Go (gopls)
+[language-server.gopls]
+command = "gopls"
 
-[[language]]
-name = "go"
-language-servers = ["gopls", "lsp-ai"]
-
-[[language]]
-name = "python"
-language-servers = ["pyright", "lsp-ai"]
-
-[[language]]
-name = "typescript"
-language-servers = ["typescript-language-server", "lsp-ai"]
-
-[[language]]
-name = "javascript"
-language-servers = ["typescript-language-server", "lsp-ai"]
+# TypeScript / JavaScript
+[language-server.typescript-language-server]
+command = "typescript-language-server"
+args = ["--stdio"]

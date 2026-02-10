@@ -72,3 +72,8 @@ mise-tips:
 
 yazi:
     ya pack -a yazi-rs/themes:tokyo-night
+
+helix:
+    @hx --grammar fetch
+	@hx --grammar build
+    @hx --health

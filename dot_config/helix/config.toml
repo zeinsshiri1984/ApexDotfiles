@@ -3,30 +3,35 @@ theme = "noctis"
 
 [editor]
 line-number = "relative"   # 相对行号 (Vim/Helix 神器，方便 jump)
-mouse = true               # 允许鼠标点击/滚动
 cursorline = true          # 高亮当前行
-color-modes = true         # 模式变色 (Insert红/Normal蓝)
-true-color = true          # 真彩色支持
 bufferline = "always"      # 始终显示顶部 Buffer 列表，看起来就像 IDE 的 Tab
-idle-timeout = 0           # 让快捷键提示菜单瞬间弹出，不卡顿
+auto-format = true
+auto-save = false
+idle-timeout = 400         # 让快捷键提示菜单弹出时间
+completion-timeout = 5
 completion-trigger-len = 1 # 代码补全更积极
+true-color = true          # 真彩色支持
+scroll-lines = 3
+color-modes = true         # 模式变色 (Insert红/Normal蓝)
+mouse = true               # 允许鼠标点击/滚动
 
 [editor.cursor-shape]
 insert = "bar"
 normal = "block"
 select = "underline"
 
-[editor.statusline]
-left = ["mode", "spinner", "read-only-indicator", "file-modification-indicator"]
-center = ["diagnostics"]
-right = ["position", "position-percentage", "total-line-numbers", "file-encoding", "file-type"]
-separator = "│"
-
 [keys.normal]
-# 避开 Zellij 的 Alt-h/l (切换窗格);通过 Alt+i/o 快速切换 Tab (Buffer)
-"A-i" = ":bp"  # previous buffer
-"A-o" = ":bn"  # next buffer
-"A-w" = ":bc"  # close buffer (close tab)
+# 文件
+space.w = ":w"
+space.q = ":q"
+space.x = ":wq"
+space.e = ":open ~/.config/helix/config.toml"
 
-# Lazygit 浮动窗格
-"C-g" = ":sh zellij run -n 'Lazygit' --close-on-exit --floating -x 5% -y 5% --width 90% --height 90% -- lazygit"
+# 搜索 / 跳转
+space.f = "file_picker"
+space.F = "file_picker_in_current_directory"
+space.b = "buffer_picker"
+space.s = "global_search"
+
+# 诊断
+space.d = "diagnostics_picker"
