@@ -1,4 +1,0 @@
-# ShellGPT runtime config (Groq OpenAI-compatible)
-API_BASE_URL=https://api.groq.com/openai/v1
-DEFAULT_MODEL=llama-3.1-8b-instant
-REQUEST_TIMEOUT=60
