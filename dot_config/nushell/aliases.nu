@@ -27,23 +27,12 @@ alias gd = git diff
 alias gds = git diff --staged
 alias gl = git log --graph --decorate --oneline --all
 
-# TUI
-alias lg = lazygit
-alias y = yazi
-
-# just 使用全局 justfile
-def --wrapped j [...args] {
-  let justfile = $"($env.XDG_CONFIG_HOME? | default $"($env.HOME)/.config")/just/justfile"
-  ^just --justfile $justfile ...$args
-}
-
 # Zellij 快速启动
 alias zj = zellij
 alias zja = zellij attach
 alias zjl = zellij list-sessions
 
-#yazi
-# 普通终端
-alias y='yazi'
-# zellij 内
-alias yz='YAZI_CONFIG_HOME=$HOME/.config/yazi-zellij yazi'
+# TUI
+alias lg = lazygit
+alias y='yazi' # 普通终端
+alias yz='YAZI_CONFIG_HOME=$HOME/.config/yazi-zellij yazi'  # zellij 内
