@@ -32,8 +32,3 @@ if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
 elif [ -x "$HOME/.linuxbrew/bin/brew" ]; then
   eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
 fi
-
-# ShellGPT
-if [ -n "${GROQ_API_KEY-}" ] && [ -z "${OPENAI_API_KEY-}" ]; then
-  export OPENAI_API_KEY="$GROQ_API_KEY"
-fi
