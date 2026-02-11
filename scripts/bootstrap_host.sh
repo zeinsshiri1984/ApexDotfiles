@@ -122,7 +122,8 @@ location = "docker.m.daocloud.io"
 EOF
 
 # containers.conf: 核心配置
-# 修正点：使用 host.containers.internal 指向宿主机
+# 使用 host.containers.internal 指向宿主机
+mkdir -p $HOME/.config/containers
 cat <<EOF > ~/.config/containers/containers.conf
 [containers]
 log_size_max = 52428800
