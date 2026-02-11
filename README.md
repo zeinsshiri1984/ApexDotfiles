@@ -33,7 +33,7 @@ sudo sed -i 's|http://archive.ubuntu.com|https://mirrors.tuna.tsinghua.edu.cn|g'
 sudo sed -i 's|http://security.ubuntu.com|https://mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/ubuntu.sources
 
 # 2. 执行 bootstrap (brew 镜像已内置脚本，无需预设环境变量)
-bash -c "$(curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap.sh)"
+bash -c "$(curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
 ```
 
 ## Roadmap
