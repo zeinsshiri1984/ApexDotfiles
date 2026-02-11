@@ -36,6 +36,8 @@ sudo sed -i 's|http://security.ubuntu.com|https://mirrors.tuna.tsinghua.edu.cn|g
 bash -c "$(curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
 ```
 
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
+
 ## Roadmap
 
 - 完成 README 多语言版本或移除无效链接  
