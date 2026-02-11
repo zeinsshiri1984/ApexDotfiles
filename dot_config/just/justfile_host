@@ -10,8 +10,8 @@ host:
 
 # 系统包与镜像维护
 nala:
-    @echo "正在重新测试并优化最快镜像源..."
-    sudo nala fetch --auto --https-only -y
+    # @echo "正在重新测试并优化最快镜像源..."
+    # sudo nala fetch --auto --https-only -y
     @echo "同步软件包索引..."
     sudo nala update
     @echo "执行系统升级..."

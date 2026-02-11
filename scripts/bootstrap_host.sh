@@ -7,8 +7,8 @@ sudo apt update
 echo "安装 nala..."
 sudo apt install nala -y
 
-echo "配置：测试并选择最快的https镜像源,默认写入配置文件..."
-sudo nala fetch --auto --https-only -y
+# echo "配置：测试并选择最快的https镜像源,默认写入配置文件..."
+# sudo nala fetch --auto --https-only -y
 
 echo "执行软件包同步与升级..."
 sudo nala update
