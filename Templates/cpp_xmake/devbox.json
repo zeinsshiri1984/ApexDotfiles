@@ -1,7 +1,0 @@
-{
-  "packages": [
-    "gcc",
-    "cmake",
-    "ninja"
-  ]
-}

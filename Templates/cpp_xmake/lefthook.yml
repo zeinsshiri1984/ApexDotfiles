@@ -1,6 +1,0 @@
-pre-commit:
-  commands:
-    clang-format:
-      run: clang-format -i $(git ls-files '*.c' '*.cpp' '*.h' '*.hpp')
-    gitleaks:
-      run: gitleaks protect --staged --redact
