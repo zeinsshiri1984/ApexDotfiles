@@ -14,7 +14,6 @@ alias curl = curlie                # curlie: httpie 风格的 curl
 alias diff = delta                 # delta: 更美观的 diff
 alias watch = viddy                # viddy: 更强的 watch
 
-
 # Git 常用
 alias gs = git status -sb
 alias ga = git add
@@ -26,10 +25,10 @@ alias gd = git diff
 alias gds = git diff --staged
 alias gl = git log --graph --decorate --oneline --all
 
-# Zellij 快速启动
-alias zj = zellij
-alias zja = zellij attach
-alias zjl = zellij list-sessions
+# Zellij
+alias z = zellij
+alias za = zellij attach
+alias zl = zellij list-sessions
 
 # TUI
 alias lg = lazygit

@@ -1,5 +1,17 @@
 set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
 default:
-    @just --list
+    @echo "=== Project Overview (onefetch) ==="
+    @onefetch .
+    @echo "========================================================"
+    @echo "=== SCC Code Stats ==="
+    @scc .
+    @echo "========================================================"
+    @echo "=== SCC Cyclomatic Complexity ==="
+    @scc --cyc .
+    @echo "========================================================"
+    @echo "=== SCC Wage Estimation ==="
+    @scc --wage 2000 .
 
+report:
+    scc --format html --output project_stats.html
