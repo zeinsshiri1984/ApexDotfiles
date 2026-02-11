@@ -7,7 +7,6 @@ brew "mise"
 # === CLI 增强 ===
 brew "starship"
 brew "carapace"
-brew "uv"       # Python 包管理器 (pipx 后端)
 brew "fd"
 brew "ripgrep"
 brew "dust"

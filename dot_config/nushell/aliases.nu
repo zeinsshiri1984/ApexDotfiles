@@ -1,5 +1,3 @@
-# Nushell 别名
-
 alias ll = ls -l
 alias la = ls -a
 alias lla = ls -la
@@ -15,6 +13,7 @@ alias rm = gtrash put              # gtrash: 安全删除到回收站
 alias curl = curlie                # curlie: httpie 风格的 curl
 alias diff = delta                 # delta: 更美观的 diff
 alias watch = viddy                # viddy: 更强的 watch
+
 
 # Git 常用
 alias gs = git status -sb

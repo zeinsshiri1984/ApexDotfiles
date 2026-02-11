@@ -77,3 +77,11 @@ helix:
     @hx --grammar fetch
 	@hx --grammar build
     @hx --health
+
+gtrash-tips:
+	@echo "放入垃圾桶:gtrash put <文件/目录>"
+	@echo "交互式恢复:gtrash restore (支持多选和搜索，推荐用法)"
+	@echo "浏览垃圾桶:gtrash find"
+	@echo "查看垃圾桶占用空间:gtrash summary"
+	@echo "清理30天前记录:gtrash prune --days 30"
+	@echo "物理删除所有垃圾桶文件:gtrash prune --all"
