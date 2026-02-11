@@ -102,3 +102,12 @@ podman-clean:
     @echo "清理停止的容器与悬空镜像（安全）..."
     podman container prune -f
     podman image prune -f
+
+wsl-tips:
+    @echo "wsl --shutdown"
+    @echo "wsl --unregister Ubuntu"
+    @echo "查看可下载发行版: wsl -l -o"
+    @echo "wsl --install -d Ubuntu"
+    @echo "wsl --update"
+    @echo "wsl --set-default-version 2"
+    @echo "查看已下载发行版:wsl -l -v"
