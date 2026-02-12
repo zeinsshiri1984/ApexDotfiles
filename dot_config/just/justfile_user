@@ -1,6 +1,4 @@
-set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
-
-default:
+user:
     @just --list
 
 brew:

@@ -1,3 +1,4 @@
+set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 set allow-duplicate-recipes := true
 
 import '~/.config/just/justfile_host'
