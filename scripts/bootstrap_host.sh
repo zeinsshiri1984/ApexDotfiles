@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# 强制清除当前 Shell 的代理变量，防止 Windows Clash Verge 劫持导致下载失败
+unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY all_proxy ALL_PROXY
+
 echo "更新软件包列表..."
 sudo apt update
 
@@ -62,14 +65,14 @@ rm -f /tmp/metacubexd.tgz
 echo "生成配置文件..."
 sudo mkdir -p /etc/mihomo
 sudo tee /etc/mihomo/config.yaml >/dev/null <<EOF
-mixed-port: 7890                # HTTP/SOCKS5 混合端口
+mixed-port: 7899                # HTTP/SOCKS5 混合端口
 allow-lan: true                 # 允许局域网访问
 bind-address: '*'               # 监听所有网卡
 
 mode: rule
 log-level: info
 
-external-controller: 0.0.0.0:9090  # API 监听地址
+external-controller: 0.0.0.0:9099  # API 监听地址
 external-ui: /etc/mihomo/ui
 secret: ''
 
@@ -133,8 +136,8 @@ events_logger = "file"
 # 这里配置环境变量，让所有容器启动时默认走代理
 # 注意：host.containers.internal 是 Podman 特有的宿主机 DNS
 env = [
-  "HTTP_PROXY=http://host.containers.internal:7890",
-  "HTTPS_PROXY=http://host.containers.internal:7890",
+  "HTTP_PROXY=http://host.containers.internal:7899",
+  "HTTPS_PROXY=http://host.containers.internal:7899",
   "NO_PROXY=localhost,127.0.0.1,::1,host.containers.internal"
 ]
 EOF
@@ -152,15 +155,15 @@ log_size_max = 52428800
 events_logger = "file"
 # 让容器内部自动走宿主机代理;host.containers.internal 自动解析为宿主机 IP
 env = [
-  "HTTP_PROXY=http://host.containers.internal:7890",
-  "HTTPS_PROXY=http://host.containers.internal:7890",
+  "HTTP_PROXY=http://host.containers.internal:7899",
+  "HTTPS_PROXY=http://host.containers.internal:7899",
   "NO_PROXY=localhost,127.0.0.1,::1,host.containers.internal"
 ]
 EOF
 
 LOCAL_IP=$(hostname -I | awk '{print $1}')
 echo "host环境部署完毕。GeoIP / GeoSite / rule-provider 将在首次订阅加载时自动下载，无需手动干预;后续执行 just nala 或 just mihomo 或just mihomo-tips或just podman进行维护。"
-echo "在浏览器打开webUI管理：http://$LOCAL_IP:9090/ui"
+echo "在浏览器打开webUI管理：http://$LOCAL_IP:9099/ui"
 echo "Mihomo 服务管理（原生命令）："
 echo "  启动:   sudo systemctl start mihomo"
 echo "  停止:   sudo systemctl stop mihomo"
