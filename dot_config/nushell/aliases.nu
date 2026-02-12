@@ -7,7 +7,7 @@ alias g = git
 alias grep = rg                    # ripgrep: 更快的 grep
 alias top = btop                   # btop: 更美观的系统监控
 alias man = tldr                   # tealdeer: 简明版 man
-alias rm = rm --trash              
+alias rm = gtrash put              
 alias curl = curlie                # curlie: httpie 风格的 curl
 alias diff = delta                 # delta: 更美观的 diff
 

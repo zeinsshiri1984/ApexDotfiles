@@ -12,7 +12,7 @@ brew "carapace"
 brew "ripgrep"
 # brew "dust"
 brew "tealdeer"
-# brew "gtrash"
+brew "gtrash"
 brew "jq"
 brew "gum"
 
