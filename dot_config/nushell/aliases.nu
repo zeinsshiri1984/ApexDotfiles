@@ -30,9 +30,6 @@ alias z = zellij
 alias za = zellij attach
 alias zl = zellij list-sessions
 
-#just
-alias just="just --justfile ~/.justfile --working-directory ."
-
 # TUI
 alias lg = lazygit
 alias y='yazi' # 普通终端
