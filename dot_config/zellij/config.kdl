@@ -44,11 +44,10 @@ keybinds {
         bind "Ctrl q" { Detach; }
 
         // 浮动窗格
-        bind "Alt y" { Run "bash" "-lc" "yz" { floating true; close_on_exit false; } }
-        bind "Alt g" { Run "bash" "-lc" "lazygit" { floating true; close_on_exit false; } }
-        bind "Alt p" { Run "bash" "-lc" "podman-tui" { floating true; close_on_exit false; } }
-        bind "Alt b" { Run "bash" "-lc" "btop" { floating true; close_on_exit false; } }
-
+        bind "Alt y" { Run "bash" "-lc" "yz" floating=true close_on_exit=false; }
+        bind "Alt g" { Run "bash" "-lc" "lazygit" floating=true close_on_exit=false; }
+        bind "Alt p" { Run "bash" "-lc" "podman-tui" floating=true close_on_exit=false; }
+        bind "Alt b" { Run "bash" "-lc" "btop" floating=true close_on_exit=false; }
         // --- Pane管理 ---
         bind "Alt n" { NewPane "stacked"; }               // 新建窗格(自动)
         bind "Alt r" { NewPane "Right"; }       // 强制向右分屏 (Right)
