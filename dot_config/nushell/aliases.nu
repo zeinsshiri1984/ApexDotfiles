@@ -30,7 +30,7 @@ alias z = zellij
 alias za = zellij attach
 alias zl = zellij list-sessions
 
-# TUI
+# TUI;普通终端用y,zellij中用yz
 alias lg = lazygit
-alias y='yazi' # 普通终端
-alias yz='YAZI_CONFIG_HOME=$HOME/.config/yazi-zellij yazi'  # zellij 内
+alias y = yazi
+alias yz = with-env { YAZI_CONFIG_HOME: $"($env.HOME)/.config/yazi-zellij" } { yazi }
