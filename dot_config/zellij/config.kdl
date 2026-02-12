@@ -48,17 +48,20 @@ keybinds {
 
         // 浮动窗格
         bind "Alt y" {
-            Run "nu" "-c" "yz" {
-                floating true;
-                width "80%";
-                height "70%";
-                x "10%";
-                y "15%";
-                close_on_exit false;
+            Run "yazi" {
+                env {
+                    YAZI_CONFIG_HOME "~/.config/yazi-zellij"
+                }
+                floating true
+                width "80%"
+                height "70%"
+                x "10%"
+                y "15%"
+                close_on_exit false
             }
         }
         bind "Alt g" {
-            Run "bash" "-lc" "lazygit" {
+            Run "lazygit" {
                 floating true;
                 width "80%";
                 height "70%";
