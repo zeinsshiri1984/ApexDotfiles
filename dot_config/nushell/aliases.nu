@@ -24,9 +24,6 @@ alias gl = git log --graph --decorate --oneline --all
 
 # Zellij
 alias z = zellij
-alias za = zellij a
-alias zl = zellij list-sessions
-alias zs = zellij -s 
 
 # TUI;普通终端用y,zellij中用yz
 alias lg = lazygit
