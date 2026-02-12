@@ -48,44 +48,43 @@ keybinds {
 
         // 浮动窗格
         bind "Alt y" {
-            Run "nu" {
-                args ["-c", "yz"]
-                floating true
-                width "80%"
-                height "70%"
-                close_on_exit false
-                position "center"
+            Run "nu" "-c" "yz" {
+                floating true;
+                width "80%";
+                height "70%";
+                x "10%";
+                y "15%";
+                close_on_exit false;
             }
         }
-
         bind "Alt g" {
-            Run "bash" {
-                args ["-lc", "lazygit"]
-                floating true
-                width "80%"
-                height "70%"
-                close_on_exit false
-                position "center"
+            Run "bash" "-lc" "lazygit" {
+                floating true;
+                width "80%";
+                height "70%";
+                x "10%";
+                y "15%";
+                close_on_exit false;
             }
         }
-
         bind "Alt p" {
             Run "podman-tui" {
                 floating true
                 width "80%"
                 height "70%"
+                x "10%"
+                y "15%"
                 close_on_exit false
-                position "center"
             }
         }
-
         bind "Alt b" {
             Run "btop" {
                 floating true
                 width "80%"
                 height "70%"
+                x "10%"
+                y "15%"
                 close_on_exit false
-                position "center"
             }
         }
 
