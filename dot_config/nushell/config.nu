@@ -14,17 +14,11 @@ $env.config = {
     algorithm: "fuzzy"
     external: {
       enable: true # 必须开启，否则 Carapace 不工作
-      max_results: 100
+      max_results: 50
     }
   }
 
   edit_mode: emacs
-  cursor_shape: {
-    emacs: line
-    vi_insert: line
-    vi_normal: block
-  }
-
 }
 
 source ($nu.default-config-dir | path join "cache/mise.nu")
