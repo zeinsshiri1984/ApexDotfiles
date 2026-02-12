@@ -18,7 +18,7 @@ export VISUAL=hx
 export PATH="$HOME/.local/bin:$PATH"
 
 #在 Bash 中激活的mise钩子
-export MISE_VERBOSE=1
+# export MISE_VERBOSE=1
 if [ -n "${BASH_VERSION-}" ] && command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"
 fi
