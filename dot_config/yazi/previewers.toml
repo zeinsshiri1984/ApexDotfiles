@@ -1,7 +1,7 @@
 # -------- text --------
 [[previewer]]
 mime = "text/*"
-run = "bat --color=always --style=plain --paging=never \"$1\""
+run = "hx -p \"$1\""
 
 # -------- structured text --------
 [[previewer]]
