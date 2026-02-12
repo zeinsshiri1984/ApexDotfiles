@@ -8,11 +8,11 @@ brew "chezmoi"
 # === CLI 增强 ===
 brew "starship"
 brew "carapace"
-brew "fd"
+# brew "fd"
 brew "ripgrep"
-brew "dust"
+# brew "dust"
 brew "tealdeer"
-brew "gtrash"
+# brew "gtrash"
 brew "jq"
 brew "gum"
 
@@ -37,8 +37,8 @@ brew "git-lfs"
 # ===== Monitor =====
 #brew "watchexec"
 #brew "lnav"
-brew "tailspin"
-brew "viddy"
+# brew "tailspin"
+# brew "viddy"
 #brew "angle-grinder"
 
 # ===== Containers =====
