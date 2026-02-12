@@ -48,40 +48,39 @@ keybinds {
 
         // 浮动窗格
         bind "Alt y" {
-            Run {
-                command = "nu"
-                args = ["-c", "yz"]
-                floating = true
-                close_on_exit = false
-                width = "80%"
-                height = "70%"
+            Run "nu" {
+                args "-c" "yz"
+                floating true
+                width "80%"
+                height "70%"
+                close_on_exit false
             }
         }
+
         bind "Alt g" {
-            Run {
-                command = "lazygit"
-                floating = true
-                close_on_exit = false
-                width = "80%"
-                height = "70%"
+            Run "lazygit" {
+                floating true
+                width "80%"
+                height "70%"
+                close_on_exit false
             }
         }
+
         bind "Alt p" {
-            Run {
-                command = "podman-tui"
-                floating = true
-                close_on_exit = false
-                width = "80%"
-                height = "70%"
+            Run "podman-tui" {
+                floating true
+                width "80%"
+                height "70%"
+                close_on_exit false
             }
         }
+
         bind "Alt b" {
-            Run {
-                command = "btop"
-                floating = true
-                close_on_exit = false
-                width = "80%"
-                height = "70%"
+            Run "btop" {
+                floating true
+                width "80%"
+                height "70%"
+                close_on_exit false
             }
         }
 
