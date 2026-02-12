@@ -33,4 +33,3 @@ source ($nu.default-config-dir | path join "cache/carapace.nu")
 
 source aliases.nu
 source functions.nu
-source keybindings.nu
