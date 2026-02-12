@@ -1,7 +1,9 @@
 # ~/.profile — 唯一环境变量事实源
 # Bash login / sh / 非交互式脚本均 source 此文件
 
+#zellij
 export COLORTERM=truecolor
+export ZELLIJ_DISABLE_PIXEL_RATIO_QUERY=1
 
 # Locale
 export LANG=en_US.UTF-8
