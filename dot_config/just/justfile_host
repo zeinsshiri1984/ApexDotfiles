@@ -5,7 +5,6 @@ default:
 
 host:
     @just nala
-    @just mihomo
     @just podman
 
 # 系统包与镜像维护
@@ -22,46 +21,6 @@ nala:
     @echo "修复潜在依赖损坏..."
     sudo apt --fix-broken install
 
-mihomo:
-    @echo "mihomo 内核升级..."
-    curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest \
-      | grep browser_download_url \
-      | grep linux-amd64 \
-      | grep -v compatible \
-      | grep '.gz"' \
-      | head -n 1 \
-      | cut -d '"' -f 4 \
-      | xargs -n1 curl -L -o /tmp/mihomo.gz
-    gunzip -f /tmp/mihomo.gz
-    chmod +x /tmp/mihomo
-    sudo mv -f /tmp/mihomo /usr/local/bin/mihomo
-
-    @echo "升级 UI 面板..."
-    curl -s https://api.github.com/repos/MetaCubeX/metacubexd/releases/latest \
-      | grep browser_download_url \
-      | grep compressed-dist.tgz \
-      | head -n 1 \
-      | cut -d '"' -f 4 \
-      | xargs -n1 curl -L -o /tmp/metacubexd.tgz
-    sudo rm -rf /etc/mihomo/ui/*
-    sudo tar -xzf /tmp/metacubexd.tgz -C /etc/mihomo/ui
-    rm -f /tmp/metacubexd.tgz
-
-    @echo "重启 Mihomo 服务以应用升级..."
-    sudo systemctl restart mihomo
-
-    @just mihomo-tips
-
-mihomo-tips:
-    @LOCAL_IP=$(hostname -I | awk '{print $1}'); \
-    echo "在浏览器打开 WebUI 管理：http://$LOCAL_IP:9090/ui"; \
-    echo "Mihomo 服务管理（原生命令）："; \
-    echo "  启动:   sudo systemctl start mihomo"; \
-    echo "  停止:   sudo systemctl stop mihomo"; \
-    echo "  重启:   sudo systemctl restart mihomo"; \
-    echo "  状态:   systemctl status mihomo"; \
-    echo "  日志查看: journalctl -u mihomo -f"
-
 podman:
     @just podman-tips
     @just podman-images
@@ -72,8 +31,8 @@ podman-tips:
     podman --version
     podman info --debug | sed -n '1,120p'
 
-    @echo "验证代理环境（containers.conf）:"
-    podman info --debug | grep -i proxy || true
+    @echo "验证容器网络 (测试 curl google.com):"
+    @podman run --rm alpine sh -c "apk add --no-cache curl >/dev/null && curl -I -s https://www.google.com | grep HTTP" || echo "网络连接失败或无代理"
 
     @echo "  查看镜像:        podman images"
     @echo "  查看容器:        podman ps -a"

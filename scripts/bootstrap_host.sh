@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-# 强制清除当前 Shell 的代理变量，防止 Windows Clash Verge 劫持导致下载失败
-unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY all_proxy ALL_PROXY
-
 echo "更新软件包列表..."
 sudo apt update
 
@@ -22,106 +19,12 @@ sudo nala install -y \
   build-essential \
   ca-certificates \
   wget curl \
-  unzip \
   git \
   file \
-  tar gzip \
+  gzip \
   xdg-user-dirs \
   uidmap slirp4netns fuse-overlayfs \
   podman podman-docker
-
-echo "获取 Mihomo & Metacubexd最新版本下载链接..."
-MIHOMO_URL=$(
-  curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest \
-  | grep browser_download_url \
-  | grep linux-amd64 \
-  | grep -v compatible \
-  | grep '.gz"' \
-  | head -n 1 \
-  | cut -d '"' -f 4
-)
-
-META_UI_URL=$(
-  curl -s https://api.github.com/repos/MetaCubeX/metacubexd/releases/latest \
-  | grep browser_download_url \
-  | grep compressed-dist.tgz \
-  | head -n 1 \
-  | cut -d '"' -f 4
-)
-
-echo "下载安装 Mihomo..."
-wget -qO /tmp/mihomo.gz "$MIHOMO_URL"
-gunzip -f /tmp/mihomo.gz
-chmod +x /tmp/mihomo
-sudo mv -f /tmp/mihomo /usr/local/bin/mihomo
-
-echo "部署 Metacubexd Web UI..."
-sudo mkdir -p /etc/mihomo/ui
-wget -qO /tmp/metacubexd.tgz "$META_UI_URL"
-sudo rm -rf /etc/mihomo/ui/*
-sudo tar -xzf /tmp/metacubexd.tgz -C /etc/mihomo/ui
-rm -f /tmp/metacubexd.tgz
-
-echo "生成配置文件..."
-sudo mkdir -p /etc/mihomo
-sudo tee /etc/mihomo/config.yaml >/dev/null <<EOF
-mixed-port: 7899                # HTTP/SOCKS5 混合端口
-allow-lan: true                 # 允许局域网访问
-bind-address: '*'               # 监听所有网卡
-
-mode: rule
-log-level: info
-
-external-controller: 0.0.0.0:9099  # API 监听地址
-external-ui: /etc/mihomo/ui
-secret: ''
-
-external-controller-cors:
-  allow-origins:
-    - '*'
-  allow-private-network: true
-
-ipv6: true
-
-dns:
-  enable: true
-  listen: 0.0.0.0:1053
-  ipv6: true
-  enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
-  nameserver:
-    - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
-  fallback:
-    - https://1.1.1.1/dns-query
-    - https://8.8.8.8/dns-query
-
-EOF
-
-echo "部署 systemd 服务..."
-sudo tee /etc/systemd/system/mihomo.service >/dev/null <<EOF
-[Unit]
-Description=Mihomo Service
-Documentation=https://wiki.metacubex.one
-After=network.target network-online.target
-Wants=network-online.target
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/etc/mihomo
-ExecStart=/usr/local/bin/mihomo -d /etc/mihomo
-Restart=always
-RestartSec=3
-LimitNOFILE=65536
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl daemon-reload
-sudo systemctl enable mihomo >/dev/null 2>&1
-sudo systemctl restart mihomo
 
 echo "配置 Podman 无根模式权限(解决无根模式无法绑定低端口的问题)..."
 echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-podman-privileged-ports.conf
@@ -138,13 +41,13 @@ unqualified-search-registries = ["docker.io", "quay.io"]
 [[registry]]
 prefix = "docker.io"
 location = "docker.io"
-# 如果 Mihomo 很稳，其实不需要 mirror，但留着防备
+
 [[registry.mirror]]
 location = "docker.m.daocloud.io"
 EOF
 
-# containers.conf: 核心配置
-# 使用 host.containers.internal 指向宿主机
+echo "containers.conf配置用户级 Podman引擎参数..."
+# host.containers.internal 指向宿主机
 mkdir -p $HOME/.config/containers
 cat <<EOF > ~/.config/containers/containers.conf
 [containers]
@@ -152,29 +55,19 @@ log_size_max = 52428800
 
 [engine]
 events_logger = "file"
-# 这里配置环境变量，让所有容器启动时默认走代理
-# 注意：host.containers.internal 是 Podman 特有的宿主机 DNS
 env = [
-  "HTTP_PROXY=http://host.containers.internal:7899",
-  "HTTPS_PROXY=http://host.containers.internal:7899",
-  "NO_PROXY=localhost,127.0.0.1,::1,host.containers.internal"
+  "http_proxy",
+  "https_proxy",
+  "ftp_proxy",
+  "no_proxy",
+  "HTTP_PROXY",
+  "HTTPS_PROXY",
+  "FTP_PROXY",
+  "NO_PROXY"
 ]
 EOF
 
-if grep -q "microsoft" /proc/version; then
-    LOCAL_IP=127.0.0.1
-else
-    LOCAL_IP=$(hostname -I | awk '{print $1}')
-fi
-
-echo "host环境部署完毕。GeoIP / GeoSite / rule-provider 将在首次订阅加载时自动下载，无需手动干预;后续执行 just nala 或 just mihomo 或just mihomo-tips或just podman进行维护。"
-echo "在浏览器打开webUI管理：http://$LOCAL_IP:9099/ui"
-echo "Mihomo 服务管理（原生命令）："
-echo "  启动:   sudo systemctl start mihomo"
-echo "  停止:   sudo systemctl stop mihomo"
-echo "  重启:   sudo systemctl restart mihomo"
-echo "  状态:   systemctl status mihomo"
-echo "  日志查看: journalctl -u mihomo -f"
+echo "host环境部署完毕。后续执行 just nala 或just podman进行维护。"
 echo " podman原生命令:"
 echo "  检查配置:       podman info"
 echo "  拉取镜像:       podman pull alpine (已自动走代理)"
