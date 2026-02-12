@@ -8,8 +8,8 @@
 # ApexDotfiles
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 
-1)一套追求效率与简洁的开发环境配置。
-2)面向debian系(wsl-Ubuntu,Pop_os在我机器上实测没问题)。
+1) 一套追求效率与简洁的开发环境配置。
+2) 面向debian系(wsl-Ubuntu,Pop_os在我机器上实测没问题)。
 
 1) XDG 规范化：`~/.profile` 为环境唯一事实源  
 2) 宿主最小化：仅启动级/逃生级工具  
@@ -26,7 +26,7 @@
   <video src="" width="100%" autoplay loop muted playsinline controls></video>
 </div>
 
-## Installation(无代理环境链接增加https://ghfast.top/前缀)
+## Installation(无代理环境链接增加https://ghfast.top/ 前缀)
 1.执行 bootstrap_host.sh
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
