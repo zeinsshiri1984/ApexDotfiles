@@ -61,12 +61,21 @@ keybinds {
         bind "Alt l" "Alt Right" { MoveFocus "Right"; }
         bind "Alt j" "Alt Down" { MoveFocus "Down"; }
         bind "Alt k" "Alt Up" { MoveFocus "Up"; }
+        bind "Alt z" {
+            LaunchOrFocusPlugin "strider" {
+                floating true              // 浮动模式，不占固定布局
+                move_to_focused_tab true   // 跟随当前聚焦的Tab
+                size="80%"                 // 插件窗口大小
+                position="center"          // 窗口居中显示
+            } 
+        }
+
         // --- Pane 大小调整 ---
         bind "Alt =" { Resize "Increase"; }
         bind "Alt -" { Resize "Decrease"; }
 
         // --- Tab管理 ---
-        bind "Alt t" { Run "bash" "-lc" "zj-worktree" { close_on_exit true; }; } // 新建 Worktree Tab
+        bind "Alt t" { NewTab; }
         bind "Alt [" { GoToPreviousTab; }      // 上一个 Tab
         bind "Alt ]" { GoToNextTab; }          // 下一个 Tab
         bind "Alt 1" { GoToTab 1; }            // 快速切换 1-9
@@ -88,11 +97,4 @@ keybinds {
             } 
         }
     }
-}
-
-// 插件
-plugins {
-//    strider location="zellij:strider"
-//    compact-bar location="zellij:compact-bar"
-//    session-manager location="zellij:session-manager"
 }
