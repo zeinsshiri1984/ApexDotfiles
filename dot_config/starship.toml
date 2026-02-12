@@ -26,7 +26,6 @@ $haskell\
 $python\
 [](fg:color_blue bg:color_bg3)\
 $mise\
-$uv\
 $docker_context\
 $conda\
 $pixi\
@@ -179,11 +178,6 @@ format = '[[ $symbol( $version) ](fg:color_fg0 bg:color_blue)]($style)'
 symbol = "󱁤 "
 style = "bg:color_bg3"
 format = '[[ $symbol($version ) ](fg:color_fg0 bg:color_bg3)]($style)'
-
-[uv]
-symbol = "󱐋 "
-style = "bg:color_bg3"
-format = '[[ $symbol($version) ](fg:color_fg0 bg:color_bg3)]($style)'
 
 [docker_context]
 symbol = ""
