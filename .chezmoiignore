@@ -9,8 +9,9 @@ License
 # 脚本 (手动执行，不部署)
 scripts/
 
-# 项目模板 (由 copier 使用)
-Templates/
+# 项目模板
+**/Templates/ 
+Templates/**
 
 # 系统垃圾
 .DS_Store
