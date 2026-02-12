@@ -69,7 +69,7 @@ bind-address: 127.0.0.1               # 监听所有网卡
 mode: rule
 log-level: info
 
-external-controller: 0.0.0.0:9090  # API 监听地址
+external-controller: 0.0.0.0:19090  # API 监听地址
 external-ui: /etc/mihomo/ui
 secret: ''
 
