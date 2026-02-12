@@ -9,7 +9,7 @@ layout {
             command "hx"
         }
         pane size="35%" {
-            command "bash" "-l"
+            command "bash -l"
         }
     }
 

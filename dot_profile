@@ -1,6 +1,10 @@
 # ~/.profile — 唯一环境变量事实源
 # Bash login / sh / 非交互式脚本均 source 此文件
 
+# 如果已载入则立即返回（sourced 情况下可用）
+[ -n "${PROFILE_LOADED-}" ] && return
+export PROFILE_LOADED=1
+
 # Locale
 export LANG=en_US.UTF-8
 
@@ -14,13 +18,18 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export EDITOR=hx
 export VISUAL=hx
 
-#用户bin加入路径
-export PATH="$HOME/.local/bin:$PATH"
+#用户bin幂等加入 PATH（避免重复）加入路径
+case ":$PATH:" in
+  *":$HOME/.local/bin:"*) ;;
+  *) PATH="$HOME/.local/bin:$PATH"; export PATH ;;
+esac
 
-#在 Bash 中激活的mise钩子
-# export MISE_VERBOSE=1
+#在 Bash 中激活的mise钩子;只激活一次
 if [ -n "${BASH_VERSION-}" ] && command -v mise >/dev/null 2>&1; then
-  eval "$(mise activate bash)"
+  if [ -z "${MISE_BASH_ACTIVATED-}" ]; then
+    eval "$(mise activate bash)"
+    export MISE_BASH_ACTIVATED=1
+  fi
 fi
 
 # Linuxbrew

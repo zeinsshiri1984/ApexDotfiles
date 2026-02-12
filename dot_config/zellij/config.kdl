@@ -26,6 +26,8 @@ ui {
 
 // 快捷键
 keybinds {
+    unbind "Ctrl g"
+
     // Locked 模式 (默认)
     locked {
         bind "Ctrl a" { SwitchToMode "Normal"; }
@@ -34,7 +36,7 @@ keybinds {
 
     // RenameTab 模式
     renametab {
-        bind "Enter" { SwitchToMode "Locked"; }
+        bind "Enter" "Ctrl a" { SwitchToMode "Locked"; }
         bind "Esc" { UndoRenameTab; SwitchToMode "Locked"; }
     }
 
