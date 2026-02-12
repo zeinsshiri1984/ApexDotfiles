@@ -10,15 +10,15 @@ run = "bat --color=always --style=plain --paging=never \"$1\""
 
 [[previewer]]
 mime = "application/toml"
-run = "bat --color=always --style=plain --paging=never \"$1\""
+run = "hx -v \"$1\""
 
 [[previewer]]
 mime = "application/yaml"
-run = "bat --color=always --style=plain --paging=never \"$1\""
+run = "hx -v \"$1\""
 
 [[previewer]]
 mime = "application/xml"
-run = "bat --color=always --style=plain --paging=never \"$1\""
+run = "hx -v \"$1\""
 
 # -------- markdown --------
 [[previewer]]

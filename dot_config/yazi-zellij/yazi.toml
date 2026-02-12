@@ -6,7 +6,7 @@ theme = "tokyo-night"
 
 [opener]
 hx-zellij = [
-  { run = "hx \"$1\" && true", desc = "Open in hx (zellij)" }
+  { run = 'zellij action focus-left || exit 0; zellij action write-chars -- "hx somefile"; zellij action write 13; zellij action focus-right || true', desc="Open in hx" }
 ]
 
 [open]
