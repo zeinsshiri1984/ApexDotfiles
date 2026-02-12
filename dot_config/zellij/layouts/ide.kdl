@@ -1,4 +1,4 @@
-layout {
+layout direction="horizontal" {
     pane size="65%" {
         command "hx"
     }

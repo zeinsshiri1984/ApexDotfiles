@@ -5,6 +5,8 @@ $env.config = {
     max_size: 100_000
     sync_on_enter: true
     file_format: "sqlite"
+    include_duplicates: false
+    isolation: false  # 所有 Shell 共享同一个 sqlite 文件
   }
 
   completions: {
