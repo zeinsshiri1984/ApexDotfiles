@@ -30,10 +30,12 @@ brew install chezmoi just
 
 echo "拉取用户配置"
 chezmoi init --apply --force https://github.com/zeinsshiri1984/ApexDotfiles
+#确保二次配置能覆盖
+chezmoi update --force
 
 echo "用户环境预部署完成！后续执行just gh,just brew,just mise完全部署"
 echo " chezmoi原生命令:"
-echo "- 同步远程最新更改: chezmoi update -v"
+echo "- 同步远程最新更改(包含apply): chezmoi update -v"
 echo "- 手动重新应用配置: chezmoi apply"
 echo "- 查看本地差异:     chezmoi diff"
 echo "- 进入源码目录:     chezmoi cd"

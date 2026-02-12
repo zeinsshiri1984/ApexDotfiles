@@ -82,6 +82,12 @@ helix:
     @hx --grammar build
     @hx --health
 
+chezmoi-tips:
+    echo "- 同步远程最新更改(包含apply): chezmoi update -v"
+    echo "- 手动重新应用配置: chezmoi apply"
+    echo "- 查看本地差异:     chezmoi diff"
+    echo "- 进入源码目录:     chezmoi cd"
+
 gtrash-tips:
     @echo "放入垃圾桶:       gtrash put <文件/目录>"
     @echo "交互式恢复:       gtrash restore (支持多选和搜索，推荐用法)"
