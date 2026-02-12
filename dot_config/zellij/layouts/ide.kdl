@@ -1,6 +1,10 @@
-layout direction="horizontal" {
-    pane size="65%" {
-        command "hx"
+layout {
+    pane split_direction="vertical" {
+        pane size="65%" {
+            command "hx"
+        }
+        pane size="35%" {
+            command "bash"
+        }
     }
-    pane size="35%"
 }
