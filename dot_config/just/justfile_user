@@ -1,3 +1,5 @@
+GITHUB_TOKEN := `gh auth token 2>/dev/null || echo ""`
+
 user:
     @just --list
 
@@ -22,13 +24,13 @@ gh:
 mise:
     @echo "mise 自动识别 GITHUB_TOKEN 环境变量解决 GitHub API 速率限制"
     # [安装] 根据 config.toml 安装新增的工具
-    @GITHUB_TOKEN=$$(gh auth token 2>/dev/null) mise install --yes
+    @GITHUB_TOKEN={{GITHUB_TOKEN}} mise install --yes
     
     # [升级] 将已安装的工具升级至 config.toml 允许的最新版本
-    @GITHUB_TOKEN=$$(gh auth token 2>/dev/null) mise upgrade --yes
+    @GITHUB_TOKEN={{GITHUB_TOKEN}} mise upgrade --yes
     
     # [清理] 卸载 config.toml 中已删除的工具及孤儿版本
-    @GITHUB_TOKEN=$$(gh auth token 2>/dev/null) mise prune --yes
+    @GITHUB_TOKEN={{GITHUB_TOKEN}} mise prune --yes
     
     # 刷新垫片 (shims) 确保环境变量一致
     mise reshim
