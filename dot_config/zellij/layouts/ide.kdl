@@ -9,11 +9,11 @@ layout {
             command "hx"
         }
         pane size="35%" {
-            command "bash -l"
+            command "bash" "-l"
         }
     }
 
-    pane size=1 borderless=true {
+    pane size=2 borderless=true {
         plugin location="zellij:status-bar"
     }
 }

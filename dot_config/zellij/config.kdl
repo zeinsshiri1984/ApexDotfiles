@@ -20,7 +20,7 @@ on_force_close "detach"
 ui {
     pane_frames {
         rounded_corners true
-        hide_session_name true
+        hide_session_name flase
     }
 }
 
@@ -36,12 +36,13 @@ keybinds {
 
     // RenameTab 模式
     renametab {
-        bind "Enter" "Ctrl a" { SwitchToMode "Locked"; }
+        bind "Enter" { SwitchToMode "Locked"; }
         bind "Esc" { UndoRenameTab; SwitchToMode "Locked"; }
     }
 
     // 除 RenameTab 外的所有模式
     shared_except "renametab" {
+        bind "Ctrl a" { SwitchToMode "Locked"; }
         bind "Esc" { SwitchToMode "Locked"; }
         bind "Ctrl q" { Detach; }
 
