@@ -3,6 +3,7 @@ brew "gh"
 brew "just"
 brew "nushell"
 brew "mise"
+brew "chezmoi"
 
 # === CLI 增强 ===
 brew "starship"
