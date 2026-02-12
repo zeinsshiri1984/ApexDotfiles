@@ -5,7 +5,7 @@ default_shell "bash"
 scrollback_editor "hx"
 pane_frames true
 mouse_mode true
-simplified_ui true
+simplified_ui false  //快捷键熟了可关闭提示
 default_mode "locked"
 copy_clipboard "system"
 copy_on_select true
