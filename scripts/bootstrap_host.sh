@@ -70,6 +70,6 @@ EOF
 echo "host环境部署完毕。后续执行 just nala 或just podman进行维护。"
 echo " podman原生命令:"
 echo "  检查配置:       podman info"
-echo "  拉取镜像:       podman pull alpine (已自动走代理)"
+echo "  拉取镜像:       podman pull alpine"
 echo "  查看镜像/容器:  podman images / podman ps -a"
 echo "  别名测试:       docker ps"
