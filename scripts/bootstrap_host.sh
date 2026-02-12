@@ -76,7 +76,26 @@ external-controller: 0.0.0.0:9099  # API 监听地址
 external-ui: /etc/mihomo/ui
 secret: ''
 
+external-controller-cors:
+  allow-origins:
+    - '*'
+  allow-private-network: true
+
 ipv6: true
+
+dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  ipv6: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  fallback:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+
 EOF
 
 echo "部署 systemd 服务..."
@@ -147,7 +166,6 @@ if grep -q "microsoft" /proc/version; then
 else
     LOCAL_IP=$(hostname -I | awk '{print $1}')
 fi
-
 
 echo "host环境部署完毕。GeoIP / GeoSite / rule-provider 将在首次订阅加载时自动下载，无需手动干预;后续执行 just nala 或 just mihomo 或just mihomo-tips或just podman进行维护。"
 echo "在浏览器打开webUI管理：http://$LOCAL_IP:9099/ui"
