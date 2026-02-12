@@ -1,6 +1,6 @@
 layout {
-    pane size=65 {
+    pane size="65%" {
         command "hx"
     }
-    pane size=35
+    pane size="35%"
 }
