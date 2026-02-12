@@ -71,17 +71,21 @@ mise-tips:
     @echo "  mise tasks ls           # 查看 mise 定义的本地任务"
 
 yazi:
-    ya pack -a yazi-rs/themes:tokyo-night
+    @if ! grep -q "tokyo-night" "$HOME/.config/yazi/package.toml" 2>/dev/null; then \
+        ya pack -a yazi-rs/themes:tokyo-night; \
+    fi
+    # 尝试升级已安装的包
+    ya pack -u
 
 helix:
     @hx --grammar fetch
-	@hx --grammar build
+    @hx --grammar build
     @hx --health
 
 gtrash-tips:
-	@echo "放入垃圾桶:gtrash put <文件/目录>"
-	@echo "交互式恢复:gtrash restore (支持多选和搜索，推荐用法)"
-	@echo "浏览垃圾桶:gtrash find"
-	@echo "查看垃圾桶占用空间:gtrash summary"
-	@echo "清理30天前记录:gtrash prune --days 30"
-	@echo "物理删除所有垃圾桶文件:gtrash prune --all"
+    @echo "放入垃圾桶:       gtrash put <文件/目录>"
+    @echo "交互式恢复:       gtrash restore (支持多选和搜索，推荐用法)"
+    @echo "浏览垃圾桶:       gtrash find"
+    @echo "查看垃圾桶占用空间: gtrash summary"
+    @echo "清理30天前记录:    gtrash prune --days 30"
+    @echo "物理删除所有:      gtrash prune --all"
