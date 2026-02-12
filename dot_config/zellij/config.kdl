@@ -65,7 +65,6 @@ keybinds {
             LaunchOrFocusPlugin "strider" {
                 floating true              // 浮动模式，不占固定布局
                 move_to_focused_tab true   // 跟随当前聚焦的Tab
-                size="80%"                 // 插件窗口大小
                 position="center"          // 窗口居中显示
             } 
         }
