@@ -37,7 +37,7 @@ mise:
 
     @just mise-tips
 
-    @ mise cache clear
+    @mise cache clear
 
 gh-tips:
     @echo " [身份/权限]"
