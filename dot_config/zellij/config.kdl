@@ -62,7 +62,7 @@ keybinds {
         }
         bind "Alt g" {
             Run "bash" "-lc" "lazygit" {
-                floating true;
+                floating true
                 width "80%"
                 height "70%"
                 x "10%"
