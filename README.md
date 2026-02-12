@@ -6,8 +6,10 @@
 </div>
 
 # ApexDotfiles
+[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 
-面向 WSL-Ubuntu（无 GUI）的可复现开发环境 dotfiles。
+1)一套追求效率与简洁的开发环境配置。
+2)面向debian系(wsl-Ubuntu,Pop_os在我机器上实测没问题)。
 
 1) XDG 规范化：`~/.profile` 为环境唯一事实源  
 2) 宿主最小化：仅启动级/逃生级工具  
@@ -20,49 +22,28 @@
 9) AI 终端：Nushell + ShellGPT（ask/complete/fix/commit）
 
 ## Screenshots
-
 <div align="center">
   <video src="" width="100%" autoplay loop muted playsinline controls></video>
 </div>
 
-## Installation (仅支持 Ubuntu 24.04+)
-
+## Installation(无代理环境链接增加https://ghfast.top/前缀)
+1.执行 bootstrap_host.sh
 ```bash
-# 1. 设置 apt 清华镜像源
-sudo sed -i 's|http://archive.ubuntu.com|https://mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/ubuntu.sources
-sudo sed -i 's|http://security.ubuntu.com|https://mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list.d/ubuntu.sources
-
-# 2. 执行 bootstrap (brew 镜像已内置脚本，无需预设环境变量)
-bash -c "$(curl -fsSL https://ghfast.top/https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
 ```
 
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
+2.执行 bootstrap_user.sh
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_user.sh)"
+```
 
-## Roadmap
-
-- 完成 README 多语言版本或移除无效链接  
-- 统一项目模板入口（dbx/ai-shell/just）  
-- 细化 devbox 与原生包管理的项目分类  
-- bootstrap.sh 强幂等与无半配置态  
-- Zellij/Yazi/Helix 快捷键与用法文档  
-- AI 工作流文档化与最小测试覆盖
-
-## Badges
-
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-
-## FAQ
-
-#### Homebrew download failed
-
-In regions with restricted internet access such as China, network proxy tools are necessary.
-
-#### Configuration of chezmoi failed to be created
-
-If the ~/.local/share directory already contains the chezmoi directory, this will cause the failure. Make sure your machine is running the bootstrap.sh for the first time.
-
+3.执行用户cli安装
+```bash
+just brew
+just gh
+just mise
+```
 ## Acknowledgements
-
 - [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
 - [Awesome README](https://github.com/matiassingers/awesome-readme)
 - [How to write a Good readme](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
