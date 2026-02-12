@@ -37,6 +37,8 @@ mise:
 
     @just mise-tips
 
+    @ mise cache clear
+
 gh-tips:
     @echo " [身份/权限]"
     @echo "  gh auth status          # 查看当前登录状态及权限范围"

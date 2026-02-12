@@ -17,7 +17,8 @@ export VISUAL=hx
 #用户bin加入路径
 export PATH="$HOME/.local/bin:$PATH"
 
-#仅在 Bash 中激活的mise钩子
+#在 Bash 中激活的mise钩子
+export MISE_VERBOSE=1
 if [ -n "${BASH_VERSION-}" ] && command -v mise >/dev/null 2>&1; then
   eval "$(mise activate bash)"
 fi
