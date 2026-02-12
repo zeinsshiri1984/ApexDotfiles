@@ -47,10 +47,43 @@ keybinds {
         bind "Ctrl q" { Detach; }
 
         // 浮动窗格
-        bind "Alt y" { Run "nu -c 'yz'"; floating true; close_on_exit false; width 80%; height 70%; }
-        bind "Alt g" { Run "lazygit"; floating true; close_on_exit false; width 80%; height 70%; }
-        bind "Alt p" { Run "podman-tui"; floating true; close_on_exit false; width 80%; height 70%; }
-        bind "Alt b" { Run "btop"; floating true; close_on_exit false; width 80%; height 70%; }
+        bind "Alt y" {
+            Run {
+                command = "nu"
+                args = ["-c", "yz"]
+                floating = true
+                close_on_exit = false
+                width = "80%"
+                height = "70%"
+            }
+        }
+        bind "Alt g" {
+            Run {
+                command = "lazygit"
+                floating = true
+                close_on_exit = false
+                width = "80%"
+                height = "70%"
+            }
+        }
+        bind "Alt p" {
+            Run {
+                command = "podman-tui"
+                floating = true
+                close_on_exit = false
+                width = "80%"
+                height = "70%"
+            }
+        }
+        bind "Alt b" {
+            Run {
+                command = "btop"
+                floating = true
+                close_on_exit = false
+                width = "80%"
+                height = "70%"
+            }
+        }
 
         // --- Pane管理 ---
         bind "Alt n" { NewPane "stacked"; }               // 新建窗格(自动)
