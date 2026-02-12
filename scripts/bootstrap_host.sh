@@ -142,26 +142,13 @@ env = [
 ]
 EOF
 
-echo "配置 Podman 用户级代理 (仅针对当前用户 Rootless)"
-# 给当前用户配置默认代理，防止干扰 sudo podman 运行系统服务
-mkdir -p ~/.config/containers
-cat <<EOF > ~/.config/containers/containers.conf
-[containers]
-# 限制日志大小
-log_size_max = 52428800
+if grep -q "microsoft" /proc/version; then
+    LOCAL_IP=127.0.0.1
+else
+    LOCAL_IP=$(hostname -I | awk '{print $1}')
+fi
 
-[engine]
-# 事件日志驱动
-events_logger = "file"
-# 让容器内部自动走宿主机代理;host.containers.internal 自动解析为宿主机 IP
-env = [
-  "HTTP_PROXY=http://host.containers.internal:7899",
-  "HTTPS_PROXY=http://host.containers.internal:7899",
-  "NO_PROXY=localhost,127.0.0.1,::1,host.containers.internal"
-]
-EOF
 
-LOCAL_IP=$(hostname -I | awk '{print $1}')
 echo "host环境部署完毕。GeoIP / GeoSite / rule-provider 将在首次订阅加载时自动下载，无需手动干预;后续执行 just nala 或 just mihomo 或just mihomo-tips或just podman进行维护。"
 echo "在浏览器打开webUI管理：http://$LOCAL_IP:9099/ui"
 echo "Mihomo 服务管理（原生命令）："
