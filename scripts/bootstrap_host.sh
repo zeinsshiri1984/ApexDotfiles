@@ -63,13 +63,13 @@ echo "生成配置文件..."
 sudo mkdir -p /etc/mihomo
 sudo tee /etc/mihomo/config.yaml >/dev/null <<EOF
 mixed-port: 7890                # HTTP/SOCKS5 混合端口
-allow-lan: false                 # 允许局域网访问
-bind-address: 127.0.0.1               # 监听所有网卡
+allow-lan: true                 # 允许局域网访问
+bind-address: '*'               # 监听所有网卡
 
 mode: rule
 log-level: info
 
-external-controller: 0.0.0.0:19090  # API 监听地址
+external-controller: 0.0.0.0:9090  # API 监听地址
 external-ui: /etc/mihomo/ui
 secret: ''
 
