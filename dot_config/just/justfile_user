@@ -74,9 +74,9 @@ mise-tips:
 
 yazi:
     @if ! grep -q "tokyo-night" "$HOME/.config/yazi/package.toml" 2>/dev/null; then \
-        ya add yazi-rs/themes:tokyo-night; \
+        ya pkg add yazi-rs/themes:tokyo-night; \
     fi
-    ya upgrade
+    ya pkg upgrade
 
 helix:
     @hx --grammar fetch
