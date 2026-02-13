@@ -8,16 +8,10 @@ theme = "tokyo-night"
 hx-zellij = [
   { run = '''
     file="$1"
-
-    # 切到左侧 pane
-    zellij action move-focus left
-
-    # 在左侧 pane 上创建 stacked pane 并运行 hx
     zellij action new-pane --stacked --cwd "$(dirname "$file")" -- hx "$file"
-
-    # 关闭当前浮动 yazi pane
+    # 关掉自己
     zellij action close-pane
-  ''', desc = "Open in hx (stacked left)" }
+  ''', desc = "Open in hx (stacked on current/yazi position)" }
 ]
 
 [open]
