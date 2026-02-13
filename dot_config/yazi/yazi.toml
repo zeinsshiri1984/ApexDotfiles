@@ -6,7 +6,7 @@ theme = "tokyo-night"
 
 [opener]
 hx = [
-  { run = "hx \"$@\"", desc = "Open in hx" }
+  { run = '${EDITOR:-vi} "$@"', block = true, desc = "$EDITOR" }
 ]
 
 [open]
