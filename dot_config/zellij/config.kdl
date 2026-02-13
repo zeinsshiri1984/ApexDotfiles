@@ -48,9 +48,12 @@ keybinds {
 
         // 浮动窗格
         bind "Alt y" {
-            Run "bash" {
-                args "-c" "zellij action new-pane --stacked -- env YAZI_CONFIG_HOME=~/.config/yazi-zellij yazi"
-                close_on_exit true  // shell 运行后关闭临时 bash pane
+            Run "yazi" {
+                env {
+                    YAZI_CONFIG_HOME "~/.config/yazi-zellij"
+                }
+                floating flase
+                close_on_exit true
             }
         }
         bind "Alt G" {
