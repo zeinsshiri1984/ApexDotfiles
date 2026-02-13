@@ -29,12 +29,12 @@
 1) 不依赖FHS硬编码动态包:mise实现工具链复现及路径隔离(不同路径生效不同runtime / toolchain)+语言原生包管理器实现依赖复现
 2) 依赖FHS硬编码动态包:mise实现工具链复现及路径隔离(不同路径生效不同runtime / toolchain)+distrobox实现FHS硬编码动态包依赖复现+语言原生包管理器实现非FHS包复现
 
-## Screenshots
+# Screenshots
 <div align="center">
   <video src="" width="100%" autoplay loop muted playsinline controls></video>
 </div>
 
-## Installation(无代理环境链接增加https://ghfast.top/ 前缀)
+# Installation(无代理环境链接增加https://ghfast.top/ 前缀)
 1.执行 bootstrap_host.sh
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
@@ -51,7 +51,7 @@ just brew
 just gh
 just mise
 ```
-## Acknowledgements
+# Acknowledgements
 - [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
 - [Awesome README](https://github.com/matiassingers/awesome-readme)
 - [How to write a Good readme](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
