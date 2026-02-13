@@ -60,7 +60,7 @@ keybinds {
                 close_on_exit true
             }
         }
-        bind "Alt g" {
+        bind "Alt G" {
             Run "bash" "-lc" "lazygit" {
                 floating true
                 width "80%"
