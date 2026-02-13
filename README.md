@@ -34,7 +34,7 @@
   <video src="" width="100%" autoplay loop muted playsinline controls></video>
 </div>
 
-# Installation(无代理环境链接增加https://ghfast.top/ 前缀)
+# Installation(无代理环境,可在链接前添加https://ghfast.top/ 前缀)
 1.执行 bootstrap_host.sh
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
