@@ -6,12 +6,7 @@ theme = "tokyo-night"
 
 [opener]
 hx-zellij = [
-  { run = '''
-    file="$1"
-    zellij action new-pane --stacked --cwd "$(dirname "$file")" -- hx "$file"
-    # 关掉自己
-    zellij action close-pane
-  ''', desc = "Open in hx (stacked on current/yazi position)" }
+  { run = '${EDITOR:-vi} "$@"', block = true, desc = "$EDITOR" }
 ]
 
 [open]

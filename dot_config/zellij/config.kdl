@@ -52,7 +52,11 @@ keybinds {
                 env {
                     YAZI_CONFIG_HOME "~/.config/yazi-zellij"
                 }
-                floating false
+                floating true
+                width "80%"
+                height "70%"
+                x "10%"
+                y "15%"
                 close_on_exit true
             }
         }
