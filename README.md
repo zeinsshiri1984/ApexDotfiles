@@ -45,6 +45,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfi
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_user.sh)"
 ```
 
+执行完这步后要重启登录shell使配置生效, 不清楚就重启发行版
+
 3.执行用户cli安装
 ```bash
 just brew
