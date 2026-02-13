@@ -52,7 +52,7 @@ keybinds {
                 env {
                     YAZI_CONFIG_HOME "~/.config/yazi-zellij"
                 }
-                floating flase
+                floating false
                 close_on_exit true
             }
         }
