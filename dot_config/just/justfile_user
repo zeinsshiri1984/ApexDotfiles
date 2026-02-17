@@ -231,10 +231,10 @@ helix-tips:
 	@echo ":theme <name>        切换主题"
 
 flatpak:
-    sudo nala install flatpak
-    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    flatpak install flathub io.github.flattool.Warehouse
-    flatpak update
-    flatpak uninstall --unused
+    sudo nala install flatpak -y
+    flatpak remote-add -y --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    flatpak install flathub -y io.github.flattool.Warehouse
+    flatpak update -y
+    flatpak uninstall -y --unused
 
 flatpak-tips:
