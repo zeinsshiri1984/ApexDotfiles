@@ -229,3 +229,12 @@ helix-tips:
 	@echo ":config-reload       重载配置"
 	@echo ":tutor               官方教程"
 	@echo ":theme <name>        切换主题"
+
+flatpak:
+    sudo nala install flatpak
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    flatpak install flathub io.github.flattool.Warehouse
+    flatpak update
+    flatpak uninstall --unused
+
+flatpak-tips:
