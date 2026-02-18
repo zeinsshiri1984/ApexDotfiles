@@ -52,6 +52,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfi
 just brew
 just gh
 just mise
+just flatpak-bootstrap
 ```
 # Acknowledgements
 - [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
