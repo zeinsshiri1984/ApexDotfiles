@@ -234,7 +234,6 @@ flatpak-bootstrap:
     @sudo nala install -y flatpak
     @flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     @flatpak install -y flathub \
-        org.niri.Niri \
         com.brave.Browser \
         io.github.flattool.Warehouse \
         io.github.celluloid_player.Celluloid \
