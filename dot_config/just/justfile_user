@@ -231,9 +231,9 @@ helix-tips:
 	@echo ":theme <name>        切换主题"
 
 flatpak-bootstrap:
-    sudo nala install -y flatpak
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    flatpak install -y flathub \
+    @sudo nala install -y flatpak
+    @flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    @flatpak install -y flathub \
         com.mitchellh.ghostty \
         org.niri.Niri \
         com.brave.Browser \
@@ -250,13 +250,13 @@ flatpak-bootstrap:
         org.telegram.desktop \
         com.github.johnfactotum.Foliate \
         org.onlyoffice.desktopeditors
-    flatpak uninstall -y --unused
-    flatpak-tips
+    @flatpak uninstall -y --unused
+    @just flatpak-tips
 
 flatpak-maintain:
-    flatpak update -y
-    flatpak uninstall -y --unused
-    flatpak-tips
+    @flatpak update -y
+    @flatpak uninstall -y --unused
+    @just flatpak-tips
 
 flatpak-tips:
     @echo "[flathub] https://flathub.org/en"
