@@ -234,7 +234,7 @@ flatpak-bootstrap:
     @sudo nala install -y flatpak
     @flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     @flatpak install -y flathub \
-        com.mitchellh.ghostty \
+        ; com.mitchellh.ghostty \
         org.niri.Niri \
         com.brave.Browser \
         io.github.flattool.Warehouse \
