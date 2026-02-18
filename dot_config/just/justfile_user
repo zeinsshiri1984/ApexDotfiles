@@ -230,11 +230,51 @@ helix-tips:
 	@echo ":tutor               官方教程"
 	@echo ":theme <name>        切换主题"
 
-flatpak:
-    sudo nala install flatpak -y
-    flatpak remote-add -y --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    flatpak install flathub -y io.github.flattool.Warehouse
+flatpak-bootstrap:
+    sudo nala install -y flatpak
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    flatpak install -y flathub \
+        com.mitchellh.ghostty \
+        org.niri.Niri \
+        com.brave.Browser \
+        io.github.flattool.Warehouse \
+		io.github.celluloid_player.Celluloid \
+		io.dbeaver.DBeaverCommunity \
+        io.github.peazip.PeaZip \
+        org.kde.dolphin \
+        org.ksnip.ksnip \
+        com.visualstudio.code \
+        md.obsidian.Obsidian \
+        org.localsend.localsend_app \
+        com.discordapp.Discord \
+        org.telegram.desktop \
+        com.github.johnfactotum.Foliate \
+        org.onlyoffice.desktopeditors
+    flatpak uninstall -y --unused
+    flatpak-tips
+
+flatpak-maintain:
     flatpak update -y
     flatpak uninstall -y --unused
+    flatpak-tips
 
 flatpak-tips:
+    @echo "[flathub] https://flathub.org/en"
+    @echo "flatpak --version                    # 查看版本"
+    @echo "flatpak remotes                      # 查看已添加仓库"
+    @echo "flatpak list                         # 查看已安装应用"
+    @echo "[安装 / 卸载]"
+    @echo "flatpak search <name>                # 搜索应用"
+    @echo "flatpak install flathub <APP-ID>     # 安装应用"
+    @echo "flatpak run <APP-ID>                 # 运行应用"
+    @echo "flatpak uninstall <APP-ID>           # 卸载应用"
+    @echo "flatpak uninstall --unused           # 清理无用 runtime"
+    @echo "[更新]"
+    @echo "flatpak update                       # 更新全部"
+    @echo "flatpak update <APP-ID>              # 更新指定应用"
+    @echo "[仓库管理]"
+    @echo "flatpak remote-add --if-not-exists flathub <仓库地址>"
+    @echo "flatpak remote-delete flathub        # 删除仓库"
+    @echo "[调试]"
+    @echo "flatpak info <APP-ID>                # 查看应用信息"
+    @echo "flatpak repair                       # 修复损坏安装"
