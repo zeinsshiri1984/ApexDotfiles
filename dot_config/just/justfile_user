@@ -238,7 +238,7 @@ flatpak-bootstrap:
         org.niri.Niri \
         com.brave.Browser \
         io.github.flattool.Warehouse \
-		io.github.celluloid_player.Celluloid \
+        io.github.celluloid_player.Celluloid \
 		io.dbeaver.DBeaverCommunity \
         io.github.peazip.PeaZip \
         org.kde.dolphin \
