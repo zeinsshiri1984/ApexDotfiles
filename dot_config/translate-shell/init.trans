@@ -1,7 +1,7 @@
 {
+ :engine "bing"
+ :source "auto"
  :verbose         false
  :hl              "zh-CN"
  :tl              ["zh-CN" "en"]
- :view            "auto"
- :engine          "auto"
 }
