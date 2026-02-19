@@ -15,6 +15,7 @@ brew "tealdeer"
 brew "gtrash"
 brew "jq"
 brew "gum"
+brew "translate-shell"
 
 # === ai+TUI 工作流 ===
 brew "yazi"
