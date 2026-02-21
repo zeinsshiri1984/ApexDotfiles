@@ -234,6 +234,8 @@ flatpak-bootstrap:
     @sudo nala install -y flatpak
     @flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     @flatpak install -y flathub \
+		com.qq.QQ \
+		com.tencent.WeChat \
         com.pot_app.pot \
         com.baidu.NetDisk \
         com.brave.Browser \
