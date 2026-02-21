@@ -42,6 +42,9 @@ brew "git-lfs"
 # brew "viddy"
 #brew "angle-grinder"
 
+#vm
+brew "qemu"
+
 # ===== Containers =====
 brew "docker-compose"
 # brew "dive"
