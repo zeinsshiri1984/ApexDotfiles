@@ -56,7 +56,7 @@ brew "docker-compose"
 brew "curlie"               # curl 封装 (像 httpie)
 brew "mosh"
 brew "sshs"
-# brew "doggo"
+brew "doggo"
 # brew "trippy"
 # brew "croc"
 # brew "miniserve"
