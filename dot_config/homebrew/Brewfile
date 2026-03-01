@@ -37,7 +37,7 @@ brew "git-lfs"
 
 # ===== Monitor =====
 #brew "watchexec"
-#brew "lnav"
+brew "lnav"
 # brew "tailspin"
 # brew "viddy"
 #brew "angle-grinder"
