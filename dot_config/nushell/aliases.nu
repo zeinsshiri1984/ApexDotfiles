@@ -1,5 +1,5 @@
 #ls -laih
-alias ll = ls -a | sort-by type name | update size { $in.size | into filesize }
+alias ll = ls -a | sort-by type name | update size { |row| $row.size | into filesize }
 
 # 现代工具替代;如需使用原始命令，在 nushell 中用 ^ 前缀调用，例如 ^find
 alias grep = rg                    # ripgrep: 更快的 grep
