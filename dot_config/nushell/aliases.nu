@@ -9,6 +9,7 @@ alias rm = gtrash put
 alias curl = curlie                # curlie: httpie 风格的 curl
 alias diff = delta                 # delta: 更美观的 diff
 alias du = dust
+alias cat = bat                    # 提醒:nushell的open查看结构化文件内容好用
 
 # Git 常用
 alias g = git

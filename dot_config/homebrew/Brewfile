@@ -10,7 +10,7 @@ brew "starship"
 brew "carapace"
 # brew "fd"
 brew "ripgrep"
-brew "dust"   # 分析
+brew "dust"   # 分析,脚本, 还有些脚本会依赖du
 brew "ncdu"   # 日常干活
 brew "tealdeer"
 brew "gtrash"
@@ -65,7 +65,7 @@ brew "doggo"
 # brew "zrok"
 
 # 测试与性能
-# brew "fio"
+brew "fio"
 # brew "oha"
 # brew "ffuf"   
 # brew "hyperfine"
@@ -89,4 +89,4 @@ brew "p7zip"
 brew "poppler"
 brew "chafa"
 brew "glow"
-# brew "bat"
+brew "bat"
