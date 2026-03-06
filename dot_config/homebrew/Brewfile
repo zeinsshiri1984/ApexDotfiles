@@ -10,7 +10,8 @@ brew "starship"
 brew "carapace"
 # brew "fd"
 brew "ripgrep"
-# brew "dust"
+brew "dust"   # 分析
+brew "ncdu"   # 日常干活
 brew "tealdeer"
 brew "gtrash"
 brew "jq"

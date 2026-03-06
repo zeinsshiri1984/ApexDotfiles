@@ -1,7 +1,5 @@
-alias ll = ls -l
-alias la = ls -a
-alias lla = ls -la
-alias g = git
+#ls -laih
+alias ll = ls -a | sort-by type name | update size { into filesize }
 
 # 现代工具替代;如需使用原始命令，在 nushell 中用 ^ 前缀调用，例如 ^find
 alias grep = rg                    # ripgrep: 更快的 grep
@@ -10,8 +8,10 @@ alias man = tldr                   # tealdeer: 简明版 man
 alias rm = gtrash put              
 alias curl = curlie                # curlie: httpie 风格的 curl
 alias diff = delta                 # delta: 更美观的 diff
+alias du = dust
 
 # Git 常用
+alias g = git
 alias gs = git status -sb
 alias ga = git add
 alias gc = git commit
