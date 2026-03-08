@@ -56,7 +56,7 @@ brew "docker-compose"
 # 网络
 brew "curlie"               # curl 封装 (像 httpie)
 brew "mosh"
-brew "sshs"
+#brew "sshs"                # https://github.com/caelansar/termirs也行, sshTUI客户端可能是伪需求, 如果你一开始就在zellij中连接
 brew "doggo"
 # brew "trippy"
 # brew "croc"
