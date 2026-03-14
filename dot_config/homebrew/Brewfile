@@ -17,6 +17,8 @@ brew "gtrash"
 brew "jq"
 brew "gum"
 brew "translate-shell"
+brew "gopass"
+brew "age"
 
 # === ai+TUI 工作流 ===
 brew "yazi"
