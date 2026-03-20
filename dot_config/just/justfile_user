@@ -251,7 +251,8 @@ flatpak-bootstrap:
         com.discordapp.Discord \
         org.telegram.desktop \
         com.github.johnfactotum.Foliate \
-        org.onlyoffice.desktopeditors
+        org.onlyoffice.desktopeditors \
+        chat.delta.desktop
     @flatpak uninstall -y --unused
     @flatpak override --user --filesystem=xdg-desktop com.qq.QQ com.tencent.WeChat com.pot_app.pot com.baidu.NetDisk org.ksnip.ksnip org.localsend.localsend_app
     @flatpak override --user --filesystem=xdg-download com.qq.QQ com.tencent.WeChat com.pot_app.pot com.baidu.NetDisk org.ksnip.ksnip org.localsend.localsend_app
