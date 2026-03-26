@@ -22,7 +22,7 @@
 2) 脚本shell bash + 交互shell nushell: `~/.profile` 为环境事实源; bash作为默认登录shell; 由交互式bash启动nushell, 达成了两shell共用一套环境的目的
 3) 遵循XDG规范
 4) 开箱即用的zellij + yazi + helix + lazygit + podman-tui + btop + claude code基础开发环境
-5) 交互增加: starship + Carapace-bin
+5) 交互增强: starship + Carapace-bin
 6) ~/just/下编写了大量日常维护命令
 
 ## 工具链和依赖可复现的项目环境
@@ -49,6 +49,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfi
 
 3.执行用户cli安装
 ```bash
+chezmoi cd
 just brew
 just gh
 just mise
