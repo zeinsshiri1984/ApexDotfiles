@@ -54,6 +54,13 @@ just gh
 just mise
 just flatpak-bootstrap
 ```
+
+4.后续项目更新
+```bash
+chezmoi update
+```
+执行以上拉取更新配置后, 重复执行3的步骤
+
 # Acknowledgements
 - [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
 - [Awesome README](https://github.com/matiassingers/awesome-readme)
