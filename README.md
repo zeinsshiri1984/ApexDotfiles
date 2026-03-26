@@ -13,7 +13,7 @@
 
 # 环境方案
 ## 最小化系统环境:
-1) Host OS随时可丢弃；仅作为Linux 内核 + 用户态容器宿主;脚本仅部署启动级/逃生级工具
+1) Host OS随时可丢弃；仅作为Linux 内核 + 用户态容器宿主;bootstrap脚本仅部署启动级/逃生级工具
 2) rootless podman优先,兼容docker命令和docker compose脚本
 3) 虽然不是真正的immutable os, 但baes os尽量自律式不可写
 
