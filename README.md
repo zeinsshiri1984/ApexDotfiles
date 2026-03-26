@@ -36,6 +36,7 @@
 
 # Installation(无代理环境,可在链接前添加https://ghfast.top/ 前缀)
 代理环境应该自己准备好, 国内网络环境真没辙
+
 1.执行 bootstrap_host.sh
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
