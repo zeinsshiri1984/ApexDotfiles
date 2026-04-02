@@ -27,7 +27,7 @@ sudo nala install -y \
   podman podman-docker \
   network-manager \
   dnsutils \
-  ptcpdump
+  ptcpdump tshark
 
 echo "配置 Podman 无根模式权限(解决无根模式无法绑定低端口的问题)..."
 echo "net.ipv4.ip_unprivileged_port_start=0" | sudo tee /etc/sysctl.d/99-podman-privileged-ports.conf
