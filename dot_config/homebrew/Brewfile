@@ -71,6 +71,7 @@ brew "fio"
 # brew "oha"
 # brew "ffuf"   
 # brew "hyperfine"
+brew "posting"
 
 # 数据库
 # brew "sqlfluff"
