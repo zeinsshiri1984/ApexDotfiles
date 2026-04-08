@@ -64,8 +64,10 @@ chezmoi update
 ```
 执行以上拉取更新配置后, 重复执行3的步骤
 
-# 快捷使用
+# 快速上手常用工具
+
 运行以下命令快速上手
+
 ```bash
 just helix-tips
 just flatpak-tips
