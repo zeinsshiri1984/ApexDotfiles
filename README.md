@@ -64,6 +64,18 @@ chezmoi update
 ```
 执行以上拉取更新配置后, 重复执行3的步骤
 
+# 快捷使用
+运行以下命令快速上手
+```bash
+just helix-tips
+just flatpak-tips
+just zellij-tips
+just gtrash-tips
+just chezmoi-tips
+just mise-tips
+just gh-tips
+```
+
 # Acknowledgements
 - [Awesome Readme Templates](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
 - [Awesome README](https://github.com/matiassingers/awesome-readme)
