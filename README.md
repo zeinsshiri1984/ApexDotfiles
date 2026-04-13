@@ -60,6 +60,7 @@ just flatpak-bootstrap
 
 4.后续项目更新
 ```bash
+chezmoi cd
 chezmoi update
 ```
 执行以上拉取更新配置后, 重复执行3的步骤
