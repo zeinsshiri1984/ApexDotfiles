@@ -55,7 +55,7 @@ chezmoi cd
 just brew
 just gh
 just mise
-just flatpak-bootstrap  # 没GUI别执行这行
+just flatpak-bootstrap  # 没GUI别执行这行(如wsl环境)
 ```
 
 4.后续项目更新
