@@ -55,7 +55,7 @@ chezmoi cd
 just brew
 just gh
 just mise
-just flatpak-bootstrap
+just flatpak-bootstrap  # 没GUI别执行这行
 ```
 
 4.后续项目更新
