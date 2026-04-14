@@ -42,3 +42,9 @@ if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
 elif [ -x "$HOME/.linuxbrew/bin/brew" ]; then
   eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
 fi
+
+# bun global bin
+case ":$PATH:" in
+  *":$HOME/.cache/.bun/bin:"*) ;;
+  *) PATH="$HOME/.cache/.bun/bin:$PATH"; export PATH ;;
+esac
