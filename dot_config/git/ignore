@@ -23,6 +23,8 @@ keys.txt
 id_rsa
 id_ed25519
 secrets.env.yaml
+*.passwd
+*.password
 
 # --- Generic Dev ---
 .env.local
