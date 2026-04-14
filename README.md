@@ -18,7 +18,7 @@
 3) 虽然不是真正的immutable os, 但baes os尽量自律式不可写
 
 ## 可快速恢复的用户态环境:
-1) 用户态包管理器规避FHS路径造成的依赖冲突: 使用Linuxbrew管理cli工具,flatpak管理GUI工具,mise管理开发工具链;所有工具都是声明式管理的,一条命令快速部署/恢复
+1) 用户态包管理器规避FHS路径造成的依赖冲突: 使用Linuxbrew管理cli工具(但有些强依赖运行时的工具只有语言包管理器分发途径),flatpak管理GUI工具,mise管理开发工具链;所有工具都是声明式管理的,一条命令快速部署/恢复
 2) 脚本shell bash + 交互shell nushell: `~/.profile` 为环境事实源; bash作为默认登录shell; 由交互式bash启动nushell, 达成了两shell共用一套环境的目的
 3) 遵循XDG规范
 4) 开箱即用的zellij + yazi + helix + lazygit + podman-tui + btop + claude code基础开发环境
@@ -26,8 +26,13 @@
 6) ~/just/下编写了大量日常维护命令
 
 ## 工具链和依赖可复现的项目环境
-1) 不依赖FHS硬编码动态包:mise实现工具链复现及路径隔离(不同路径生效不同runtime / toolchain)+语言原生包管理器实现依赖复现
-2) 依赖FHS硬编码动态包:mise实现工具链复现及路径隔离(不同路径生效不同runtime / toolchain)+distrobox实现FHS硬编码动态包依赖复现+语言原生包管理器实现非FHS包复现
+1) 项目不依赖FHS硬编码动态包:
+工具链复现: mise安装工具链+工具链版本按路径隔离
+依赖复现: 语言原生包管理器
+2) 项目依赖FHS硬编码动态包:
+工具链复现: mise安装工具链+工具链版本按路径隔离
+非FHS路径依赖复现: 语言原生包管理器
+FHS硬编码路径依赖复现: distrobox
 
 # Screenshots
 <div align="center">
