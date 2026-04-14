@@ -31,6 +31,3 @@ alias z = zellij
 alias lg = lazygit
 alias y = yazi
 alias yz = with-env { YAZI_CONFIG_HOME: $"($env.HOME)/.config/yazi-zellij" } { yazi }
-alias cc = claude
-alias cx = codex
-alias gm = gemini

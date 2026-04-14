@@ -38,3 +38,15 @@ def --env y [...args] {
         ^rm -f $tmp
     }
 }
+
+def cc [] {
+  bash -lc "claude $env.args"
+}
+
+def cx [] {
+  bash -lc "codex $env.args"
+}
+
+def gm [] {
+  bash -lc "gemini $env.args"
+}
