@@ -1,6 +1,8 @@
 # GNUls的参数就是 -laih
 alias ll = ls -al
 
+alias fg = job unfreeze # 将最近一个被挂起（Ctrl+Z）的任务恢复到前台
+
 # 现代工具替代;如需使用原始命令，在 nushell 中用 ^ 前缀调用，例如 ^find
 alias grep = rg                    # ripgrep: 更快的 grep
 alias top = btop                   # btop: 更美观的系统监控

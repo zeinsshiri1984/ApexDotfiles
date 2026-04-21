@@ -2,13 +2,13 @@
     name = {{ .name }}
     email = {{ .email }}
     # 假设 gh 生成了标准的 ed25519 密钥；如果文件不存在，Git 会忽略此项但不报错
-    signingkey = {{ .chezmoi.homeDir }}/.ssh/id_ed25519.pub
+#    signingkey = {{ .chezmoi.homeDir }}/.ssh/id_ed25519.pub
     
-[gpg]
-    format = ssh
+#[gpg]
+#    format = ssh
 
-[commit]
-    gpgsign = true
+#[commit]
+#    gpgsign = true
 
 [init]
     defaultBranch = main
