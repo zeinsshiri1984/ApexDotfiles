@@ -43,7 +43,6 @@ keybinds {
     // 除 RenameTab 外的所有模式
     shared_except "renametab" {
         bind "Ctrl a" { SwitchToMode "Locked"; }
-        bind "Esc" { SwitchToMode "Locked"; }
         bind "Ctrl q" { Detach; }
 
         // 浮动窗格
