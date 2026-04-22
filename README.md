@@ -9,7 +9,8 @@
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
 
 1) 一套追求效率与简洁的开发环境配置。
-2) 面向debian系(wsl-Ubuntu,Pop_os在我机器上实测没问题)。
+2) 面向debian系(wsl-Ubuntu,Pop_os在我机器上实测没问题)
+3) 计划支持RHEL系
 
 # 环境方案
 ## 最小化系统环境:
