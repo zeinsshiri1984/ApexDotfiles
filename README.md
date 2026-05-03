@@ -76,6 +76,9 @@ just brew
 just gh
 just mise
 just flatpak-bootstrap  # 没GUI别执行这行(如服务器环境)
+just flatpak-bootstrap 
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/dev_tool.sh)"
+just flatpak-maintain
 ```
 
 4.后续项目更新
