@@ -74,11 +74,13 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfi
 chezmoi cd
 just brew
 just gh
-just mise
-just flatpak-bootstrap  # 没GUI别执行这行(如服务器环境)
-just flatpak-bootstrap 
+just mise 
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/dev_tool.sh)"
-just flatpak-maintain
+# 不需要运维工具别执行以下行
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/ops_tool.sh)"
+# 没GUI别执行以下行(如服务器环境)
+just flatpak-bootstrap  
+just flatpak-bootstrap 
 ```
 
 4.后续项目更新
@@ -100,6 +102,16 @@ just gtrash-tips
 just chezmoi-tips
 just mise-tips
 just gh-tips
+
+# 工作流
+y              # 终端中打开文件管理器yazi
+yz             # zellij中打开文件管理器yazi用这个命令; 主要是zellij中yazi有兼容性问题, 两个命令用的是两套配置
+
+z -s <项目名>   # 开启一个zellij项目会话
+z a <项目名>    # 链接已存在zellij项目会话
+
+cc-switch       # 给claudecode配置第三方模型
+cc              # 打开claudecode, nu环境下务必用这个命令打开, 避免潜在兼容性问题 
 ```
 
 # Acknowledgements
