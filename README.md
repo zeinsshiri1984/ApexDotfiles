@@ -80,7 +80,6 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfi
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/ops_tool.sh)"
 # 没GUI别执行以下行(如服务器环境)
 just flatpak-bootstrap  
-just flatpak-bootstrap 
 ```
 
 4.后续项目更新
