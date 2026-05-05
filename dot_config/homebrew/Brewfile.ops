@@ -1,0 +1,16 @@
+
+# 网络
+brew "doggo"
+# brew "trippy"
+brew "croc"       # 存在内网/防火墙阻隔的临时跨机传输, 不想搞 SSH 密钥、不想配安全组端口穿透
+# brew "miniserve"
+# brew "websocat"
+# brew "zrok"
+
+# sre
+brew "ansible"
+
+# === Security ===
+# brew "trivy"
+# brew "rustscan"
+# brew "lynis"

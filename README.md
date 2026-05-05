@@ -74,7 +74,7 @@ curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/sc
 chezmoi cd
 just brew
 just gh
-just mise
+MISE_NODE_VERIFY=0 just mise
 curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/dev_tool.sh | bash
 # 不需要运维工具别执行以下行
 curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/ops_tool.sh | bash
