@@ -15,4 +15,4 @@ sudo nala upgrade -y
 echo "ops tool..."
 sudo nala install -y \
   network-manager dnsutils rsync \
-  ptcpdump tshark termshark \
+  ptcpdump tshark termshark
