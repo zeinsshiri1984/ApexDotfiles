@@ -51,7 +51,7 @@ echo "1) dev"
 echo "2) ops"
 echo "3) dev + ops"
 printf "输入选项 [1-3]: "
-read -r choice
+read -r choice < /dev/tty
 cat "$BASE" > "$TARGET"
 case "$choice" in
   1)
@@ -59,7 +59,7 @@ case "$choice" in
     ;;
   2)
     cat "$OPS" >> "$TARGET"
-    
+
     ;;
   3)
     cat "$DEV" >> "$TARGET"
