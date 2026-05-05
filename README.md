@@ -69,12 +69,12 @@ curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/sc
 
 执行完这步后要重启登录shell使配置生效, 不清楚就重启发行版
 
-3.执行用户cli安装
+3.初次部署(可重复部署)
 ```bash
 chezmoi cd
 just brew
 just gh
-MISE_NODE_VERIFY=0 just mise
+just mise
 curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/dev_tool.sh | bash
 # 不需要运维工具别执行以下行
 curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/ops_tool.sh | bash
@@ -86,9 +86,8 @@ just flatpak-bootstrap
 ```bash
 chezmoi cd
 chezmoi update
+just usr
 ```
-执行以上拉取更新配置后, 重复执行3的步骤
-
 # 快速上手常用工具
 
 运行以下命令快速上手

@@ -3,11 +3,15 @@ GITHUB_TOKEN := `gh auth token 2>/dev/null || echo ""`
 user:
     @just --list
 
+usr:
+    just brew
+    just mise
+
 brew:
     @echo "升级brew及同步远程仓库元数据"
     brew update
     @echo "同步Brewfile"
-    brew bundle --file=~/.config/homebrew/Brewfile --cleanup --force
+    brew bundle --file=~/.config/homebrew/Brewfile.all --cleanup --force
     @echo "升级所有已安装工具到最新版本"
     brew upgrade
     @echo "移除孤儿依赖"
@@ -22,6 +26,7 @@ gh:
     @just gh-tips
     
 mise:
+    @export MISE_NODE_VERIFY=0
     @echo "mise 自动识别 GITHUB_TOKEN 环境变量解决 GitHub API 速率限制"
     # [安装] 根据 config.toml 安装新增的工具
     @GITHUB_TOKEN={{GITHUB_TOKEN}} mise install --yes
