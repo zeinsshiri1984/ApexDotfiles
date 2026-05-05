@@ -10,6 +10,13 @@ mkdir -p "$HOME/.config" \
          "$HOME/.local/bin"
 xdg-user-dirs-update --force
 
+echo "安装 mise..."
+if ! command -v mise >/dev/null 2>&1; then
+  curl https://mise.run | sh
+fi
+# 让 mise 当前 shell 生效
+export PATH="$HOME/.local/bin:$PATH"
+
 echo "部署linuxbrew"
 export NONINTERACTIVE=1
 export HOMEBREW_NO_ANALYTICS=1
