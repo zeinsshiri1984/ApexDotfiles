@@ -62,6 +62,3 @@ brew "poppler"
 brew "chafa"
 brew "glow"
 brew "bat"
-
-brewfile "~/.config/homebrew/Brewfile.dev"
-brewfile "~/.config/homebrew/Brewfile.ops"

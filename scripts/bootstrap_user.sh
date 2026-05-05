@@ -41,6 +41,35 @@ chezmoi init --apply --force https://github.com/zeinsshiri1984/ApexDotfiles
 #确保二次配置能覆盖
 chezmoi update --force
 
+# 生成Brewfile.all
+BASE="$HOME/.config/homebrew/Brewfile.base"
+DEV="$HOME/.config/homebrew/Brewfile.dev"
+OPS="$HOME/.config/homebrew/Brewfile.ops"
+TARGET="$HOME/.config/homebrew/Brewfile.all"
+echo "是否安装开发,运维常用工具集:"
+echo "1) dev"
+echo "2) ops"
+echo "3) dev + ops"
+printf "输入选项 [1-3]: "
+read -r choice
+cat "$BASE" > "$TARGET"
+case "$choice" in
+  1)
+    cat "$DEV" >> "$TARGET"
+    ;;
+  2)
+    cat "$OPS" >> "$TARGET"
+    
+    ;;
+  3)
+    cat "$DEV" >> "$TARGET"
+    cat "$OPS" >> "$TARGET"
+    ;;
+  *)
+    # 默认只 base
+    ;;
+esac
+
 echo "用户环境预部署完成！后续执行just gh,just brew,just mise完全部署"
 echo " chezmoi原生命令:"
 echo "- 同步远程最新更改(包含apply): chezmoi update -v"
