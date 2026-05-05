@@ -58,6 +58,7 @@ FHS硬编码路径依赖复现: distrobox
 代理环境应该自己准备好, 国内网络环境真没辙
 
 进入bash环境后执行以下命令
+
 1.执行 bootstrap_host.sh
 ```bash
 curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh | bash
