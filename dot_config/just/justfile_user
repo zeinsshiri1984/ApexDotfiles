@@ -8,8 +8,6 @@ brew:
     brew update
     @echo "同步Brewfile"
     brew bundle --file=~/.config/homebrew/Brewfile --cleanup --force
-    @echo "升级所有已安装工具到最新版本"
-    brew upgrade
     @echo "移除孤儿依赖"
     brew autoremove
     @echo "清理旧版本下载缓存和锁定的二进制文件"
