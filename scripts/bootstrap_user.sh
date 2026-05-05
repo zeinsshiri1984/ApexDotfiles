@@ -1,5 +1,6 @@
-#!/bin/bash
-set -eo pipefail
+#!/usr/bin/env bash
+set -Eeuo pipefail
+shopt -s nullglob
 # -o pipefail: 管道中任意命令失败则整体失败
 
 echo "确立xdg规范"

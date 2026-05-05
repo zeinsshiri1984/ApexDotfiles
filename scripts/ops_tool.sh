@@ -1,5 +1,6 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -Eeuo pipefail
+shopt -s nullglob
 
 echo "更新软件包列表..."
 sudo apt update

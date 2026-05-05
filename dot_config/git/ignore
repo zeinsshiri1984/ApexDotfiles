@@ -33,3 +33,5 @@ dist/
 build/
 .direnv/
 .devbox/
+
+**/.claude/settings.local.json 

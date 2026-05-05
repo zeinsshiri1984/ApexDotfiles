@@ -1,5 +1,6 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -Eeuo pipefail
+shopt -s nullglob
 
 #uv tool install aider-chat@latest --python "$(mise where python@3.12)"
 
