@@ -59,12 +59,12 @@ FHS硬编码路径依赖复现: distrobox
 
 1.执行 bootstrap_host.sh
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh)"
+curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_host.sh | bash
 ```
 
 2.执行 bootstrap_user.sh
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_user.sh)"
+curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_user.sh | bash
 ```
 
 执行完这步后要重启登录shell使配置生效, 不清楚就重启发行版
@@ -74,10 +74,10 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfi
 chezmoi cd
 just brew
 just gh
-just mise 
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/dev_tool.sh)"
+just mise
+curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/dev_tool.sh | bash
 # 不需要运维工具别执行以下行
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/ops_tool.sh)"
+curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/ops_tool.sh | bash
 # 没GUI别执行以下行(如服务器环境)
 just flatpak-bootstrap  
 ```
