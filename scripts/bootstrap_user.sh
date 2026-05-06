@@ -70,6 +70,8 @@ case "$choice" in
     ;;
 esac
 
+exec bash -l
+
 echo "用户环境预部署完成！后续执行just gh,just brew,just mise完全部署"
 echo " chezmoi原生命令:"
 echo "- 同步远程最新更改(包含apply): chezmoi update -v"
