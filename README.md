@@ -109,6 +109,7 @@ yz             # zellij中打开文件管理器yazi用这个命令; 主要是zel
 
 z -s <项目名>   # 开启一个zellij项目会话
 z a <项目名>    # 链接已存在zellij项目会话
+z ls           # 查看已存在会话
 
 cc-switch       # 给claudecode配置第三方模型
 cc              # 打开claudecode, nu环境下务必用这个命令打开, 避免潜在兼容性问题 
