@@ -69,7 +69,7 @@ curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/sc
 curl -fsSL https://raw.githubusercontent.com/zeinsshiri1984/ApexDotfiles/main/scripts/bootstrap_user.sh | bash
 ```
 
-执行完这步后要重启登录shell使配置生效, 不清楚就重启发行版
+执行到此会自动重启login shell使配置生效, 若配置未生效导致找不到包管理器, 则手动重启发行版
 
 3.初次部署(可重复部署)
 ```bash
