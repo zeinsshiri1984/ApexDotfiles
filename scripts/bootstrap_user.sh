@@ -70,6 +70,7 @@ case "$choice" in
     ;;
 esac
 
+# 重启登录shell让配置生效
 exec bash -l
 
 echo "用户环境预部署完成！后续执行just gh,just brew,just mise完全部署"
