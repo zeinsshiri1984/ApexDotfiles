@@ -57,7 +57,6 @@ brew "mosh"
 
 # =====yazi预览 =====
 brew "ffmpegthumbnailer"
-brew "p7zip"
 brew "poppler"
 brew "chafa"
 brew "glow"
