@@ -6,6 +6,7 @@ brew "croc"       # 存在内网/防火墙阻隔的临时跨机传输, 不想搞
 # brew "miniserve"
 # brew "websocat"
 # brew "zrok"
+brew "trzsz-ssh"
 
 # sre
 brew "ansible"
